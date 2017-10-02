@@ -23,9 +23,9 @@ param([String]$debugfile = "");
 
 if ($debugfile -eq "")
 {
-& "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\common\bin\cspybat" -f "U:\Vedlegg\2. Kildekode\NXT\ARM7_AT91SAM7S64_IAR\settings\nxt_kartlegging.Flash_Debug.general.xcl" --backend -f "U:\Vedlegg\2. Kildekode\NXT\ARM7_AT91SAM7S64_IAR\settings\nxt_kartlegging.Flash_Debug.driver.xcl" 
+& "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\common\bin\cspybat" -f "C:\Users\geirhei\Documents\lego-master-geir\NXT\ARM7_AT91SAM7S64_IAR\settings\nxt_kartlegging.Flash_Debug.general.xcl" --backend -f "C:\Users\geirhei\Documents\lego-master-geir\NXT\ARM7_AT91SAM7S64_IAR\settings\nxt_kartlegging.Flash_Debug.driver.xcl" 
 }
 else
 {
-& "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\common\bin\cspybat" -f "U:\Vedlegg\2. Kildekode\NXT\ARM7_AT91SAM7S64_IAR\settings\nxt_kartlegging.Flash_Debug.general.xcl" --debug_file=$debugfile --backend -f "U:\Vedlegg\2. Kildekode\NXT\ARM7_AT91SAM7S64_IAR\settings\nxt_kartlegging.Flash_Debug.driver.xcl" 
+& "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\common\bin\cspybat" -f "C:\Users\geirhei\Documents\lego-master-geir\NXT\ARM7_AT91SAM7S64_IAR\settings\nxt_kartlegging.Flash_Debug.general.xcl" --debug_file=$debugfile --backend -f "C:\Users\geirhei\Documents\lego-master-geir\NXT\ARM7_AT91SAM7S64_IAR\settings\nxt_kartlegging.Flash_Debug.driver.xcl" 
 }

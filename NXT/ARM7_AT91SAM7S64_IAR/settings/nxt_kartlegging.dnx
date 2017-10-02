@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
 <settings>
     <Stack>
         <FillEnabled>0</FillEnabled>
@@ -16,7 +16,7 @@
         <ShowSource>1</ShowSource>
     </Trace1>
     <DebugChecksum>
-        <Checksum>2352651050</Checksum>
+        <Checksum>1086130331</Checksum>
     </DebugChecksum>
     <CodeCoverage>
         <Enabled>_ 0</Enabled>
@@ -35,6 +35,29 @@
         <Symbiont>0</Symbiont>
         <Exclusions />
     </DriverProfiling>
+    <JLinkDriver>
+        <WatchCond>_ 0</WatchCond>
+        <Watch0>_ 0 "0x00000000" 4294967295 "0xFFFFFFFF" 0 "0x00000000" 4294967295 "0xFFFFFFFF" 3 0 0 0</Watch0>
+        <Watch1>_ 0 "0x00000000" 4294967295 "0xFFFFFFFF" 0 "0x00000000" 4294967295 "0xFFFFFFFF" 3 0 0 0</Watch1>
+        <CStepIntDis>_ 0</CStepIntDis>
+        <LeaveTargetRunning>_ 0</LeaveTargetRunning>
+    </JLinkDriver>
+    <Disassembly>
+        <MixedMode>1</MixedMode>
+    </Disassembly>
+    <SfrWindow>
+        <Show>1 1</Show>
+        <Sort>4 0</Sort>
+    </SfrWindow>
+    <struct_types>
+        <Fmt0>update_message_t-sensor1	3	0</Fmt0>
+        <Fmt1>update_message_t-sensor2	3	0</Fmt1>
+        <Fmt2>update_message_t-sensor3	3	0</Fmt2>
+        <Fmt3>update_message_t-sensor4	3	0</Fmt3>
+    </struct_types>
+    <array_types>
+        <Fmt0>uint8_t[12]	4	0</Fmt0>
+    </array_types>
     <InterruptLog>
         <LogEnabled>0</LogEnabled>
         <GraphEnabled>0</GraphEnabled>
@@ -65,35 +88,18 @@
         <FreqHi>0</FreqHi>
         <MultiCoreRunAll>1</MultiCoreRunAll>
     </Simulator>
-    <JLinkDriver>
-        <WatchCond>_ 0</WatchCond>
-        <Watch0>_ 0 "" 0 "" 0 "" 0 "" 0 0 0 0</Watch0>
-        <Watch1>_ 0 "" 0 "" 0 "" 0 "" 0 0 0 0</Watch1>
-        <CStepIntDis>_ 0</CStepIntDis>
-        <LeaveTargetRunning>_ 0</LeaveTargetRunning>
-    </JLinkDriver>
-    <Disassembly>
-        <MixedMode>1</MixedMode>
-    </Disassembly>
-    <SfrWindow>
-        <Show>1 1</Show>
-        <Sort>4 0</Sort>
-    </SfrWindow>
-    <struct_types>
-        <Fmt0>update_message_t-sensor1	3	0</Fmt0>
-        <Fmt1>update_message_t-sensor2	3	0</Fmt1>
-        <Fmt2>update_message_t-sensor3	3	0</Fmt2>
-        <Fmt3>update_message_t-sensor4	3	0</Fmt3>
-    </struct_types>
-    <array_types>
-        <Fmt0>uint8_t[12]	4	0</Fmt0>
-    </array_types>
     <CallStackLog>
         <Enabled>0</Enabled>
     </CallStackLog>
     <CallStackStripe>
         <ShowTiming>1</ShowTiming>
     </CallStackStripe>
+    <DisassembleMode>
+        <mode>0</mode>
+    </DisassembleMode>
+    <Breakpoints2>
+        <Count>0</Count>
+    </Breakpoints2>
     <LogFile>
         <LoggingEnabled>_ 0</LoggingEnabled>
         <LogFile>_ ""</LogFile>
@@ -103,13 +109,6 @@
         <LoggingEnabled>_ 0</LoggingEnabled>
         <LogFile>_ ""</LogFile>
     </TermIOLog>
-    <DisassembleMode>
-        <mode>0</mode>
-    </DisassembleMode>
-    <Breakpoints2>
-        <Bp0>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\Source\tasks.c}.758.4" 0 0 1 "" 0 "" 0</Bp0>
-        <Count>1</Count>
-    </Breakpoints2>
     <Aliases>
         <Count>0</Count>
         <SuppressDialog>0</SuppressDialog>

@@ -71,6 +71,7 @@ volatile int16_t gRightWheelTicks = 0;
 volatile int16_t gLeftWheelTicks = 0;
 
 // To store motor direction, only changed in motor controller, but accessed from ISR
+//
 uint8_t gLeftWheelDirection;
 uint8_t gRightWheelDirection;
 
