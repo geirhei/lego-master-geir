@@ -69,3 +69,4 @@ dkms.conf
 **/Obj/*.pbd.*  
 **/Obj/*.pbi  
 **/Obj/*.pbi.*  
+*.dep
