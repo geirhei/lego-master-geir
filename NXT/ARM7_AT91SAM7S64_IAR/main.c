@@ -653,7 +653,7 @@ void vMainPoseEstimatorTask( void *pvParameters ) {
 		  	vFunc_Inf2pi(&compassHeading);
 		  
 			// kalmanGain = covariance_filter_predicted / (covariance_filter_predicted + CONST_VARIANCE_COMPASS);
-		  	if (fabs(error) > (0.8727*period_in_S)) { // 0.8727 rad/s is top speed while turning
+		  	if (fabs(error) > (0.8727*period_in_S)) { // 0.8727 rad/s is top speed while turning (for Arduino?)
                 // If we have a reading over this, we can safely ignore the compass
                 // Ignore compass while driving in a straight line
                 kalmanGain = 0;
@@ -712,8 +712,9 @@ void vMainPoseEstimatorTask( void *pvParameters ) {
 
 /* Handles request from position controller and sets motor pins. */
 /* Frequency set by PERIOD_MOTOR_MS in defines.h */
-void vMainMovementTask( void *pvParameters ){
+/*/*void vMainMovementTask( void *pvParameters ){
   /* Task init */
+/*
   uint8_t lastMovement = 0;
   uint8_t movement = 0;
   uint8_t actuation = 0;
@@ -740,36 +741,39 @@ void vMainMovementTask( void *pvParameters ){
 	  tmp_rightWheelTicks = gRightWheelTicks - bias_RightWheelTick;
 	  taskEXIT_CRITICAL();
 	  /* Saturate values */
+/*
 	  if (actuation < 40) actuation = 40;
 	  else if (actuation > 100) actuation = 100;
 	  
 	  /* Change actuation to millis with period defined in defines.h */
-	  actuation = PERIOD_MOTOR_MS * actuation / 100;
+	  //actuation = PERIOD_MOTOR_MS * actuation / 100;
+	  /*
 	  if (actuation != 0){
 		vMotorMovementSwitch(movement, tmp_leftWheelTicks, tmp_rightWheelTicks);
 		/* ON time duration */
-		vTaskDelay(actuation / portTICK_PERIOD_MS);
+		//vTaskDelay(actuation / portTICK_PERIOD_MS);
 		/* We dont want to move */
+/*
 		if (actuation != PERIOD_MOTOR_MS){
 		  nxt_motor_set_speed(servoLeft, 0, 1);
 		  nxt_motor_set_speed(servoRight, 0, 1);
 		}
 		else{/* Full throttle*/
-		}
+//		}
 		/* Off time duration */
-		vTaskDelay((PERIOD_MOTOR_MS - actuation) / portTICK_PERIOD_MS);
-	  }
-	  else {/*actuation is 0, do nothing*/
+//		vTaskDelay((PERIOD_MOTOR_MS - actuation) / portTICK_PERIOD_MS);
+//	  }
+/*	  else {/*actuation is 0, do nothing*/
 		vTaskDelay(20 / portTICK_PERIOD_MS);
-	  }
-	}
-	else{ // Not connected, stop & do nothing
-	  nxt_motor_set_speed(servoLeft, 0, 1);
-	  nxt_motor_set_speed(servoRight, 0, 1);
-	  vTaskDelay(100 / portTICK_PERIOD_MS);
-	}
-  }// While(1) end
-}
+//	  }
+//	}
+//	else{ // Not connected, stop & do nothing
+//	  nxt_motor_set_speed(servoLeft, 0, 1);
+//	  nxt_motor_set_speed(servoRight, 0, 1);
+//	  vTaskDelay(100 / portTICK_PERIOD_MS);
+//	}
+  //}// While(1) end
+//}*/*/
 
 //#define COMPASS_CALIBRATE
 
