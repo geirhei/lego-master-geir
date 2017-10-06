@@ -1,6 +1,6 @@
 /************************************************************************/
-// File:			main.c
-// Author:			Erlend Ese, NTNU Spring 2016
+// File:            main.c
+// Author:          Erlend Ese, NTNU Spring 2016
 //                  Modified for use with NXT by Kristian Lien, Spring 2017
 //                  Credit is given where credit is due.
 // Purpose:
@@ -266,82 +266,82 @@ void vMainSensorTowerTask( void *pvParameters ) {
 			}
 			vMotorSetAngle(servoTower, servoStep*servoResolution);
 	  
-		  	// Wait total of 200 ms for servo to reach set point and allow previous update message to be transfered.
-		  	vTaskDelayUntil(&xLastWakeTime, 200 / portTICK_PERIOD_MS);   
+			// Wait total of 200 ms for servo to reach set point and allow previous update message to be transfered.
+			vTaskDelayUntil(&xLastWakeTime, 200 / portTICK_PERIOD_MS);   
 		  
-		  	// Get measurements from sensors
-		  	uint8_t forwardSensor = distance_get_cm(0);
-		  	uint8_t leftSensor = distance_get_cm(1);
-		  	uint8_t rearSensor = distance_get_cm(2);
-		  	uint8_t rightSensor = distance_get_cm(3);
+			// Get measurements from sensors
+			uint8_t forwardSensor = distance_get_cm(0);
+			uint8_t leftSensor = distance_get_cm(1);
+			uint8_t rearSensor = distance_get_cm(2);
+			uint8_t rightSensor = distance_get_cm(3);
 		  
-		  	// Get latest pose estimate
-		  	xSemaphoreTake(xPoseMutex, 40 / portTICK_PERIOD_MS);
-		  		thetahat = gTheta_hat;
-		  		xhat = gX_hat;
-		  		yhat = gY_hat;
-		  	xSemaphoreGive(xPoseMutex);
+			// Get latest pose estimate
+			xSemaphoreTake(xPoseMutex, 40 / portTICK_PERIOD_MS);
+				thetahat = gTheta_hat;
+				xhat = gX_hat;
+				yhat = gY_hat;
+			xSemaphoreGive(xPoseMutex);
 		  
-		  	if ((idleCounter > 10) && (robotMovement == moveStop)) {
+			if ((idleCounter > 10) && (robotMovement == moveStop)) {
 				// If the robot stands idle for 1 second, send 'status:idle' in case the server missed it.
 				send_idle();
 				idleCounter = 1;
-		  	}
-		  	else if ((idleCounter >= 1) && (robotMovement == moveStop)) {
+			}
+			else if ((idleCounter >= 1) && (robotMovement == moveStop)) {
 				idleCounter++;
-		  	}
+			}
 		  
-		  	//Send updates to server in the correct format (centimeter and degrees, rounded)
-		  	send_update(ROUND(xhat/10), ROUND(yhat/10), ROUND(thetahat*RAD2DEG), servoStep*servoResolution, forwardSensor, leftSensor, rearSensor, rightSensor);
+			//Send updates to server in the correct format (centimeter and degrees, rounded)
+			send_update(ROUND(xhat/10), ROUND(yhat/10), ROUND(thetahat*RAD2DEG), servoStep*servoResolution, forwardSensor, leftSensor, rearSensor, rightSensor);
 		  
-		  	// Low level anti collision
-		  	uint8_t objectX;
+			// Low level anti collision
+			uint8_t objectX;
 		  
-		  	if ((servoStep*servoResolution) <= 30) objectX = forwardSensor; // * cos(servoStep*5);
-		  	else if ((servoStep*servoResolution) >= 60) objectX = rightSensor; // * cos(270 + servoStep*5);
-		  	else objectX = 0;
+			if ((servoStep*servoResolution) <= 30) objectX = forwardSensor; // * cos(servoStep*5);
+			else if ((servoStep*servoResolution) >= 60) objectX = rightSensor; // * cos(270 + servoStep*5);
+			else objectX = 0;
 		  
-		  	if ((objectX > 0) && (objectX < 20)) {
+			if ((objectX > 0) && (objectX < 20)) {
 				// Stop controller
 				struct sPolar Setpoint = {0, 0};
 				xQueueSend(poseControllerQ, &Setpoint, 100);
-		  	}            
+			}            
 		  
-		  	// Iterate in a increasing/decreasing manner and depending on the robots movement
-		  	if ((servoStep*servoResolution <= 90) && (rotationDirection == moveCounterClockwise) && (robotMovement < moveClockwise)) {
+			// Iterate in a increasing/decreasing manner and depending on the robots movement
+			if ((servoStep*servoResolution <= 90) && (rotationDirection == moveCounterClockwise) && (robotMovement < moveClockwise)) {
 				servoStep++;                
-		  	} 
-		  	else if ((servoStep*servoResolution > 0) && (rotationDirection == moveClockwise) && (robotMovement < moveClockwise)) {
+			} 
+			else if ((servoStep*servoResolution > 0) && (rotationDirection == moveClockwise) && (robotMovement < moveClockwise)) {
 				servoStep--;
-		  	}
+			}
 		  
-		  	if ((servoStep*servoResolution >= 90) && (rotationDirection == moveCounterClockwise)) {
+			if ((servoStep*servoResolution >= 90) && (rotationDirection == moveCounterClockwise)) {
 				rotationDirection = moveClockwise;
-		  	}
-		  	else if ((servoStep*servoResolution <= 0) && (rotationDirection == moveClockwise)) {
+			}
+			else if ((servoStep*servoResolution <= 0) && (rotationDirection == moveClockwise)) {
 				rotationDirection = moveCounterClockwise;
-		  	}
+			}
 
 		}
 
 		else if (gPaused == TRUE && gHandshook == TRUE) {
-		  	vTaskDelay(200 / portTICK_PERIOD_MS);
+			vTaskDelay(200 / portTICK_PERIOD_MS);
 		}
 
 		else { // Disconnected or unconfirmed
-		  	vMotorSetAngle(servoTower, 0);
-		  	// Reset servo incrementation
-		  	rotationDirection = moveCounterClockwise;
-		  	servoStep = 0;
-		  	vTaskDelay(100 / portTICK_PERIOD_MS);
+			vMotorSetAngle(servoTower, 0);
+			// Reset servo incrementation
+			rotationDirection = moveCounterClockwise;
+			servoStep = 0;
+			vTaskDelay(100 / portTICK_PERIOD_MS);
 		}
 
-  	}
+	}
 }
 
 /**
- * @brief      Task for controlling the movement of the robot. Depends on
- *             semaphore from estimator task.
+ * @brief      Task for controlling the movement of the robot. Waits on
+ *             xControllerBSem from estimator task.
  *
  * @param      pvParameters  The pv parameters
  */
@@ -549,225 +549,165 @@ void vMainPoseControllerTask( void *pvParameters ) {
  * @param      pvParameters  The pv parameters
  */
 void vMainPoseEstimatorTask( void *pvParameters ) {
-  uint8_t USE_GYRO_COMPASS = 0;
-  uint8_t driveStatus = 0;
-  uint8_t compass_is_reliable = FALSE;
-  
-  int16_t previous_leftWheelTicks = 0;
-  int16_t previous_rightWheelTicks = 0;  
-  
-  double kalmanGain = 0;
-  double covariance_filter_predicted = 0;
-  
-  float predictedTheta = 0.0;
-  float oldCompass = 0.0;
-  
-  float predictedX = 0.0;
-  float predictedY = 0.0;
-  
-  float gyroOffset = 0.0;
-  float compassOffset = 0.0;
-  // These may need to be updated when exploring a new area
-  // Can be found by using the calibration task and using
-  // define COMPASS_CALIBRATE
-  const int16_t xComOff = -278; 
-  const int16_t yComOff = 13;
-  
-  const float variance_gyro = 0.0482f; // [rad] calculated offline, see report
-  const float variance_encoder = (2.0f * WHEEL_FACTOR_MM) / (WHEELBASE_MM); // approximation, 0.0257 [rad]
-  const TickType_t xDelay = PERIOD_ESTIMATOR_MS;
-  const float period_in_S = PERIOD_ESTIMATOR_MS / 1000.0f;
-  const float variance_gyro_encoder = (variance_gyro + variance_encoder) * period_in_S; // (Var gyro + var encoder) * timestep
-  
-#define CONST_VARIANCE_COMPASS 0.0349f // 2 degrees in rads, as specified in the data sheet
-#define COMPASS_FACTOR 10000.0f// We are driving inside with a lot of interference, compass needs to converge slowly
+	int16_t previous_ticksLeft = 0;
+	int16_t previous_ticksRight = 0;
 
-  float gyroWeight = 0;
+	const TickType_t xDelay = PERIOD_ESTIMATOR_MS;
+    float period_in_S = PERIOD_ESTIMATOR_MS / 1000.0f;
 
-  //float adaptiveGyroWeight = 0;
-  
-  uint8_t robot_is_turning = 0;
-  
-  // Initialise the xLastWakeTime variable with the current time.
-  TickType_t xLastWakeTime;
-  xLastWakeTime = xTaskGetTickCount();
-  while(1){
-	// Loop
-	vTaskDelayUntil(&xLastWakeTime, xDelay / portTICK_PERIOD_MS );   
+	float kalmanGain = 0.5;
 
-	if (gHandshook){ // Check if we are ready   
-	  int16_t current_leftWheelTicks = 0;
-	  int16_t current_rightWheelTicks = 0;
-	  // Get encoder data, protect the global tick variables
-	  taskENTER_CRITICAL();
-	  current_leftWheelTicks = gLeftWheelTicks;
-	  current_rightWheelTicks = gRightWheelTicks;
-	  taskEXIT_CRITICAL(); 
-	  float dLeft = (float)(current_leftWheelTicks - previous_leftWheelTicks) * WHEEL_FACTOR_MM; // Distance left wheel has traveled since last sample
-	  float dRight = (float)(current_rightWheelTicks - previous_rightWheelTicks) * WHEEL_FACTOR_MM; // Distance right wheel has traveled since last sample
-	  previous_leftWheelTicks = current_leftWheelTicks;
-	  previous_rightWheelTicks = current_rightWheelTicks;
-	  
-	  float dRobot = (dLeft + dRight) / 2; // Distance robot has travelled since last sample
-	  float dTheta = (dRight - dLeft) / WHEELBASE_MM; // [RAD] Get angle from encoders, derived from arch of circles formula
-	  
-	  /* PREDICT */
-	  // Get gyro data:
-	  float gyrZ = DEG2RAD * (gyro_get_dps_z() - gyroOffset);
-	  // If the robot is not really rotating we don't include the gyro measurements, to avoid the trouble with drift while driving in a straight line
-	  if(fabs(gyrZ) < DEG2RAD*10){ 
-		gyroWeight = 0; // Disregard gyro while driving in a straight line
-		robot_is_turning = FALSE; // Don't update angle estimates
-	  }
-	  else {
-		robot_is_turning = TRUE;                
-		/*
-		// Use the calculated relationship between encoder and gyro based on compass measurements *EXPERIMENTAL*
-		if (adaptiveGyroWeight < 1 && adaptiveGyroWeight > 0){
-		gyroWeight = adaptiveGyroWeight;
-	  }
-				else */
-		// Gyro tends to show too small values, while encoders tends to show too large values.
-		gyroWeight = 0.75; // Found by comparing encoders to gyro in the motion lab - this is dependent on the surface the robot is driving on!
-	  }      
-	  
-	  gyrZ *= period_in_S; // Scale gyro measurement
-	  
-	  // Fuse heading from sensors to predict heading:
-	  float fusedHeading = 0;
-	  if (robot_is_turning == TRUE){
-		fusedHeading = (1 - gyroWeight) * dTheta + gyroWeight * gyrZ;  
-	  }
-	  else {
-		fusedHeading = 0;
-	  }            
-	  
-	  // Estimate global X and Y pos
-	  predictedX = predictedX + (dRobot * cos(predictedTheta + 0.5 * fusedHeading));
-	  predictedY = predictedY + (dRobot * sin(predictedTheta + 0.5 * fusedHeading));
+	float predictedTheta = 0.0;
+	float predictedX = 0.0;
+	float predictedY = 0.0;
 
-	  // Predicted (a priori) state estimate for theta
-	  if(USE_GYRO_COMPASS) predictedTheta += fusedHeading;
-	  else predictedTheta += dTheta;
-	  // Predicted (a priori) estimate covariance
-	  covariance_filter_predicted += variance_gyro_encoder;
-	  
-	  /* UPDATE */
-	  // Get compass data:
-	  int16_t xCom, yCom, zCom;
-	  compass_get(&xCom, &yCom, &zCom);
-	  // Add calibrated bias
-	  xCom += xComOff;
-	  yCom += yComOff;
-	  // calculate heading
-	  float compassHeading;
-	  compassHeading = atan2(xCom, yCom) - compassOffset ; // returns -pi, pi
-	  vFunc_Inf2pi(&compassHeading);
-	  
-	  
-	  if (xQueueReceive(driveStatusQ, &driveStatus, 0) == pdTRUE){
-		// Check if we start driving to a new location in a straight line
-		if (driveStatus == moveForward){
-		  //led_set(LED_RED);
-		  driveStatus = moveStop;
-		  oldCompass = compassHeading;
-		}
-		
-		// Check if we have arrived after driving in a straight line
-		else if (driveStatus == moveArrived){
-		  //led_clear(LED_RED);
-		  driveStatus = moveStop;
-		  float diffCompass = (compassHeading - oldCompass);
-		  vFunc_Inf2pi(&diffCompass);
-		  // Check if the compass has changed after driving in a straight line
-		  if (fabs(diffCompass) < (CONST_VARIANCE_COMPASS)){
-			compass_is_reliable = TRUE;
-			/*
-			// Calculate relationship between encoder and gyro based on compass measurements *EXPERIMENTAL*
-			float numerator = (fabs(compassHeading) - fabs(dTheta));
-			vFunc_Inf2pi(&numerator);
-			float denominator = (fabs(gyrZ) - fabs(dTheta));
-			vFunc_Inf2pi(&denominator);
-			adaptiveGyroWeight = numerator / denominator;
-			*/
-		  }
-		  else
-			compass_is_reliable = FALSE;
+	float gyroOffset = 0.0;
+	float compassOffset = 0.0;
+
+	// These may need to be updated when exploring a new area
+	// Can be found by using the calibration task and using
+	// define COMPASS_CALIBRATE
+	const int16_t xComOff = -278; 
+	const int16_t yComOff = 13;
+
+	const float variance_gyro = 0.0482f; // [rad] calculated offline, see report
+	const float variance_encoder = (2.0f * WHEEL_FACTOR_MM) / (WHEELBASE_MM); // approximation, 0.0257 [rad]
+
+	const float variance_gyro_encoder = (variance_gyro + variance_encoder) * period_in_S; // (Var gyro + var encoder) * timestep
+	double covariance_filter_predicted = 0;
+
+	#define CONST_VARIANCE_COMPASS 0.0349f // 2 degrees in rads, as specified in the data sheet (NXT)
+	#define COMPASS_FACTOR 10000.0f// We are driving inside with a lot of interference, compass needs to converge slowly
+
+	float gyroWeight = 0.5; // encoderError / (encoderError + gyroError);
+	uint8_t robot_is_turning = 0;
+
+	// Initialise the xLastWakeTime variable with the current time.
+	TickType_t xLastWakeTime;
+	xLastWakeTime = xTaskGetTickCount();
+
+	while(1) {
+		// Loop
+		vTaskDelayUntil(&xLastWakeTime, xDelay / portTICK_PERIOD_MS);   
+
+		if (gHandshook) { // Check if we are ready   
+	  		int16_t leftWheelTicks = 0;
+	  		int16_t rightWheelTicks = 0;
+
+	  		// Get encoder data, protect the global tick variables.
+			xSemaphoreTake(xTickMutex, 15 / portTICK_PERIOD_MS);
+				leftWheelTicks = gLeftWheelTicks;
+		  		rightWheelTicks = gRightWheelTicks;
+		  	xSemaphoreGive(xTickMutex);
+
+		  	float dLeft = (float)(leftWheelTicks - previous_ticksLeft) * WHEEL_FACTOR_MM; // Distance left wheel has traveled since last sample
+		  	float dRight = (float)(rightWheelTicks - previous_ticksRight) * WHEEL_FACTOR_MM; // Distance right wheel has traveled since last sample
+
+		  	previous_ticksLeft = leftWheelTicks;
+		  	previous_ticksRight = rightWheelTicks;
 		  
-		}                    
-	  }
-	  
-	  // Check if robot is not moving and that the compass is reliable            
-	  if ((robot_is_turning == FALSE) && (dRobot == 0) && (compass_is_reliable == TRUE)){
-		// Updated (a posteriori) state estimate, use compass factor instead of variance to avoid too fast convergence toward inaccurate readings
-		kalmanGain = covariance_filter_predicted / (covariance_filter_predicted + COMPASS_FACTOR);
-		//led_set(LED_YELLOW);
-	  }
-	  else{
-		// Dont update compass while robot is driving, to avoid false curved trajectory
-		kalmanGain = 0.0;
-		//led_clear(LED_YELLOW);
-	  }      
-	  
-	  // Update predicted state:
-	  float error;
-	  error = (compassHeading - predictedTheta);
-	  vFunc_Inf2pi(&error);
-	  
-	  if(USE_GYRO_COMPASS) predictedTheta  += kalmanGain*(error);
-	  vFunc_Inf2pi(&predictedTheta); 
-	  
-	  
-	  // Updated (a posteriori) estimate covariance
-	  covariance_filter_predicted = (1 - kalmanGain) * covariance_filter_predicted;  
-	  
-	  // Update pose
-	  xSemaphoreTake(xPoseMutex,20);
-	  gTheta_hat = predictedTheta;//theeta;
-	  gX_hat = ROUND(predictedX);
-	  gY_hat = ROUND(predictedY);
-	  xSemaphoreGive(xPoseMutex);
-	  /*char str[10];
-	  vFunc_ftoa(gTheta_hat, str, 5);
-	  display_clear(0);
-	  display_goto_xy(0,3);
-	  display_int(gX_hat, 5);
-	  display_int(gY_hat, 5);
-	  display_goto_xy(0,4);
-	  display_string(str);
-	  display_update();*/
-	  // Send semaphore to controller
-	  xSemaphoreGive(xControllerBSem);
-	}
-	else{
-	  // Not connected, getting heading and gyro bias
-	  uint16_t i;
-	  uint16_t samples = 500;
-	  float gyro = 0;
-	  for (i = 0; i <= (samples-1); i++){
-		gyro += gyro_get_dps_z();
-	  }
-	  
-	  int16_t xCom = 0;
-	  int16_t yCom = 0;
-	  int16_t zCom = 0;
+		  	float dRobot = (dLeft + dRight) / 2; // Distance robot has travelled since last sample
+		  	float dTheta = (dRight - dLeft) / WHEELBASE_MM; // [RAD] Get angle from encoders, derived from arch of circles formula
+		  
+		  	/* PREDICT */
+		  	// Get gyro data:
+		  	float gyrZ = (gyro_get_dps_z() - gyroOffset);
 
-	  compass_get(&xCom, &yCom, &zCom);       
-	  
-	  xCom += xComOff;
-	  yCom += yComOff; 
-	  
-	  // Initialize pose to 0 and reset offset variables
-	  predictedX = 0;
-	  predictedY = 0;
-	  predictedTheta = 0;
-	  
-	  compassOffset = atan2(xCom,yCom);
-	  oldCompass = -compassOffset;    
-	  gyroOffset = gyro / (float)i;
-	  vTaskDelay(200 / portTICK_PERIOD_MS);           
+		  	// If the robot is not really rotating we don't include the gyro measurements, to avoid the trouble with drift while driving in a straight line
+		  	if (fabs(gyrZ) < 10) { 
+				gyroWeight = 0; // Disregard gyro while driving in a straight line
+				robot_is_turning = FALSE; // Don't update angle estimates
+		  	} else {
+				robot_is_turning = TRUE;                
+				gyroWeight = 0.85; // Found by experiment, after 20x90 degree turns, gyro seems 85% more accurate than encoders    
+		  	}      
+		  	
+		  	// Scale gyro measurement
+		  	gyrZ *= period_in_S * DEG2RAD;
+		  
+		  	// Fuse heading from sensors to predict heading:
+		  	dTheta = (1 - gyroWeight) * dTheta + gyroWeight * gyrZ;
+		  
+		  	// Estimate global X and Y pos
+		  	predictedX = predictedX + (dRobot * cos(predictedTheta + 0.5 * dTheta));
+		  	predictedY = predictedY + (dRobot * sin(predictedTheta + 0.5 * dTheta));
+
+		  	// Predicted (a priori) state estimate for theta
+		  	predictedTheta += dTheta;
+
+		  	// Predicted (a priori) estimate covariance
+		  	covariance_filter_predicted += variance_gyro_encoder;
+		  
+		  	/* UPDATE */
+		  	// Get compass data:
+		  	int16_t xCom, yCom, zCom;
+		  	compass_get(&xCom, &yCom, &zCom);
+		  	// Add calibrated bias
+		  	xCom += xComOff;
+		  	yCom += yComOff;
+		  	// calculate heading
+		  	float compassHeading;
+		  	compassHeading = atan2(xCom, yCom) - compassOffset ; // returns -pi, pi
+		  	// Update predicted state:
+		  	float error = (compassHeading - predictedTheta);
+		  	vFunc_Inf2pi(&compassHeading);
+		  
+			// kalmanGain = covariance_filter_predicted / (covariance_filter_predicted + CONST_VARIANCE_COMPASS);
+		  	if (fabs(error) > (0.8727*period_in_S)) { // 0.8727 rad/s is top speed while turning
+                // If we have a reading over this, we can safely ignore the compass
+                // Ignore compass while driving in a straight line
+                kalmanGain = 0;
+            	led_clear(LED_YELLOW);
+            } else if ((robot_is_turning == FALSE) && (dRobot == 0)) {
+                // Updated (a posteriori) state estimate
+                kalmanGain = covariance_filter_predicted / (covariance_filter_predicted + CONST_VARIANCE_COMPASS);
+                led_set(LED_YELLOW);
+            } else {
+                kalmanGain = 0;
+                led_clear(LED_YELLOW);
+            }
+
+            predictedTheta += kalmanGain*(error);
+			vFunc_Inf2pi(&predictedTheta);          
+
+			// Updated (a posteriori) estimate covariance
+            covariance_filter_predicted = (1 - kalmanGain) * covariance_filter_predicted; 
+
+            // Update pose
+            xSemaphoreTake(xPoseMutex, 15 / portTICK_PERIOD_MS);
+                gTheta_hat = predictedTheta;
+                gX_hat = predictedX;
+                gY_hat = predictedY;
+            xSemaphoreGive(xPoseMutex);
+
+            // Notify the controller by semaphore
+            xSemaphoreGive(xControllerBSem);
+
+		}
+
+		else {
+		  	// Not connected, getting heading and gyro bias
+		  	uint16_t i = 0;
+		  	uint16_t samples = 500;
+		  	float gyro = 0;
+		  	for (i = 0; i <= (samples-1); i++) {
+				gyro += gyro_get_dps_z();
+		  	}
+		  
+		  	int16_t xCom, yCom, zCom = 0;
+		  	compass_get(&xCom, &yCom, &zCom);       
+		  	xCom += xComOff;
+		  	yCom += yComOff; 
+		  
+		  	// Initialize pose to 0 and reset offset variables
+		  	predictedX = 0;
+		  	predictedY = 0;
+		  	predictedTheta = 0;
+		  
+		  	compassOffset = atan2(xCom,yCom);
+		  	gyroOffset = gyro / (float)i;
+		}
 	}
-  } // While(1) end
 }
 
 /* Handles request from position controller and sets motor pins. */
@@ -1039,6 +979,7 @@ int main(void){
   
   xPoseMutex = xSemaphoreCreateMutex(); // Global variables for robot pose. Only updated from estimator, accessed from many
   xUartMutex = xSemaphoreCreateMutex(); // Protected printf with a mutex, may cause fragmented bytes if higher priority task want to print as well
+  xTickMutex = xSemaphoreCreateMutex(); // Global variable to hold robot tick values
   
   xControllerBSem = xSemaphoreCreateBinary(); // Estimator to Controller synchronization
   xCommandReadyBSem = xSemaphoreCreateBinary(); 
