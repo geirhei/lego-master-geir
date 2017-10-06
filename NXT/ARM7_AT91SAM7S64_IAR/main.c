@@ -240,7 +240,7 @@ void vMainSensorTowerTask( void *pvParameters ) {
 			xLastWakeTime = xTaskGetTickCount();
 			// Set scanning resolution depending on which movement the robot is executing.
 			// Note that the iterations are skipped while robot is rotating (see further downbelow)
-			if (xQueueReceive(scanStatusQ, &robotMovement, 150 / portTICK_PERIOD_MS)) {
+			if (xQueueReceive(scanStatusQ, &robotMovement, 150 / portTICK_PERIOD_MS) == pdTRUE) {
 				switch (robotMovement)
 				{
 					case moveStop:
