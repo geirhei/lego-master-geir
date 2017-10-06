@@ -55,6 +55,7 @@
 SemaphoreHandle_t xScanLock;
 SemaphoreHandle_t xPoseMutex;
 SemaphoreHandle_t xUartMutex;
+SemaphoreHandle_t xTickMutex;
 SemaphoreHandle_t xControllerBSem;
 SemaphoreHandle_t xCommandReadyBSem;
 
@@ -105,6 +106,10 @@ struct sCartesian {
 	float y;
 };
 
+#ifdef DEBUG
+	#warning DEBUG IS ACTIVE
+#endif
+
 /**
  * @brief      Communication task
  *
@@ -131,7 +136,7 @@ void vMainCommunicationTask( void *pvParameters ) {
 	send_handshake();
 
 	while(1) {
-		if (xSemaphoreTake(xCommandReadyBSem, portMAX_DELAY) == pdTRUE) {
+		if (xSemaphoreTake(xCommandReadyBSem, portMAX_DELAY)) {
 			// We have a new command from the server, copy it to the memory
 			vTaskSuspendAll ();       // Temporarily disable context switching
 			taskENTER_CRITICAL();
@@ -162,7 +167,11 @@ void vMainCommunicationTask( void *pvParameters ) {
 					} else if (Setpoint.distance < -320) {
 						Setpoint.distance = -320;
 					}
+
+					//
 					Setpoint.distance *= 10; // Received SP is in cm, but mm is used in the controller
+					// changed with new controller
+					
 					Setpoint.heading *= DEG2RAD; // Convert received set point to radians
 					vFunc_Inf2pi(&Setpoint.heading);
 					
