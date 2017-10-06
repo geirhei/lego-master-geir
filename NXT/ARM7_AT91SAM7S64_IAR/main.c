@@ -71,7 +71,6 @@ volatile int16_t gRightWheelTicks = 0;
 volatile int16_t gLeftWheelTicks = 0;
 
 // To store motor direction, only changed in motor controller, but accessed from ISR
-//
 uint8_t gLeftWheelDirection;
 uint8_t gRightWheelDirection;
 
@@ -80,111 +79,127 @@ volatile uint8_t gHandshook = FALSE;
 volatile uint8_t gPaused = FALSE;
 volatile message_t message_in;
 
+/// Task declarations
 void vMainCommunicationTask( void *pvParameters );
-void vMainSensorTowerTask( void *pvParameters);
+void vMainSensorTowerTask( void *pvParameters );
 void vMainPoseControllerTask( void *pvParameters );
-void vARQTask(void *pvParamters);
+void vARQTask( void *pvParameters );
 void vMainPoseEstimatorTask( void *pvParameters );
 void vMainMovementTask( void *pvParameters );
-void vApplicationStackOverflowHook(xTaskHandle *pxTask, signed char *pcTaskName);
+void vApplicationStackOverflowHook(xTaskHandle *pxTask, signed char *pcTaskName );
 
 // Global robot pose
 float gTheta_hat = 0;
 int16_t gX_hat = 0;
 int16_t gY_hat = 0;
 
-/* STRUCTURE */
-struct sPolar{
+/// Struct for storing polar coordinates
+struct sPolar {
   float heading;
   int16_t distance;
 };
 
-/*  Communication task */
-void vMainCommunicationTask( void *pvParameters ){
-  // Setup for the communication task
-  struct sPolar Setpoint = {0}; // Struct for setpoints from server
+/// Struct for storing cartesian coordinates
+struct sCartesian {
+	float x;
+	float y;
+};
 
-  message_t command_in; // Buffer for recieved messages
-  
-  server_communication_init();
-  
-  uint8_t success = 0;
-  
-  while(!success) {
-    success = server_connect();
-    vTaskDelay(1000 / portTICK_PERIOD_MS);
-    led_toggle(LED_GREEN);
-  }
-  xTaskCreate(vARQTask, "ARQ", 500, NULL, 3, NULL);
-  led_clear(LED_GREEN);
-  send_handshake();
-  
-  while(1){
-    if (xSemaphoreTake(xCommandReadyBSem, portMAX_DELAY) == pdTRUE){
-      // We have a new command from the server, copy it to the memory
-      vTaskSuspendAll ();       // Temporarily disable context switching
-      taskENTER_CRITICAL();
-      command_in = message_in;
-      taskEXIT_CRITICAL();
-      xTaskResumeAll ();      // Enable context switching
-      
-      switch(command_in.type){
-      case TYPE_CONFIRM:
-        taskENTER_CRITICAL();
-        gHandshook = TRUE; // Set start flag true
-        taskEXIT_CRITICAL();
-        
-        display_goto_xy(0,1);
-        display_string("Connected");
-        display_update();
-        break;
-      case TYPE_PING:
-        send_ping_response();
-        break;
-      case TYPE_ORDER:
-        Setpoint.heading = command_in.message.order.orientation;
-        Setpoint.distance = command_in.message.order.distance;
-        // Ensure max values are not exceeded
-        if (Setpoint.distance > 320){
-          Setpoint.distance = 320;
-        }
-        else if (Setpoint.distance < -320){
-          Setpoint.distance = -320;
-        }
-        Setpoint.distance *= 10; // Received SP is in cm, but mm is used in the controller
-        Setpoint.heading *= DEG2RAD; // Convert received set point to radians
-        vFunc_Inf2pi(&Setpoint.heading);
-        
-        /* Relay new coordinates to position controller */
-        xQueueSend(poseControllerQ, &Setpoint, 100);
-        break;
-      case TYPE_PAUSE:
-        // Stop sending update messages
-        taskENTER_CRITICAL();
-        gPaused = TRUE;
-        taskEXIT_CRITICAL();
-        // Stop controller
-        Setpoint.distance = 0;
-        Setpoint.heading = 0;
-        xQueueSend(poseControllerQ, &Setpoint, 100);
-        break;
-      case TYPE_UNPAUSE:
-        taskENTER_CRITICAL();
-        gPaused = FALSE;
-        taskEXIT_CRITICAL(); 
-        break;
-      case TYPE_FINISH:
-        taskENTER_CRITICAL();
-        gHandshook = FALSE;
-        taskEXIT_CRITICAL();   
-        break;
-      }
-      // Command is processed
-    } // if (xCommandReady) end
-  }// While(1) end
+/**
+ * @brief      Communication task
+ *
+ * @param      pvParameters  The pv parameters
+ */
+void vMainCommunicationTask( void *pvParameters ) {
+	// Setup for the communication task
+	struct sPolar Setpoint = {0}; // Struct for setpoints from server
+
+	message_t command_in; // Buffer for recieved messages
+
+	server_communication_init();
+
+	uint8_t success = 0;
+
+	while (!success) {
+		success = server_connect();
+		vTaskDelay(1000 / portTICK_PERIOD_MS);
+		led_toggle(LED_GREEN);
+	}
+
+	xTaskCreate(vARQTask, "ARQ", 500, NULL, 3, NULL);
+	led_clear(LED_GREEN);
+	send_handshake();
+
+	while(1) {
+		if (xSemaphoreTake(xCommandReadyBSem, portMAX_DELAY) == pdTRUE) {
+			// We have a new command from the server, copy it to the memory
+			vTaskSuspendAll ();       // Temporarily disable context switching
+			taskENTER_CRITICAL();
+			command_in = message_in;
+			taskEXIT_CRITICAL();
+			xTaskResumeAll ();      // Enable context switching
+			  
+			switch (command_in.type)
+			{
+				case TYPE_CONFIRM:
+					taskENTER_CRITICAL();
+					gHandshook = TRUE; // Set start flag true
+					taskEXIT_CRITICAL();
+					
+					display_goto_xy(0,1);
+					display_string("Connected");
+					display_update();
+					break;
+				case TYPE_PING:
+					send_ping_response();
+					break;
+				case TYPE_ORDER:
+					Setpoint.heading = command_in.message.order.orientation;
+					Setpoint.distance = command_in.message.order.distance;
+					// Ensure max values are not exceeded
+					if (Setpoint.distance > 320) {
+						Setpoint.distance = 320;
+					} else if (Setpoint.distance < -320) {
+						Setpoint.distance = -320;
+					}
+					Setpoint.distance *= 10; // Received SP is in cm, but mm is used in the controller
+					Setpoint.heading *= DEG2RAD; // Convert received set point to radians
+					vFunc_Inf2pi(&Setpoint.heading);
+					
+					/* Relay new coordinates to position controller */
+					xQueueSend(poseControllerQ, &Setpoint, 100);
+					break;
+				case TYPE_PAUSE:
+					// Stop sending update messages
+					taskENTER_CRITICAL();
+					gPaused = TRUE;
+					taskEXIT_CRITICAL();
+					// Stop controller
+					Setpoint.distance = 0;
+					Setpoint.heading = 0;
+					xQueueSend(poseControllerQ, &Setpoint, 100);
+					break;
+				case TYPE_UNPAUSE:
+					taskENTER_CRITICAL();
+					gPaused = FALSE;
+					taskEXIT_CRITICAL(); 
+					break;
+				case TYPE_FINISH:
+					taskENTER_CRITICAL();
+					gHandshook = FALSE;
+					taskEXIT_CRITICAL();   
+					break;
+			}
+			  // Command is processed
+		} // if (xCommandReady) end
+	}// While(1) end
 }// vMainComtask end
 
-/*  Sensor tower task */
+/**
+ * @brief      Sensor tower task
+ *
+ * @param      pvParameters  The pv parameters
+ */
 void vMainSensorTowerTask( void *pvParameters){
   /* Task init */
   float thetahat = 0;
@@ -209,7 +224,7 @@ void vMainSensorTowerTask( void *pvParameters){
 	  // Set scanning resoltuion depending on which movement the robot is executing.
 	  // Note that the iterations are skipped while robot is rotating (see further downbelow)
 	  if (xQueueReceive(scanStatusQ, &robotMovement,150 / portTICK_PERIOD_MS) == pdTRUE){
-        
+		
 		//printf("\n\tNew movement: %i\n",robotMovement);
 		switch (robotMovement)
 		{
@@ -240,11 +255,11 @@ void vMainSensorTowerTask( void *pvParameters){
 	  vTaskDelayUntil(&xLastWakeTime, 200 / portTICK_PERIOD_MS );   
 	  
 	  // Get measurements from sensors
-      uint8_t forwardSensor = distance_get_cm(0);
-      uint8_t leftSensor = distance_get_cm(1);
-      uint8_t rearSensor = distance_get_cm(2);
-      uint8_t rightSensor = distance_get_cm(3);
-      
+	  uint8_t forwardSensor = distance_get_cm(0);
+	  uint8_t leftSensor = distance_get_cm(1);
+	  uint8_t rearSensor = distance_get_cm(2);
+	  uint8_t rightSensor = distance_get_cm(3);
+	  
 	  // Get latest pose estimate
 	  xSemaphoreTake(xPoseMutex,40);
 	  thetahat = gTheta_hat;
@@ -306,8 +321,13 @@ void vMainSensorTowerTask( void *pvParameters){
   }// While end
 }
 
-/*  Calculates new settings for the movement task */
-void vMainPoseControllerTask( void *pvParameters ){
+/**
+ * @brief      Task for controlling the movement of the robot. Depends on
+ *             semaphore from estimator task.
+ *
+ * @param      pvParameters  The pv parameters
+ */
+void vMainPoseControllerTask( void *pvParameters ) {
   /* Task init */    
   struct sPolar Setpoint = {0}; // Struct for updates
   struct sPolar Error = {0}; // Struct for error
@@ -331,7 +351,7 @@ void vMainPoseControllerTask( void *pvParameters ){
 	// Checking if server is ready
 	if (gHandshook){
 	  if (xSemaphoreTake(xControllerBSem, portMAX_DELAY) == pdTRUE){  
-        // Wait for synchronization from estimator
+		// Wait for synchronization from estimator
 		// Get robot pose
 		xSemaphoreTake(xPoseMutex,portMAX_DELAY);
 		thetahat = gTheta_hat;
@@ -504,8 +524,13 @@ void vMainPoseControllerTask( void *pvParameters ){
   }// while (1)
 }
 
-/* Pose estimator task */
-void vMainPoseEstimatorTask( void *pvParameters ){
+/**
+ * @brief      Estimates the pose of the robot using a kalman filter based
+ *             algorithm. Signals the pose controller when ready.
+ *
+ * @param      pvParameters  The pv parameters
+ */
+void vMainPoseEstimatorTask( void *pvParameters ) {
   uint8_t USE_GYRO_COMPASS = 0;
   uint8_t driveStatus = 0;
   uint8_t compass_is_reliable = FALSE;
@@ -611,8 +636,8 @@ void vMainPoseEstimatorTask( void *pvParameters ){
 	  
 	  /* UPDATE */
 	  // Get compass data:
-      int16_t xCom, yCom, zCom;
-      compass_get(&xCom, &yCom, &zCom);
+	  int16_t xCom, yCom, zCom;
+	  compass_get(&xCom, &yCom, &zCom);
 	  // Add calibrated bias
 	  xCom += xComOff;
 	  yCom += yComOff;
@@ -684,15 +709,15 @@ void vMainPoseEstimatorTask( void *pvParameters ){
 	  gX_hat = ROUND(predictedX);
 	  gY_hat = ROUND(predictedY);
 	  xSemaphoreGive(xPoseMutex);
-      /*char str[10];
-      vFunc_ftoa(gTheta_hat, str, 5);
-      display_clear(0);
-      display_goto_xy(0,3);
-      display_int(gX_hat, 5);
-      display_int(gY_hat, 5);
-      display_goto_xy(0,4);
-      display_string(str);
-      display_update();*/
+	  /*char str[10];
+	  vFunc_ftoa(gTheta_hat, str, 5);
+	  display_clear(0);
+	  display_goto_xy(0,3);
+	  display_int(gX_hat, 5);
+	  display_int(gY_hat, 5);
+	  display_goto_xy(0,4);
+	  display_string(str);
+	  display_update();*/
 	  // Send semaphore to controller
 	  xSemaphoreGive(xControllerBSem);
 	}
@@ -704,12 +729,12 @@ void vMainPoseEstimatorTask( void *pvParameters ){
 	  for (i = 0; i <= (samples-1); i++){
 		gyro += gyro_get_dps_z();
 	  }
-      
-      int16_t xCom = 0;
-      int16_t yCom = 0;
-      int16_t zCom = 0;
+	  
+	  int16_t xCom = 0;
+	  int16_t yCom = 0;
+	  int16_t zCom = 0;
 
-      compass_get(&xCom, &yCom, &zCom);       
+	  compass_get(&xCom, &yCom, &zCom);       
 	  
 	  xCom += xComOff;
 	  yCom += yComOff; 
@@ -793,7 +818,12 @@ void vMainMovementTask( void *pvParameters ){
 #ifdef COMPASS_CALIBRATE
 void compassTask(void *par);
 
-void compassTask(void *par){
+/**
+ * @brief      Task for compass calibration
+ *
+ * @param      par   The par
+ */
+void compassTask(void *par ) {
   vTaskDelay(100 / portTICK_PERIOD_MS);
 
   int16_t xComOff = 0;
@@ -802,9 +832,9 @@ void compassTask(void *par){
   while(1){
 	vTaskDelay(5000 / portTICK_PERIOD_MS);
 	if (gHandshook){
-      display_goto_xy(0,6);
-      display_string("Starting...");
-      display_update();
+	  display_goto_xy(0,6);
+	  display_string("Starting...");
+	  display_update();
 	  int16_t xComMax = -4000, yComMax = -4000;
 	  int16_t xComMin = 4000, yComMin = 4000;
 	  int16_t xCom, yCom, zCom;   
@@ -860,7 +890,7 @@ void compassTask(void *par){
 
 		heading += 0.5 * zGyr  + 0.5 * dTheta; // Complementary filter
 
-        compass_get(&xCom, &yCom, &zCom);
+		compass_get(&xCom, &yCom, &zCom);
 		
 		if(xCom > xComMax) xComMax = xCom;
 		if(yCom > yComMax) yComMax = yCom;
@@ -883,7 +913,7 @@ void compassTask(void *par){
 	  // Printing new xy cal values
 	  display_goto_xy(0,1);
 	  display_string("Old values: ");
-      display_goto_xy(0,2);
+	  display_goto_xy(0,2);
 	  display_int(xComOff, 5);
 	  display_int(yComOff, 5);
 	  
@@ -892,7 +922,7 @@ void compassTask(void *par){
 	  
 	  display_goto_xy(0,3);
 	  display_string("New values:");
-      display_goto_xy(0,4);
+	  display_goto_xy(0,4);
 	  display_int(xComOff, 5);
 	  display_int(yComOff, 5);
 	  display_update();
@@ -906,6 +936,12 @@ void compassTask(void *par){
 
 #ifdef SENSOR_CALIBRTION
 void vSensorCalibrationTask(void *pvParams);
+
+/**
+ * @brief      Task for sensor calibration
+ *
+ * @param      pvParams  The pv parameters
+ */
 void vSensorCalibrationTask(void *pvParams) {
   uint8_t calibration[256] = {0};
   uint8_t current_distance = 10;
@@ -913,41 +949,47 @@ void vSensorCalibrationTask(void *pvParams) {
 
   vTaskDelay(5000/portTICK_PERIOD_MS);
   while(1) {
-    
-    led_set(LED_GREEN);
-    vTaskDelay(100/portTICK_PERIOD_MS);
-    led_clear(LED_GREEN);
-    vTaskDelay(100/portTICK_PERIOD_MS);
+	
+	led_set(LED_GREEN);
+	vTaskDelay(100/portTICK_PERIOD_MS);
+	led_clear(LED_GREEN);
+	vTaskDelay(100/portTICK_PERIOD_MS);
 
-    calibration[ distance_get_volt(3) ] = current_distance;
-    display_goto_xy(0,3);
-    display_int(++count, 3);
-    display_update();
-    display_goto_xy(0,2);
-    display_int(current_distance, 2);
-    display_update();
+	calibration[ distance_get_volt(3) ] = current_distance;
+	display_goto_xy(0,3);
+	display_int(++count, 3);
+	display_update();
+	display_goto_xy(0,2);
+	display_int(current_distance, 2);
+	display_update();
 
-    current_distance++;
-    if(current_distance == 81) {
-      led_set(LED_RED);
-      break;
-    }
-    vTaskDelay(1000 / portTICK_PERIOD_MS);
+	current_distance++;
+	if(current_distance == 81) {
+	  led_set(LED_RED);
+	  break;
+	}
+	vTaskDelay(1000 / portTICK_PERIOD_MS);
   }
   
   uint16_t i;
   uint8_t last = 0;
   for(i=0;i<255;i++) {
-    debug("%d,", calibration[i] == 0 ? last : calibration[i] );
-    if(calibration[i] != 0) last = calibration[i];
-    vTaskDelay(100/portTICK_PERIOD_MS);
+	debug("%d,", calibration[i] == 0 ? last : calibration[i] );
+	if(calibration[i] != 0) last = calibration[i];
+	vTaskDelay(100/portTICK_PERIOD_MS);
   }
 
   while(1) {};
 }
 #endif
-/*  In case of stack overflow, disable all interrupts and handle it  */
-void vApplicationStackOverflowHook(xTaskHandle *pxTask, signed char *pcTaskName){
+
+/**
+ * @brief      In case of stack overflow, disable all interrupts and handle it.
+ *
+ * @param      pxTask      The px task
+ * @param      pcTaskName  The task name
+ */
+void vApplicationStackOverflowHook(xTaskHandle *pxTask, signed char *pcTaskName) {
   led_set(LED_GREEN);
   led_set(LED_YELLOW);
   led_set(LED_RED);
@@ -956,7 +998,11 @@ void vApplicationStackOverflowHook(xTaskHandle *pxTask, signed char *pcTaskName)
   }// While(1) end
 }
 
-/*  Main function   */
+/**
+ * @brief      The main function.
+ *
+ * @return     { description_of_the_return_value }
+ */
 int main(void){
   nxt_init();
   network_init();
@@ -987,9 +1033,9 @@ int main(void){
   ret = xTaskCreate(vMainSensorTowerTask,"Tower", 500, NULL, 1, NULL); // Independent task, but use pose updates from estimator
 #endif
   if(ret != pdPASS) {
-    display_goto_xy(0,2);
-    display_string("Error");
-    display_update();
+	display_goto_xy(0,2);
+	display_string("Error");
+	display_update();
   }
   
 #ifdef COMPASS_CALIBRATE
