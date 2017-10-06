@@ -25,86 +25,105 @@ void vMotor_init(void) {
 /* Comparing ticks ensures balanced movement */
 void vMotorMovementSwitch(uint8_t movement, int16_t tmp_leftWheelTicks, int16_t tmp_rightWheelTicks){
   switch (movement){
-    case moveForward:{
-      if(tmp_leftWheelTicks > tmp_rightWheelTicks) {
-        nxt_motor_set_speed(servoLeft, SPEED-10, 1);
-        nxt_motor_set_speed(servoRight, SPEED, 1);
-      } else if(tmp_rightWheelTicks > tmp_leftWheelTicks) {
-        nxt_motor_set_speed(servoLeft, SPEED, 1);
-        nxt_motor_set_speed(servoRight, SPEED-10, 1);
-      } else {
-        nxt_motor_set_speed(servoLeft, SPEED, 1);
-        nxt_motor_set_speed(servoRight, SPEED, 1);
-      }
-      break;
-    }
-    case moveBackward:{
-      if(tmp_leftWheelTicks < tmp_rightWheelTicks) {
-        nxt_motor_set_speed(servoLeft, -SPEED+10, 1);
-        nxt_motor_set_speed(servoRight, -SPEED, 1);
-      } else if(tmp_rightWheelTicks < tmp_leftWheelTicks) {
-        nxt_motor_set_speed(servoLeft, -SPEED, 1);
-        nxt_motor_set_speed(servoRight, -SPEED+10, 1);
-      } else {
-        nxt_motor_set_speed(servoLeft, -SPEED, 1);
-        nxt_motor_set_speed(servoRight, -SPEED, 1);
-      }
-      
-      break;
-    }
-    case moveClockwise:{
-      if(tmp_leftWheelTicks > -tmp_rightWheelTicks) {
-        nxt_motor_set_speed(servoLeft, SPEED-10, 1);
-        nxt_motor_set_speed(servoRight, -SPEED, 1);
-      } else if(-tmp_rightWheelTicks > tmp_leftWheelTicks) {
-        nxt_motor_set_speed(servoLeft, SPEED, 1);
-        nxt_motor_set_speed(servoRight, -SPEED+10, 1);
-      } else {
-        nxt_motor_set_speed(servoLeft, SPEED, 1);
-        nxt_motor_set_speed(servoRight, -SPEED, 1);
-      }
-      
-      break;
-    }
-    case moveRightForward:{
-      nxt_motor_set_speed(servoRight, SPEED, 1);
-      nxt_motor_set_speed(servoLeft, 0, 1);
-      break;
-    }
-    case moveLeftForward:{
-      nxt_motor_set_speed(servoLeft, SPEED, 1);
-      nxt_motor_set_speed(servoRight, 0, 1);
-      break;
-    }
-    case moveRightBackward:{
-      nxt_motor_set_speed(servoRight, -SPEED, 1);
-      nxt_motor_set_speed(servoLeft, 0, 1);
-      break;
-    }
-    case moveLeftBackward:{
-      nxt_motor_set_speed(servoLeft, -SPEED, 1);
-      nxt_motor_set_speed(servoRight, 0, 1);
-      break;
-    }
-    case moveCounterClockwise:{
-      if(-tmp_leftWheelTicks > tmp_rightWheelTicks) {
-        nxt_motor_set_speed(servoLeft, -SPEED+10, 1);
-        nxt_motor_set_speed(servoRight, SPEED, 1);
-      } else if(tmp_rightWheelTicks > -tmp_leftWheelTicks) {
-        nxt_motor_set_speed(servoLeft, -SPEED, 1);
-        nxt_motor_set_speed(servoRight, SPEED-10, 1);
-      } else {
-        nxt_motor_set_speed(servoLeft, -SPEED, 1);
-        nxt_motor_set_speed(servoRight, SPEED, 1);
-      }
-      break;
-    }
-    default:{
-      nxt_motor_set_speed(servoLeft, 0, 1);
-      nxt_motor_set_speed(servoRight, 0, 1);
-      break;
-    }
+	case moveForward:{
+	  if(tmp_leftWheelTicks > tmp_rightWheelTicks) {
+		nxt_motor_set_speed(servoLeft, SPEED-10, 1);
+		nxt_motor_set_speed(servoRight, SPEED, 1);
+	  } else if(tmp_rightWheelTicks > tmp_leftWheelTicks) {
+		nxt_motor_set_speed(servoLeft, SPEED, 1);
+		nxt_motor_set_speed(servoRight, SPEED-10, 1);
+	  } else {
+		nxt_motor_set_speed(servoLeft, SPEED, 1);
+		nxt_motor_set_speed(servoRight, SPEED, 1);
+	  }
+	  break;
+	}
+	case moveBackward:{
+	  if(tmp_leftWheelTicks < tmp_rightWheelTicks) {
+		nxt_motor_set_speed(servoLeft, -SPEED+10, 1);
+		nxt_motor_set_speed(servoRight, -SPEED, 1);
+	  } else if(tmp_rightWheelTicks < tmp_leftWheelTicks) {
+		nxt_motor_set_speed(servoLeft, -SPEED, 1);
+		nxt_motor_set_speed(servoRight, -SPEED+10, 1);
+	  } else {
+		nxt_motor_set_speed(servoLeft, -SPEED, 1);
+		nxt_motor_set_speed(servoRight, -SPEED, 1);
+	  }
+	  
+	  break;
+	}
+	case moveClockwise:{
+	  if(tmp_leftWheelTicks > -tmp_rightWheelTicks) {
+		nxt_motor_set_speed(servoLeft, SPEED-10, 1);
+		nxt_motor_set_speed(servoRight, -SPEED, 1);
+	  } else if(-tmp_rightWheelTicks > tmp_leftWheelTicks) {
+		nxt_motor_set_speed(servoLeft, SPEED, 1);
+		nxt_motor_set_speed(servoRight, -SPEED+10, 1);
+	  } else {
+		nxt_motor_set_speed(servoLeft, SPEED, 1);
+		nxt_motor_set_speed(servoRight, -SPEED, 1);
+	  }
+	  
+	  break;
+	}
+	case moveRightForward:{
+	  nxt_motor_set_speed(servoRight, SPEED, 1);
+	  nxt_motor_set_speed(servoLeft, 0, 1);
+	  break;
+	}
+	case moveLeftForward:{
+	  nxt_motor_set_speed(servoLeft, SPEED, 1);
+	  nxt_motor_set_speed(servoRight, 0, 1);
+	  break;
+	}
+	case moveRightBackward:{
+	  nxt_motor_set_speed(servoRight, -SPEED, 1);
+	  nxt_motor_set_speed(servoLeft, 0, 1);
+	  break;
+	}
+	case moveLeftBackward:{
+	  nxt_motor_set_speed(servoLeft, -SPEED, 1);
+	  nxt_motor_set_speed(servoRight, 0, 1);
+	  break;
+	}
+	case moveCounterClockwise:{
+	  if(-tmp_leftWheelTicks > tmp_rightWheelTicks) {
+		nxt_motor_set_speed(servoLeft, -SPEED+10, 1);
+		nxt_motor_set_speed(servoRight, SPEED, 1);
+	  } else if(tmp_rightWheelTicks > -tmp_leftWheelTicks) {
+		nxt_motor_set_speed(servoLeft, -SPEED, 1);
+		nxt_motor_set_speed(servoRight, SPEED-10, 1);
+	  } else {
+		nxt_motor_set_speed(servoLeft, -SPEED, 1);
+		nxt_motor_set_speed(servoRight, SPEED, 1);
+	  }
+	  break;
+	}
+	default:{
+	  nxt_motor_set_speed(servoLeft, 0, 1);
+	  nxt_motor_set_speed(servoRight, 0, 1);
+	  break;
+	}
   }
+}
+
+/// New function for use in pose controller task
+void vMotorMovementSwitch(int16_t leftSpeed, int16_t rightSpeed, uint8_t *leftWheelDirection, uint8_t *rightWheelDirection) {
+	if (leftSpeed > 0) {
+		nxt_motor_set_speed(servoLeft, leftSpeed, leftWheelDirection);
+	} else if (leftSpeed < 0) {
+
+	} else {
+		// brake left
+	}
+
+	if (rightSpeed > 0) {
+
+	} else if (rightSpeed < 0) {
+
+	} else {
+		//brake right
+	}
 }
 
 void vMotorSetAngle(uint8_t motor, int16_t angle) {
