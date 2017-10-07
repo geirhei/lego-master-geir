@@ -20,4 +20,10 @@ void vMotorCountUpdate(void);
 void vMotor_init(void);
 void vMotorSetAngle(uint8_t motor, int16_t angle);
 
+/* Handle ISR ticks from encoder */
+void vMotorEncoderLeftTickFromISR(uint8_t wheelDirection, int16_t *leftWheelTicks, uint8_t leftEncoderTicks);
+
+/* Handle ISR ticks from encoder */
+void vMotorEncoderRightTickFromISR(uint8_t wheelDirection, int16_t *rightWheelTicks, uint8_t rightEncoderTicks);
+
 #endif

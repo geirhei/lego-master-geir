@@ -63,17 +63,16 @@ SemaphoreHandle_t xCommandReadyBSem;
 QueueHandle_t movementQ = 0;
 QueueHandle_t poseControllerQ = 0;
 QueueHandle_t scanStatusQ = 0;
-QueueHandle_t actuationQ = 0;
 QueueHandle_t driveStatusQ = 0;
 
 /* GLOBAL VARIABLES */
-// To store ticks from encoder, only changed in ISR but accessed from other
+// To store ticks from encoder, changed in ISR and motor controller
+volatile uint8_t gISR_rightWheelTicks = 0;
+volatile uint8_t gISR_leftWheelTicks = 0;
+
+// Global encoder tick values, could probably be replaced by a queue
 volatile int16_t gRightWheelTicks = 0;
 volatile int16_t gLeftWheelTicks = 0;
-
-// To store motor direction, only changed in motor controller, but accessed from ISR
-uint8_t gLeftWheelDirection;
-uint8_t gRightWheelDirection;
 
 // Flag to indicate connection status. Interrupt can change handshook status
 volatile uint8_t gHandshook = FALSE;
@@ -86,8 +85,7 @@ void vMainSensorTowerTask( void *pvParameters );
 void vMainPoseControllerTask( void *pvParameters );
 void vARQTask( void *pvParameters );
 void vMainPoseEstimatorTask( void *pvParameters );
-void vMainMovementTask( void *pvParameters );
-void vApplicationStackOverflowHook(xTaskHandle *pxTask, signed char *pcTaskName );
+void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName );
 
 // Global robot pose
 float gTheta_hat = 0;
@@ -353,11 +351,12 @@ void vMainPoseControllerTask( void *pvParameters ) {
 	float radiusEpsilon = 15; //[mm]The acceptable radius from goal for completion
 	uint8_t lastMovement = 0;
 	
+	// Valid for NXT?
 	uint8_t maxRotateActuation = 75; //The max speed the motors will run at during rotation max is 255
 	uint8_t maxDriveActuation = 100; //The max speed the motors will run at during drive max is 255
 	uint8_t currentDriveActuation = maxRotateActuation;
 	
-	/* Controller variables for tuning */
+	/* Controller variables for tuning, probably needs calculation for NXT */
 	float rotateThreshold = 0.5235; // [rad] The threshold at which the robot will go from driving to rotation. Equals 10 degrees
 	float driveThreshold = 0.0174; // [rad]The threshold at which the robot will go from rotation to driving. In degrees.
 	float driveKp = 600; //Proportional gain for theta control during drive
@@ -397,12 +396,13 @@ void vMainPoseControllerTask( void *pvParameters ) {
 		// Checking if server is ready
 		if (gHandshook) {
 
-			ATOMIC_BLOCK(ATOMIC_FORCEON) {
+			// Disable interrupts to provide an atomic operation.
+			taskENTER_CRITICAL();
 				leftEncoderVal = gISR_leftWheelTicks;
 				gISR_leftWheelTicks = 0;
 				rightEncoderVal = gISR_rightWheelTicks;
 				gISR_rightWheelTicks = 0;
-			}
+			taskEXIT_CRITICAL();
 			
 			vMotorEncoderLeftTickFromISR(gLeftWheelDirection, &leftWheelTicks, leftEncoderVal);
 			vMotorEncoderRightTickFromISR(gRightWheelDirection, &rightWheelTicks, rightEncoderVal);
@@ -483,22 +483,22 @@ void vMainPoseControllerTask( void *pvParameters ) {
 						leftIntError += thetaDiff;
 						rightIntError -= thetaDiff;
 						
-						gRightWheelDirection = motorRightForward;
-						gLeftWheelDirection = motorLeftForward;
+						gRightWheelDirection = motorForward;
+						gLeftWheelDirection = motorForward;
 						lastMovement = moveForward;
 						
 					} else { //Turn within 1 degree of target
 						if (thetaDiff >= 0) { //Rotating left
 							LSpeed = -maxRotateActuation*(0.3 + 0.22*(fabs(thetaDiff)));
-							gLeftWheelDirection = motorLeftBackward;
+							gLeftWheelDirection = motorBackward;
 							RSpeed = maxRotateActuation*(0.3 + 0.22*(fabs(thetaDiff)));
-							gRightWheelDirection = motorRightForward;
+							gRightWheelDirection = motorForward;
 							lastMovement = moveCounterClockwise;
 						} else { //Rotating right
 							LSpeed = maxRotateActuation*(0.3 + 0.22*(fabs(thetaDiff)));
-							gLeftWheelDirection = motorLeftForward;
+							gLeftWheelDirection = motorForward;
 							RSpeed = -maxRotateActuation*(0.3 + 0.22*(fabs(thetaDiff)));
-							gRightWheelDirection = motorRightBackward;
+							gRightWheelDirection = motorBackward;
 							lastMovement = moveClockwise;
 						}
 						
@@ -527,7 +527,8 @@ void vMainPoseControllerTask( void *pvParameters ) {
 }
 
 /* Pose estimator task */
-void vMainPoseEstimatorTask( void *pvParameters ){
+// New values and constants should be calibrated for the NXT
+void vMainPoseEstimatorTask( void *pvParameters ) {
     int16_t previous_ticksLeft = 0;
     int16_t previous_ticksRight = 0;  
     
@@ -548,12 +549,13 @@ void vMainPoseEstimatorTask( void *pvParameters ){
     int16_t yComOff = -78;
     
     float variance_gyro = 0.0482f; // [rad] calculated offline, see report
-    float variance_encoder = (2.0f * WHEEL_FACTOR_MM) / (WHEELBASE_MM / 2.0f); // approximation, 0.0257 [rad]
+    float variance_encoder = (2.0f * WHEEL_FACTOR_MM) / (WHEELBASE_MM); // approximation, 0.0257 [rad]
     
     float variance_gyro_encoder = (variance_gyro + variance_encoder) * period_in_S; // (Var gyro + var encoder) * timestep
     float covariance_filter_predicted = 0;
     
-    #define CONST_VARIANCE_COMPASS 0.3490f
+    #define CONST_VARIANCE_COMPASS 0.0349f // 2 degrees in rads, as specified in the data sheet
+	#define COMPASS_FACTOR 10000.0f// We are driving inside with a lot of interference, compass needs to converge slowly
     
     float gyroWeight = 0.5;//encoderError / (encoderError + gyroError);
     uint8_t robot_is_turning = 0;
@@ -593,7 +595,7 @@ void vMainPoseEstimatorTask( void *pvParameters ){
             
             /* PREDICT */
             // Get gyro data:
-            float gyrZ = (fIMU_readFloatGyroZ() - gyroOffset);
+            float gyrZ = (gyro_get_dps_z() - gyroOffset);
             //dTheta = gyrZ * period_in_S * DEG2RAD; [COMMENT]I believe this line is not supposed to be here. Residual from broken encoders?
             
             // If the robot is not really rotating we don't include the gyro measurements, to avoid the trouble with drift while driving in a straight line
@@ -601,7 +603,7 @@ void vMainPoseEstimatorTask( void *pvParameters ){
             	gyroWeight = 0; // Disregard gyro while driving in a straight line
 				robot_is_turning = FALSE; // Don't update angle estimates
 			} else {
-                gyroWeight = 0.85; // Found by experiment, after 20x90 degree turns, gyro seems 85% more accurate than encoders    
+                gyroWeight = 0.75; // Found by experiment, after 20x90 degree turns, gyro seems 85% more accurate than encoders    
                 robot_is_turning = TRUE;
             }
             
@@ -625,7 +627,7 @@ void vMainPoseEstimatorTask( void *pvParameters ){
             /* UPDATE */
             // Get compass data: ( Request and recheck after 6 ms?)
             int16_t xCom, yCom, zCom;
-            vCOM_getData(&xCom, &yCom, &zCom);
+            compass_get(&xCom, &yCom, &zCom);
             // Add calibrated bias
             xCom += xComOff;
             yCom += yComOff;
@@ -642,14 +644,14 @@ void vMainPoseEstimatorTask( void *pvParameters ){
                 // If we have a reading over this, we can safely ignore the compass
                 // Ignore compass while driving in a straight line
                 kalmanGain = 0;
-                vLED_singleLow(ledYELLOW);
+                led_clear(LED_YELLOW);
             } else if ((robot_is_turning == FALSE) && (dRobot == 0)) {
                 // Updated (a posteriori) state estimate
                 kalmanGain = covariance_filter_predicted / (covariance_filter_predicted + CONST_VARIANCE_COMPASS);
-                vLED_singleHigh(ledYELLOW);
+                led_set(LED_YELLOW);
             } else {
                 kalmanGain = 0;
-                vLED_singleLow(ledYELLOW);
+                led_clear(LED_YELLOW);
             }
            
             predictedTheta += kalmanGain*(error);
@@ -664,6 +666,7 @@ void vMainPoseEstimatorTask( void *pvParameters ){
                 gX_hat = predictedX;
                 gY_hat = predictedY;
             xSemaphoreGive(xPoseMutex);
+
             // Send semaphore to controller
             xSemaphoreGive(xControllerBSem);
 
@@ -673,11 +676,11 @@ void vMainPoseEstimatorTask( void *pvParameters ){
             uint16_t samples = 100;
             float gyro = 0;
             for (i = 0; i<=samples; i++) {
-                gyro += fIMU_readFloatGyroZ();
+                gyro += gyro_get_dps_z();
             }
             
             int16_t xCom, yCom, zCom;
-            vCOM_getData(&xCom, &yCom, &zCom);
+            compass_get(&xCom, &yCom, &zCom);
             xCom += xComOff;
             yCom += yComOff;
             
@@ -893,10 +896,8 @@ int main(void){
   led_set(LED_RED); 
 
   /* Initialize RTOS utilities  */
-  movementQ = xQueueCreate(1,sizeof(uint8_t)); // For sending movements to vMainMovementTask
   poseControllerQ = xQueueCreate(1, sizeof(struct sPolar)); // For setpoints to controller
   scanStatusQ = xQueueCreate(1,sizeof(uint8_t)); // For robot status
-  actuationQ = xQueueCreate(1,sizeof(uint8_t)); // To send variable actuations to motor task
   driveStatusQ = xQueueCreate(1,sizeof(uint8_t)); // To send if robot is driving to the estimator
   
   xPoseMutex = xSemaphoreCreateMutex(); // Global variables for robot pose. Only updated from estimator, accessed from many
@@ -905,7 +906,7 @@ int main(void){
   xControllerBSem = xSemaphoreCreateBinary(); // Estimator to Controller synchronization
   xCommandReadyBSem = xSemaphoreCreateBinary(); 
   BaseType_t ret;
-  xTaskCreate(vMainMovementTask, "Movement", 500, NULL, 4, NULL);  // Independent task
+  //xTaskCreate(vMainMovementTask, "Movement", 500, NULL, 4, NULL);  // Independent task
   xTaskCreate(vMainCommunicationTask, "Comm", 1000, NULL, 3, NULL);  // Dependant on IO, sends instructions to other tasks
 #ifndef COMPASS_CALIBRATE
   xTaskCreate(vMainPoseControllerTask, "PoseCon", 500, NULL, 2, NULL);// Dependant on estimator, sends instructions to movement task

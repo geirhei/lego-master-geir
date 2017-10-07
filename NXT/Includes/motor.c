@@ -79,3 +79,35 @@ void vMotorCountUpdate(void){
   gRightWheelTicks = nxt_motor_get_count(servoRight);
   gLeftWheelTicks = nxt_motor_get_count(servoLeft);
 }
+
+/* Handle ISR ticks from encoder, Please note that we are losing accuracy here due to division */
+void vMotorEncoderLeftTickFromISR(uint8_t wheelDirection, int16_t *leftWheelTicks, uint8_t leftEncoderTicks){
+    switch (wheelDirection){
+        case motorForward:{
+            *leftWheelTicks += leftEncoderTicks / 2;
+            break;
+        }
+        case  motorBackward:{
+            *leftWheelTicks -= leftEncoderTicks / 2;
+            break;
+        }
+        default:
+        // We have a count when the robot is supposedly not moving.
+        break;
+    }
+}
+void vMotorEncoderRightTickFromISR(uint8_t wheelDirection, int16_t *rightWheelTicks, uint8_t rightEncoderTicks){
+    switch (wheelDirection){
+        case motorForward:{
+            *rightWheelTicks += rightEncoderTicks / 2;
+            break;
+        }
+        case  motorBackward:{
+            *rightWheelTicks -= rightEncoderTicks / 2;
+            break;
+        }
+        default:
+        // We have a count when the robot is supposedly not moving.
+        break;
+    }
+}
