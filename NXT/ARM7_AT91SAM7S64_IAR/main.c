@@ -52,9 +52,8 @@
 #define FALSE   0
 
 /* Semaphore handles */
-SemaphoreHandle_t xScanLock;
 SemaphoreHandle_t xPoseMutex;
-SemaphoreHandle_t xUartMutex;
+//SemaphoreHandle_t xUartMutex;
 SemaphoreHandle_t xTickMutex;
 SemaphoreHandle_t xControllerBSem;
 SemaphoreHandle_t xCommandReadyBSem;
@@ -63,7 +62,6 @@ SemaphoreHandle_t xCommandReadyBSem;
 QueueHandle_t movementQ = 0;
 QueueHandle_t poseControllerQ = 0;
 QueueHandle_t scanStatusQ = 0;
-QueueHandle_t driveStatusQ = 0;
 
 /* GLOBAL VARIABLES */
 // To store ticks from encoder, changed in ISR and motor controller
@@ -896,17 +894,19 @@ int main(void){
   led_set(LED_RED); 
 
   /* Initialize RTOS utilities  */
+  movementQ = xQueueCreate(2,sizeof(uint8_t)); // For sending movements to vMainMovementTask
   poseControllerQ = xQueueCreate(1, sizeof(struct sPolar)); // For setpoints to controller
   scanStatusQ = xQueueCreate(1,sizeof(uint8_t)); // For robot status
-  driveStatusQ = xQueueCreate(1,sizeof(uint8_t)); // To send if robot is driving to the estimator
+  //driveStatusQ = xQueueCreate(1,sizeof(uint8_t)); // To send if robot is driving to the estimator
   
   xPoseMutex = xSemaphoreCreateMutex(); // Global variables for robot pose. Only updated from estimator, accessed from many
-  xUartMutex = xSemaphoreCreateMutex(); // Protected printf with a mutex, may cause fragmented bytes if higher priority task want to print as well
+  //xUartMutex = xSemaphoreCreateMutex(); // Protected printf with a mutex, may cause fragmented bytes if higher priority task want to print as well
+  xTickMutex = xSemaphoreCreateMutex(); // Global variable to hold robot tick values
   
   xControllerBSem = xSemaphoreCreateBinary(); // Estimator to Controller synchronization
   xCommandReadyBSem = xSemaphoreCreateBinary(); 
+
   BaseType_t ret;
-  //xTaskCreate(vMainMovementTask, "Movement", 500, NULL, 4, NULL);  // Independent task
   xTaskCreate(vMainCommunicationTask, "Comm", 1000, NULL, 3, NULL);  // Dependant on IO, sends instructions to other tasks
 #ifndef COMPASS_CALIBRATE
   xTaskCreate(vMainPoseControllerTask, "PoseCon", 500, NULL, 2, NULL);// Dependant on estimator, sends instructions to movement task
