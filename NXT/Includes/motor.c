@@ -23,6 +23,7 @@ void vMotor_init(void) {
 }
 /* Switch for robot movement to abstract the logic away from main */
 /* Comparing ticks ensures balanced movement */
+/*
 void vMotorMovementSwitch(uint8_t movement, int16_t tmp_leftWheelTicks, int16_t tmp_rightWheelTicks){
   switch (movement){
 	case moveForward:{
@@ -106,9 +107,9 @@ void vMotorMovementSwitch(uint8_t movement, int16_t tmp_leftWheelTicks, int16_t 
 	}
   }
 }
+*/
 
 // New functions
-/*
 static void vMotorMoveLeftForward(uint8_t actuation, uint8_t *leftWheelDirection) {
     nxt_motor_set_speed(servoLeft, actuation, 1);
     nxt_motor_set_speed(servoRight, 0, 1);
@@ -142,7 +143,6 @@ void vMotorBrakeRight() {
 }
 
 /* Switch for robot movement to abstract the logic away from main */
-/*
 void vMotorMovementSwitch(int16_t leftSpeed, int16_t rightSpeed, uint8_t *leftWheelDirection, uint8_t *rightWheelDirection){
     if (leftSpeed > 0) {
 		vMotorMoveLeftForward(leftSpeed, leftWheelDirection);
@@ -160,7 +160,6 @@ void vMotorMovementSwitch(int16_t leftSpeed, int16_t rightSpeed, uint8_t *leftWh
 		vMotorBrakeRight();
 	}
 }
-*/
 
 void vMotorSetAngle(uint8_t motor, int16_t angle) {
   angle = -angle; //Application code uses opposite encoder values to the nxt
