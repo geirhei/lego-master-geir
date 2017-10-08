@@ -2,6 +2,7 @@
 // File:			main.c
 // Author:			Erlend Ese, NTNU Spring 2016
 //                  Modified for use with NXT by Kristian Lien, Spring 2017
+//                  Updated with the Arduino's positioning algorithm by Geir Eikeland, Fall 2017
 //                  Credit is given where credit is due.
 // Purpose:
 // NXT Robot with FreeRTOS implementation in the collaborating robots
@@ -13,7 +14,6 @@
 // TASKS IMPLEMENTED
 // Communication:               vMainCommunicationTask
 // Sensors:                     vMainSensorTowerTask
-// Motor control                vMainMovementTask
 // Robot control:               vMainPoseControllerTask
 // Position estimator:          vMainPoseEstimatorTask
 // Stack overflow handling:     vApplicationStackOverflowHook
@@ -136,13 +136,13 @@ void vMainCommunicationTask( void *pvParameters ) {
 	send_handshake();
 
 	while(1) {
-		if (xSemaphoreTake(xCommandReadyBSem, portMAX_DELAY)) {
+		if (xSemaphoreTake(xCommandReadyBSem, portMAX_DELAY) == pdTRUE) {
 			// We have a new command from the server, copy it to the memory
 			vTaskSuspendAll ();       // Temporarily disable context switching
 			taskENTER_CRITICAL();
 			command_in = message_in;
 			taskEXIT_CRITICAL();
-			xTaskResumeAll ();      // Enable context switching
+			xTaskResumeAll();      // Enable context switching
 			  
 			switch (command_in.type)
 			{
@@ -169,7 +169,7 @@ void vMainCommunicationTask( void *pvParameters ) {
 					}
 
 					//
-					Setpoint.distance *= 10; // Received SP is in cm, but mm is used in the controller
+					//Setpoint.distance *= 10; // Received SP is in cm, but mm is used in the controller
 					// changed with new controller
 					
 					Setpoint.heading *= DEG2RAD; // Convert received set point to radians
@@ -350,8 +350,8 @@ void vMainPoseControllerTask( void *pvParameters ) {
 	uint8_t lastMovement = 0;
 	
 	// Valid for NXT?
-	uint8_t maxRotateActuation = 75; //The max speed the motors will run at during rotation max is 255
-	uint8_t maxDriveActuation = 100; //The max speed the motors will run at during drive max is 255
+	uint8_t maxRotateActuation = 45; //The max speed the motors will run at during rotation (was 75)
+	uint8_t maxDriveActuation = 60; //The max speed the motors will run at during drive (was 100)
 	uint8_t currentDriveActuation = maxRotateActuation;
 	
 	/* Controller variables for tuning, probably needs calculation for NXT */
@@ -481,7 +481,7 @@ void vMainPoseControllerTask( void *pvParameters ) {
 						leftIntError += thetaDiff;
 						rightIntError -= thetaDiff;
 						
-						gRightWheelDirection = motorForward;
+						gRightWheelDirection = motorForward; //?
 						gLeftWheelDirection = motorForward;
 						lastMovement = moveForward;
 						
