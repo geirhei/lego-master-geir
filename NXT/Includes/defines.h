@@ -34,9 +34,9 @@
 
 /************************************************************************/
 /* Program settings                                                     */
-#define NUMBER_OF_TASKS			7
+//#define NUMBER_OF_TASKS			7
 #define PERIOD_MOTOR_MS         20
-#define PERIOD_ESTIMATOR_MS     30
+#define PERIOD_ESTIMATOR_MS     40
 #define PERIOD_SENSORS_MS       200
 #define moveStop                0
 #define moveForward             1
@@ -47,7 +47,12 @@
 #define moveRightForward        6
 #define moveLeftBackward        7
 #define moveRightBackward       8
-#define moveArrived             9
+//#define moveArrived             9
+
+/************************************************************************/
+/* COMMANDS                                                             */
+#define TRUE 1
+#define FALSE 0
 
 /************************************************************************/
 /* Macros                                                               */

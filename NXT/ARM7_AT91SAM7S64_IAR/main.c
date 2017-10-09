@@ -48,9 +48,6 @@
 #include "simple_protocol.h"
 #include "network.h"
 
-#define TRUE    1
-#define FALSE   0
-
 /* Semaphore handles */
 SemaphoreHandle_t xPoseMutex;
 //SemaphoreHandle_t xUartMutex;
@@ -118,13 +115,11 @@ struct sCartesian {
 void vMainCommunicationTask( void *pvParameters ) {
 	// Setup for the communication task
 	struct sPolar Setpoint = {0}; // Struct for setpoints from server
-
 	message_t command_in; // Buffer for recieved messages
 
 	server_communication_init();
 
 	uint8_t success = 0;
-
 	while (!success) {
 		success = server_connect();
 		vTaskDelay(1000 / portTICK_PERIOD_MS);
@@ -320,20 +315,17 @@ void vMainSensorTowerTask( void *pvParameters ) {
 
 		}
 
-		else if (gPaused == TRUE && gHandshook == TRUE) {
-		  	vTaskDelay(200 / portTICK_PERIOD_MS);
-		}
-
 		else { // Disconnected or unconfirmed
 		  	vMotorSetAngle(servoTower, 0);
 		  	// Reset servo incrementation
 		  	rotationDirection = moveCounterClockwise;
 		  	servoStep = 0;
+		  	idleCounter = 0;
 		  	vTaskDelay(100 / portTICK_PERIOD_MS);
 		}
-
   	}
 }
+
 /*  Calculates new settings for the movement task */
 void vMainPoseControllerTask( void *pvParameters ) {
     #ifdef DEBUG
@@ -350,8 +342,8 @@ void vMainPoseControllerTask( void *pvParameters ) {
 	uint8_t lastMovement = 0;
 	
 	// Valid for NXT?
-	uint8_t maxRotateActuation = 45; //The max speed the motors will run at during rotation (was 75)
-	uint8_t maxDriveActuation = 60; //The max speed the motors will run at during drive (was 100)
+	uint8_t maxRotateActuation = 35; //The max speed the motors will run at during rotation (was 75)
+	uint8_t maxDriveActuation = 50; //The max speed the motors will run at during drive (was 100)
 	uint8_t currentDriveActuation = maxRotateActuation;
 	
 	/* Controller variables for tuning, probably needs calculation for NXT */
@@ -594,7 +586,6 @@ void vMainPoseEstimatorTask( void *pvParameters ) {
             /* PREDICT */
             // Get gyro data:
             float gyrZ = (gyro_get_dps_z() - gyroOffset);
-            //dTheta = gyrZ * period_in_S * DEG2RAD; [COMMENT]I believe this line is not supposed to be here. Residual from broken encoders?
             
             // If the robot is not really rotating we don't include the gyro measurements, to avoid the trouble with drift while driving in a straight line
             if (fabs(gyrZ) < 10) {
