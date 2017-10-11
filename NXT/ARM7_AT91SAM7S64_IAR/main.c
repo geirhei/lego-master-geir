@@ -341,8 +341,8 @@ void vMainPoseControllerTask( void *pvParameters ) {
 	float radiusEpsilon = 15; //[mm]The acceptable radius from goal for completion
 	uint8_t lastMovement = 0;
 	
-	// Valid for NXT?
-	uint8_t maxRotateActuation = 35; //The max speed the motors will run at during rotation (was 75)
+	// Find better values for NXT
+	uint8_t maxRotateActuation = 40; //The max speed the motors will run at during rotation (was 75)
 	uint8_t maxDriveActuation = 50; //The max speed the motors will run at during drive (was 100)
 	uint8_t currentDriveActuation = maxRotateActuation;
 	
