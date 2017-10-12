@@ -335,14 +335,14 @@ void vMainPoseControllerTask( void *pvParameters ) {
 
     /* Task init */
     struct sPolar Setpoint = {0}; // Updates from server
-    struct sCartesian Error = {0}; // Error values
-    struct sPolar oldVal = {0};
-    struct sPolar referenceModel = {0};
+    //struct sCartesian Error = {0}; // Error values
+    //struct sPolar oldVal = {0};
+    //struct sPolar referenceModel = {0};
 	float radiusEpsilon = 15; //[mm]The acceptable radius from goal for completion
 	uint8_t lastMovement = 0;
 	
 	// Find better values for NXT
-	uint8_t maxRotateActuation = 40; //The max speed the motors will run at during rotation (was 75)
+	uint8_t maxRotateActuation = 50; //The max speed the motors will run at during rotation (was 75)
 	uint8_t maxDriveActuation = 50; //The max speed the motors will run at during drive (was 100)
 	uint8_t currentDriveActuation = maxRotateActuation;
 	
@@ -360,12 +360,12 @@ void vMainPoseControllerTask( void *pvParameters ) {
 	
 	/* Goal variables*/
 	float distance = 0;
-	float thetaDiff = 0;
+	//float thetaDiff = 0;
 	float xTargt = 0;
 	float yTargt = 0;
 	
-	float prevLeftActuation = 0;
-	float prevRightActtion = 0;
+	//float prevLeftActuation = 0;
+	//float prevRightActtion = 0;
 	float leftIntError = 0;
 	float rightIntError = 0;
 	
