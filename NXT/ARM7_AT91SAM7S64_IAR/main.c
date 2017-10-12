@@ -126,7 +126,7 @@ void vMainCommunicationTask( void *pvParameters ) {
 		led_toggle(LED_GREEN);
 	}
 
-	xTaskCreate(vARQTask, "ARQ", 500, NULL, 3, NULL);
+	xTaskCreate(vARQTask, "ARQ", 250, NULL, 3, NULL);
 	led_clear(LED_GREEN);
 	send_handshake();
 
@@ -882,7 +882,10 @@ int main(void){
   simple_p_init(server_receiver);
 
   // Set red LED on to indicate INIT is ongoing
-  led_set(LED_RED); 
+  led_set(LED_RED);
+
+  /* Init and start tracing */
+  //vTraceEnable(TRC_START);
 
   /* Initialize RTOS utilities  */
   movementQ = xQueueCreate(2,sizeof(uint8_t)); // For sending movements to vMainMovementTask
@@ -898,11 +901,11 @@ int main(void){
   xCommandReadyBSem = xSemaphoreCreateBinary(); 
 
   BaseType_t ret;
-  xTaskCreate(vMainCommunicationTask, "Comm", 1000, NULL, 3, NULL);  // Dependant on IO, sends instructions to other tasks
+  xTaskCreate(vMainCommunicationTask, "Comm", 250, NULL, 3, NULL);  // Dependant on IO, sends instructions to other tasks
 #ifndef COMPASS_CALIBRATE
-  xTaskCreate(vMainPoseControllerTask, "PoseCon", 500, NULL, 2, NULL);// Dependant on estimator, sends instructions to movement task
-  xTaskCreate(vMainPoseEstimatorTask, "PoseEst", 500, NULL, 5, NULL); // Independent task,
-  ret = xTaskCreate(vMainSensorTowerTask,"Tower", 500, NULL, 1, NULL); // Independent task, but use pose updates from estimator
+  xTaskCreate(vMainPoseControllerTask, "PoseCon", 125, NULL, 2, NULL);// Dependant on estimator, sends instructions to movement task
+  xTaskCreate(vMainPoseEstimatorTask, "PoseEst", 125, NULL, 5, NULL); // Independent task,
+  ret = xTaskCreate(vMainSensorTowerTask,"Tower", 125, NULL, 1, NULL); // Independent task, but use pose updates from estimator
 #endif
   if(ret != pdPASS) {
 	display_goto_xy(0,2);
@@ -915,7 +918,7 @@ int main(void){
   display_string("\n \t WARNING \t !\n");
   display_string("COMPASS CALIBRATION!\n");
   display_string("{S,CON} to begin\n");
-  xTaskCreate(compassTask, "compasscal", 8000, NULL, 4, NULL); // Task used for compass calibration, dependant on communication and movement task
+  xTaskCreate(compassTask, "compasscal", 2000, NULL, 4, NULL); // Task used for compass calibration, dependant on communication and movement task
 #endif
   
   led_clear(LED_RED);

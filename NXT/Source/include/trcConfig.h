@@ -61,7 +61,8 @@ extern "C" {
  * required at least for the ARM Cortex-M port, that uses the ARM CMSIS API.
  * Try that in case of build problems. Otherwise, remove the #error line below.
  *****************************************************************************/
-#error "Trace Recorder: Please include your processor's header file here and remove this line."
+//#include "AT91SAM7S64.h"
+//#include "lib_AT91SAM7S64.h"
 
 /*******************************************************************************
  * Configuration Macro: TRC_CFG_HARDWARE_PORT

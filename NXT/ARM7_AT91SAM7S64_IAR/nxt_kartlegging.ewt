@@ -2384,6 +2384,15 @@
         <file>
             <name>$PROJ_DIR$\..\Includes\simple_protocol.c</name>
         </file>
+        <file>
+            <name>$PROJ_DIR$\..\Includes\trcKernelPort.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Includes\trcSnapshotRecorder.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Includes\trcStreamingRecorder.c</name>
+        </file>
     </group>
     <group>
         <name>Scheduler Source</name>

@@ -33,8 +33,8 @@ void nxt_init(void) {
   vMotor_init();
   prvSetupHardware();
   
-  xTaskCreate(vTask1000Hz, "1000Hz", 300, NULL, 5, NULL);
-  xTaskCreate(vTask1Hz, "1Hz", 300, NULL, 1, NULL);
+  xTaskCreate(vTask1000Hz, "1000Hz", 75, NULL, 5, NULL);
+  xTaskCreate(vTask1Hz, "1Hz", 75, NULL, 1, NULL);
   
   display_clear(1);
 }

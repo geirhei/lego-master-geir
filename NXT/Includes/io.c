@@ -302,7 +302,7 @@ uint8_t io_init(void) {
   uint8_t init[5] = {0x01, 0x02, 0x03, 0x04, 0x00};
   hs_write(init, 0, 5); //First byte sent after boot is always wrong for some reason. Sending some dummy text to stop actual data from being corrupted  
   
-  xTaskCreate(io_task, "IO", 1000, NULL, 5, NULL);
+  xTaskCreate(io_task, "IO", 250, NULL, 5, NULL);
   
   return 1;
 }

@@ -183,6 +183,7 @@ unsigned char prvTraceIsSchedulerSuspended(void);
 	#define TRACE_EXIT_CRITICAL_SECTION() portEXIT_CRITICAL()
 #endif
 
+
 #if (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_POWERPC_Z4)
 #if (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_8_X)
     /* FreeRTOS v8.0 or later */    
@@ -197,8 +198,14 @@ unsigned char prvTraceIsSchedulerSuspended(void);
 #endif
 #endif
 
+#if (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_Atmel_AT91SAM7)
+	#define TRACE_ALLOC_CRITICAL_SECTION()
+	#define TRACE_ENTER_CRITICAL_SECTION() portENTER_CRITICAL()
+	#define TRACE_EXIT_CRITICAL_SECTION() portEXIT_CRITICAL()
+#endif
+
 #ifndef TRACE_ENTER_CRITICAL_SECTION
-	#error "This hardware port has no definition for critical sections! See http://percepio.com/2014/10/27/how-to-define-critical-sections-for-the-recorder/"
+	//#error "This hardware port has no definition for critical sections! See http://percepio.com/2014/10/27/how-to-define-critical-sections-for-the-recorder/"
 #endif
 
 
@@ -706,7 +713,7 @@ extern traceObjectClass TraceObjectClassTable[5];
 /* Called on vTaskDelete */
 #undef traceTASK_DELETE
 #define traceTASK_DELETE( pxTaskToDelete ) \
-	{ TRACE_ALLOC_CRITICAL_SECTION(); \
+	{TRACE_ALLOC_CRITICAL_SECTION(); \
 	TRACE_ENTER_CRITICAL_SECTION(); \
 	trcKERNEL_HOOKS_TASK_DELETE(DELETE_OBJ, pxTaskToDelete); \
 	TRACE_EXIT_CRITICAL_SECTION(); }
@@ -714,7 +721,7 @@ extern traceObjectClass TraceObjectClassTable[5];
 /* Called on vQueueDelete */
 #undef traceQUEUE_DELETE
 #define traceQUEUE_DELETE( pxQueue ) \
-	{ TRACE_ALLOC_CRITICAL_SECTION(); \
+	{TRACE_ALLOC_CRITICAL_SECTION(); \
 	TRACE_ENTER_CRITICAL_SECTION(); \
 	trcKERNEL_HOOKS_OBJECT_DELETE(DELETE_OBJ, TRC_UNUSED, pxQueue); \
 	TRACE_EXIT_CRITICAL_SECTION(); }

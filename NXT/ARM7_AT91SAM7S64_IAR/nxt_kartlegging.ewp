@@ -11,7 +11,7 @@
             <name>General</name>
             <archiveVersion>3</archiveVersion>
             <data>
-                <version>28</version>
+                <version>29</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -66,7 +66,7 @@
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>8.10.1.12859</state>
+                    <state>8.11.3.13977</state>
                 </option>
                 <option>
                     <name>GeneralEnableMisra</name>
@@ -116,7 +116,7 @@
                 </option>
                 <option>
                     <name>GBECoreSlave</name>
-                    <version>24</version>
+                    <version>25</version>
                     <state>0</state>
                 </option>
                 <option>
@@ -133,7 +133,7 @@
                 </option>
                 <option>
                     <name>CoreVariant</name>
-                    <version>24</version>
+                    <version>25</version>
                     <state>0</state>
                 </option>
                 <option>
@@ -156,7 +156,7 @@
                 </option>
                 <option>
                     <name>GFPUCoreSlave2</name>
-                    <version>24</version>
+                    <version>25</version>
                     <state>0</state>
                 </option>
                 <option>
@@ -195,6 +195,10 @@
                 <option>
                     <name>GenLocaleDisplayOnly</name>
                     <state></state>
+                </option>
+                <option>
+                    <name>DSPExtension</name>
+                    <state>0</state>
                 </option>
             </data>
         </settings>
@@ -1036,7 +1040,7 @@
             <name>General</name>
             <archiveVersion>3</archiveVersion>
             <data>
-                <version>28</version>
+                <version>29</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -1091,7 +1095,7 @@
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>8.10.1.12859</state>
+                    <state>8.11.3.13977</state>
                 </option>
                 <option>
                     <name>GeneralEnableMisra</name>
@@ -1141,7 +1145,7 @@
                 </option>
                 <option>
                     <name>GBECoreSlave</name>
-                    <version>24</version>
+                    <version>25</version>
                     <state>0</state>
                 </option>
                 <option>
@@ -1158,7 +1162,7 @@
                 </option>
                 <option>
                     <name>CoreVariant</name>
-                    <version>24</version>
+                    <version>25</version>
                     <state>0</state>
                 </option>
                 <option>
@@ -1181,7 +1185,7 @@
                 </option>
                 <option>
                     <name>GFPUCoreSlave2</name>
-                    <version>24</version>
+                    <version>25</version>
                     <state>0</state>
                 </option>
                 <option>
@@ -1220,6 +1224,10 @@
                 <option>
                     <name>GenLocaleDisplayOnly</name>
                     <state></state>
+                </option>
+                <option>
+                    <name>DSPExtension</name>
+                    <state>0</state>
                 </option>
             </data>
         </settings>
@@ -2113,6 +2121,15 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\Includes\simple_protocol.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Includes\trcKernelPort.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Includes\trcSnapshotRecorder.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Includes\trcStreamingRecorder.c</name>
         </file>
     </group>
     <group>
