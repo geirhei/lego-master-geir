@@ -52,13 +52,15 @@
 SemaphoreHandle_t xPoseMutex;
 //SemaphoreHandle_t xUartMutex;
 SemaphoreHandle_t xTickMutex;
-SemaphoreHandle_t xControllerBSem;
 SemaphoreHandle_t xCommandReadyBSem;
 
 /* Queues */
 QueueHandle_t movementQ = 0;
 QueueHandle_t poseControllerQ = 0;
 QueueHandle_t scanStatusQ = 0;
+
+/* Task handles */
+TaskHandle_t xPoseCtrlTask = NULL;
 
 /* GLOBAL VARIABLES */
 // To store ticks from encoder, changed in ISR and motor controller
@@ -402,116 +404,118 @@ void vMainPoseControllerTask( void *pvParameters ) {
 				gRightWheelTicks = rightWheelTicks;
 			xSemaphoreGive(xTickMutex);
 			
-			if (xSemaphoreTake(xControllerBSem, portMAX_DELAY) == pdTRUE) { // Wait for synchronization from estimator
-				// Get robot pose
-				xSemaphoreTake(xPoseMutex, portMAX_DELAY);
-					thetahat = gTheta_hat;
-					xhat = gX_hat;
-					yhat = gY_hat;
-				xSemaphoreGive(xPoseMutex);
-				
-				// Check if a new update is received
-				if (xQueueReceive(poseControllerQ, &Setpoint, 0) == pdTRUE) {
-					xQueueReceive(poseControllerQ, &Setpoint, 20 / portTICK_PERIOD_MS); // Receive theta and radius set points from com task, wait for 20ms if necessary
-					Setpoint.distance = Setpoint.distance*10; //Distance is received in cm, convert to mm for continuity
+			// Wait for synchronization by direct notification from the estimator task. Blocks indefinetely
+			ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
 
-					xTargt = xhat + Setpoint.distance*cos(Setpoint.heading + thetahat);
-					yTargt = yhat + Setpoint.distance*sin(Setpoint.heading + thetahat);
-				}
-				
-				distance = (float)sqrt((xTargt-xhat)*(xTargt-xhat) + (yTargt-yhat)*(yTargt-yhat));
-				
-				//Simple speed controller as the robot nears the target
-				if (distance < speedDecreaseThreshold) {
-					currentDriveActuation = (maxDriveActuation - 0.32*maxDriveActuation)*distance/speedDecreaseThreshold + 0.32*maxDriveActuation; //Reverse proportional + a constant so it reaches. 
-				} else {
-					currentDriveActuation = maxDriveActuation;
-				}
-				
-				if (distance > radiusEpsilon) { //Not close enough to target
-					idleSent = FALSE;
-					
-					float xdiff = xTargt - xhat;
-					float ydiff = yTargt - yhat;
-					float thetaTargt = atan2(ydiff,xdiff); //atan() returns radians
-					float thetaDiff = thetaTargt - thetahat; //Might be outside pi to -pi degrees
-					vFunc_Inf2pi(&thetaDiff);
-					
-					//Hysteresis mechanics
-					if (fabs(thetaDiff) > rotateThreshold) {
-						doneTurning = FALSE;
-					} else if (fabs(thetaDiff) < driveThreshold) {
-						doneTurning = TRUE;
-					}
-					
-					int16_t LSpeed = 0;
-					int16_t RSpeed = 0;
-					
-					if (doneTurning) { //Start forward movement
-						if (thetaDiff >= 0) { //Moving left
-							LSpeed = currentDriveActuation - driveKp*fabs(thetaDiff) - driveKi*leftIntError; //Simple PI controller for theta 
-							
-							//Saturation
-							if (LSpeed > currentDriveActuation) {
-								LSpeed = currentDriveActuation;
-							} else if (LSpeed < 0) {
-								LSpeed = 0;
-							}
-							RSpeed = currentDriveActuation;
-						} else { //Moving right
-							RSpeed = currentDriveActuation - driveKp*fabs(thetaDiff) - driveKi*rightIntError; //Simple PI controller for theta
-							
-							//Saturation
-							if (RSpeed > currentDriveActuation) {
-								RSpeed = currentDriveActuation;
-							} else if (RSpeed < 0) {
-								RSpeed = 0;
-							}
-							LSpeed = currentDriveActuation;
-						}
-						
-						leftIntError += thetaDiff;
-						rightIntError -= thetaDiff;
-						
-						gRightWheelDirection = motorForward; //?
-						gLeftWheelDirection = motorForward;
-						lastMovement = moveForward;
-						
-					} else { //Turn within 1 degree of target
-						if (thetaDiff >= 0) { //Rotating left
-							LSpeed = -maxRotateActuation*(0.3 + 0.22*(fabs(thetaDiff)));
-							gLeftWheelDirection = motorBackward;
-							RSpeed = maxRotateActuation*(0.3 + 0.22*(fabs(thetaDiff)));
-							gRightWheelDirection = motorForward;
-							lastMovement = moveCounterClockwise;
-						} else { //Rotating right
-							LSpeed = maxRotateActuation*(0.3 + 0.22*(fabs(thetaDiff)));
-							gLeftWheelDirection = motorForward;
-							RSpeed = -maxRotateActuation*(0.3 + 0.22*(fabs(thetaDiff)));
-							gRightWheelDirection = motorBackward;
-							lastMovement = moveClockwise;
-						}
-						
-						leftIntError = 0;
-						rightIntError = 0;
-					}
-					
-					vMotorMovementSwitch(LSpeed, RSpeed, &gLeftWheelDirection, &gRightWheelDirection);
+			// Get robot pose
+			xSemaphoreTake(xPoseMutex, portMAX_DELAY);
+				thetahat = gTheta_hat;
+				xhat = gX_hat;
+				yhat = gY_hat;
+			xSemaphoreGive(xPoseMutex);
 			
-				} else {
-					if (idleSent == FALSE) {
-						send_idle();
-						idleSent = TRUE;
-					}
-					
-					vMotorBrakeLeft();
-					vMotorBrakeRight();
-					lastMovement = moveStop;
+			// Check if a new update is received
+			if (xQueueReceive(poseControllerQ, &Setpoint, 0) == pdTRUE) {
+				xQueueReceive(poseControllerQ, &Setpoint, 20 / portTICK_PERIOD_MS); // Receive theta and radius set points from com task, wait for 20ms if necessary
+				Setpoint.distance = Setpoint.distance*10; //Distance is received in cm, convert to mm for continuity
+
+				xTargt = xhat + Setpoint.distance*cos(Setpoint.heading + thetahat);
+				yTargt = yhat + Setpoint.distance*sin(Setpoint.heading + thetahat);
+			}
+			
+			distance = (float)sqrt((xTargt-xhat)*(xTargt-xhat) + (yTargt-yhat)*(yTargt-yhat));
+			
+			//Simple speed controller as the robot nears the target
+			if (distance < speedDecreaseThreshold) {
+				currentDriveActuation = (maxDriveActuation - 0.32*maxDriveActuation)*distance/speedDecreaseThreshold + 0.32*maxDriveActuation; //Reverse proportional + a constant so it reaches. 
+			} else {
+				currentDriveActuation = maxDriveActuation;
+			}
+			
+			if (distance > radiusEpsilon) { //Not close enough to target
+				idleSent = FALSE;
+				
+				float xdiff = xTargt - xhat;
+				float ydiff = yTargt - yhat;
+				float thetaTargt = atan2(ydiff,xdiff); //atan() returns radians
+				float thetaDiff = thetaTargt - thetahat; //Might be outside pi to -pi degrees
+				vFunc_Inf2pi(&thetaDiff);
+				
+				//Hysteresis mechanics
+				if (fabs(thetaDiff) > rotateThreshold) {
+					doneTurning = FALSE;
+				} else if (fabs(thetaDiff) < driveThreshold) {
+					doneTurning = TRUE;
 				}
 				
-				xQueueSend(scanStatusQ, &lastMovement, 0); // Send the current movement to the scan task
+				int16_t LSpeed = 0;
+				int16_t RSpeed = 0;
 				
-			} // No semaphore available, task is blocking
+				if (doneTurning) { //Start forward movement
+					if (thetaDiff >= 0) { //Moving left
+						LSpeed = currentDriveActuation - driveKp*fabs(thetaDiff) - driveKi*leftIntError; //Simple PI controller for theta 
+						
+						//Saturation
+						if (LSpeed > currentDriveActuation) {
+							LSpeed = currentDriveActuation;
+						} else if (LSpeed < 0) {
+							LSpeed = 0;
+						}
+						RSpeed = currentDriveActuation;
+					} else { //Moving right
+						RSpeed = currentDriveActuation - driveKp*fabs(thetaDiff) - driveKi*rightIntError; //Simple PI controller for theta
+						
+						//Saturation
+						if (RSpeed > currentDriveActuation) {
+							RSpeed = currentDriveActuation;
+						} else if (RSpeed < 0) {
+							RSpeed = 0;
+						}
+						LSpeed = currentDriveActuation;
+					}
+					
+					leftIntError += thetaDiff;
+					rightIntError -= thetaDiff;
+					
+					gRightWheelDirection = motorForward; //?
+					gLeftWheelDirection = motorForward;
+					lastMovement = moveForward;
+					
+				} else { //Turn within 1 degree of target
+					if (thetaDiff >= 0) { //Rotating left
+						LSpeed = -maxRotateActuation*(0.3 + 0.22*(fabs(thetaDiff)));
+						gLeftWheelDirection = motorBackward;
+						RSpeed = maxRotateActuation*(0.3 + 0.22*(fabs(thetaDiff)));
+						gRightWheelDirection = motorForward;
+						lastMovement = moveCounterClockwise;
+					} else { //Rotating right
+						LSpeed = maxRotateActuation*(0.3 + 0.22*(fabs(thetaDiff)));
+						gLeftWheelDirection = motorForward;
+						RSpeed = -maxRotateActuation*(0.3 + 0.22*(fabs(thetaDiff)));
+						gRightWheelDirection = motorBackward;
+						lastMovement = moveClockwise;
+					}
+					
+					leftIntError = 0;
+					rightIntError = 0;
+				}
+				
+				vMotorMovementSwitch(LSpeed, RSpeed, &gLeftWheelDirection, &gRightWheelDirection);
+		
+			} else {
+				if (idleSent == FALSE) {
+					send_idle();
+					idleSent = TRUE;
+				}
+				
+				vMotorBrakeLeft();
+				vMotorBrakeRight();
+				lastMovement = moveStop;
+			}
+			
+			xQueueSend(scanStatusQ, &lastMovement, 0); // Send the current movement to the scan task
+			
+		//} // No semaphore available, task is blocking
 		} //if(gHandshook) end
 	}
 }
@@ -655,9 +659,9 @@ void vMainPoseEstimatorTask( void *pvParameters ) {
                 gX_hat = predictedX;
                 gY_hat = predictedY;
             xSemaphoreGive(xPoseMutex);
-
-            // Send semaphore to controller
-            xSemaphoreGive(xControllerBSem);
+            
+            // Notify the pose controller about the updated position estimate
+            xTaskNotifyGive(xPoseCtrlTask);
 
         } else {
             // Not connected, getting heading and gyro bias
@@ -891,19 +895,17 @@ int main(void){
   movementQ = xQueueCreate(2,sizeof(uint8_t)); // For sending movements to vMainMovementTask
   poseControllerQ = xQueueCreate(1, sizeof(struct sPolar)); // For setpoints to controller
   scanStatusQ = xQueueCreate(1,sizeof(uint8_t)); // For robot status
-  //driveStatusQ = xQueueCreate(1,sizeof(uint8_t)); // To send if robot is driving to the estimator
   
   xPoseMutex = xSemaphoreCreateMutex(); // Global variables for robot pose. Only updated from estimator, accessed from many
   //xUartMutex = xSemaphoreCreateMutex(); // Protected printf with a mutex, may cause fragmented bytes if higher priority task want to print as well
   xTickMutex = xSemaphoreCreateMutex(); // Global variable to hold robot tick values
-  
-  xControllerBSem = xSemaphoreCreateBinary(); // Estimator to Controller synchronization
+
   xCommandReadyBSem = xSemaphoreCreateBinary(); 
 
   BaseType_t ret;
   xTaskCreate(vMainCommunicationTask, "Comm", 250, NULL, 3, NULL);  // Dependant on IO, sends instructions to other tasks
 #ifndef COMPASS_CALIBRATE
-  xTaskCreate(vMainPoseControllerTask, "PoseCon", 125, NULL, 2, NULL);// Dependant on estimator, sends instructions to movement task
+  xTaskCreate(vMainPoseControllerTask, "PoseCon", 125, NULL, 2, &xPoseCtrlTask);// Dependant on estimator, sends instructions to movement task
   xTaskCreate(vMainPoseEstimatorTask, "PoseEst", 125, NULL, 5, NULL); // Independent task,
   ret = xTaskCreate(vMainSensorTowerTask,"Tower", 125, NULL, 1, NULL); // Independent task, but use pose updates from estimator
 #endif
