@@ -21,6 +21,8 @@
 #define FALSE 0
 #define TRUE 1
 
+extern TaskHandle_t xPoseCtrlTask; // For direct to pose controller notification
+
 void vTask1000Hz( void *pvParameters );
 void vTask1Hz( void *pvParameters );
 static void prvSetupHardware( void );
@@ -97,7 +99,8 @@ void vTask1Hz( void *pvParameters ) {
 		gPaused = FALSE;
 		xSemaphoreGive(xCommandReadyBSem); // Let uart parser reset if needed
 	  }
-	  xSemaphoreGive(xControllerBSem); // let the controller reset if needed
+	  //xSemaphoreGive(xControllerBSem); // let the controller reset if needed
+    xTaskNotifyGive(xPoseCtrlTask);
 	}
   }
 }
