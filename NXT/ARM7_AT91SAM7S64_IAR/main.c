@@ -176,6 +176,7 @@ void vMainCommunicationTask( void *pvParameters ) {
 					xQueueSend(poseControllerQ, &Setpoint, 100);
 					break;
 				case TYPE_PAUSE:
+					//led_set(LED_YELLOW);
 					// Stop sending update messages
 					taskENTER_CRITICAL();
 					gPaused = TRUE;
@@ -184,11 +185,14 @@ void vMainCommunicationTask( void *pvParameters ) {
 					Setpoint.distance = 0;
 					Setpoint.heading = 0;
 					xQueueSend(poseControllerQ, &Setpoint, 100);
+					//led_clear(LED_YELLOW);
 					break;
 				case TYPE_UNPAUSE:
+					//led_set(LED_RED);
 					taskENTER_CRITICAL();
 					gPaused = FALSE;
 					taskEXIT_CRITICAL(); 
+					//led_clear(LED_RED);
 					break;
 				case TYPE_FINISH:
 					taskENTER_CRITICAL();
@@ -234,6 +238,7 @@ void vMainSensorTowerTask( void *pvParameters ) {
 			// Set scanning resolution depending on which movement the robot is executing.
 			// Note that the iterations are skipped while robot is rotating (see further downbelow)
 			if (xQueueReceive(scanStatusQ, &robotMovement, 150 / portTICK_PERIOD_MS) == pdTRUE) {
+
 				switch (robotMovement)
 				{
 					case moveStop:
@@ -257,6 +262,19 @@ void vMainSensorTowerTask( void *pvParameters ) {
 						break;
 				}
 			}
+
+			/* TEST */
+			/*
+			if (servoStep == 0) {
+				led_set(LED_YELLOW);
+			} /*else if (servoResolution == 0) {
+				led_set(LED_YELLOW);
+			}
+			
+			vTaskDelay(20 / portTICK_PERIOD_MS);
+			led_clear(LED_YELLOW);
+			*/
+
 			vMotorSetAngle(servoTower, servoStep*servoResolution);
 	  
 		  	// Wait total of 200 ms for servo to reach set point and allow previous update message to be transfered.
@@ -314,16 +332,22 @@ void vMainSensorTowerTask( void *pvParameters ) {
 		  	else if ((servoStep*servoResolution <= 0) && (rotationDirection == moveClockwise)) {
 				rotationDirection = moveCounterClockwise;
 		  	}
-
 		}
 
+	    else if (gHandshook == TRUE && gPaused == TRUE) {
+    		vTaskDelay(200 / portTICK_PERIOD_MS);
+	    }
+
 		else { // Disconnected or unconfirmed
+		    xLastWakeTime = xTaskGetTickCount();
 		  	vMotorSetAngle(servoTower, 0);
+		  	//led_set(LED_YELLOW);
 		  	// Reset servo incrementation
 		  	rotationDirection = moveCounterClockwise;
 		  	servoStep = 0;
 		  	idleCounter = 0;
-		  	vTaskDelay(100 / portTICK_PERIOD_MS);
+		  	vTaskDelayUntil(&xLastWakeTime, 200 / portTICK_PERIOD_MS);
+		  	//led_clear(LED_YELLOW);
 		}
   	}
 }
@@ -415,8 +439,7 @@ void vMainPoseControllerTask( void *pvParameters ) {
 			xSemaphoreGive(xPoseMutex);
 			
 			// Check if a new update is received
-			if (xQueueReceive(poseControllerQ, &Setpoint, 0) == pdTRUE) {
-				xQueueReceive(poseControllerQ, &Setpoint, 20 / portTICK_PERIOD_MS); // Receive theta and radius set points from com task, wait for 20ms if necessary
+			if (xQueueReceive(poseControllerQ, &Setpoint, 20 / portTICK_PERIOD_MS)) { // Receive theta and radius set points from com task, wait for 20ms if necessary
 				Setpoint.distance = Setpoint.distance*10; //Distance is received in cm, convert to mm for continuity
 
 				xTargt = xhat + Setpoint.distance*cos(Setpoint.heading + thetahat);
@@ -512,7 +535,7 @@ void vMainPoseControllerTask( void *pvParameters ) {
 				vMotorBrakeRight();
 				lastMovement = moveStop;
 			}
-			
+
 			xQueueSend(scanStatusQ, &lastMovement, 0); // Send the current movement to the scan task
 			
 		//} // No semaphore available, task is blocking
@@ -637,14 +660,14 @@ void vMainPoseEstimatorTask( void *pvParameters ) {
                 // If we have a reading over this, we can safely ignore the compass
                 // Ignore compass while driving in a straight line
                 kalmanGain = 0;
-                led_clear(LED_YELLOW);
+                //led_clear(LED_YELLOW);
             } else if ((robot_is_turning == FALSE) && (dRobot == 0)) {
                 // Updated (a posteriori) state estimate
                 kalmanGain = covariance_filter_predicted / (covariance_filter_predicted + CONST_VARIANCE_COMPASS);
-                led_set(LED_YELLOW);
+                //led_set(LED_YELLOW);
             } else {
                 kalmanGain = 0;
-                led_clear(LED_YELLOW);
+                //led_clear(LED_YELLOW);
             }
            
             predictedTheta += kalmanGain*(error);
