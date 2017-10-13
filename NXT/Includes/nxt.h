@@ -8,6 +8,8 @@
 #ifndef _NXT_H_
 #define _NXT_H
 
+extern struct sWheelTicks;
+
 void nxt_init(void);
 
 #endif

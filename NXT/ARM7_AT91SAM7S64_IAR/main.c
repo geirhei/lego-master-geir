@@ -58,6 +58,7 @@ SemaphoreHandle_t xCommandReadyBSem;
 QueueHandle_t movementQ = 0;
 QueueHandle_t poseControllerQ = 0;
 QueueHandle_t scanStatusQ = 0;
+QueueHandle_t globalWheelTicksQ = 0;
 
 /* Task handles */
 TaskHandle_t xPoseCtrlTask = NULL;
@@ -68,8 +69,10 @@ volatile uint8_t gISR_rightWheelTicks = 0;
 volatile uint8_t gISR_leftWheelTicks = 0;
 
 // Global encoder tick values, could probably be replaced by a queue
+/*
 volatile int16_t gRightWheelTicks = 0;
 volatile int16_t gLeftWheelTicks = 0;
+*/
 
 // Flag to indicate connection status. Interrupt can change handshook status
 volatile uint8_t gHandshook = FALSE;
@@ -83,6 +86,12 @@ void vMainPoseControllerTask( void *pvParameters );
 void vARQTask( void *pvParameters );
 void vMainPoseEstimatorTask( void *pvParameters );
 void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName );
+
+/// Struct for storing wheel ticks
+struct sWheelTicks {
+	int16_t rightWheel;
+	int16_t leftWheel;
+};
 
 // Global robot pose
 float gTheta_hat = 0;
@@ -399,6 +408,7 @@ void vMainPoseControllerTask( void *pvParameters ) {
 	
 	int16_t leftWheelTicks = 0;
 	int16_t rightWheelTicks = 0;
+	struct sWheelTicks WheelTicks = {0};
 	
 	uint8_t leftEncoderVal = 0;
 	uint8_t rightEncoderVal = 0;
@@ -423,10 +433,17 @@ void vMainPoseControllerTask( void *pvParameters ) {
 			vMotorEncoderLeftTickFromISR(gLeftWheelDirection, &leftWheelTicks, leftEncoderVal);
 			vMotorEncoderRightTickFromISR(gRightWheelDirection, &rightWheelTicks, rightEncoderVal);
 			
+			WheelTicks.leftWheel = leftWheelTicks;
+			WheelTicks.rightWheel = rightWheelTicks;
+			/*
 			xSemaphoreTake(xTickMutex, 1 / portTICK_PERIOD_MS);
 				gLeftWheelTicks = leftWheelTicks;
 				gRightWheelTicks = rightWheelTicks;
 			xSemaphoreGive(xTickMutex);
+			*/
+
+			// Send wheel ticks received from ISR to the global wheel tick Q. Wait 1ms - increase this?
+			xQueueOverwrite(globalWheelTicksQ, &WheelTicks);
 			
 			// Wait for synchronization by direct notification from the estimator task. Blocks indefinetely
 			ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
@@ -536,7 +553,7 @@ void vMainPoseControllerTask( void *pvParameters ) {
 				lastMovement = moveStop;
 			}
 
-			xQueueSend(scanStatusQ, &lastMovement, 0); // Send the current movement to the scan task
+			xQueueSend(scanStatusQ, &lastMovement, 0); // Send the current movement to the sensor tower task
 			
 		//} // No semaphore available, task is blocking
 		} //if(gHandshook) end
@@ -594,12 +611,21 @@ void vMainPoseEstimatorTask( void *pvParameters ) {
         if (gHandshook) { // Check if we are ready    
             int16_t leftWheelTicks = 0;
             int16_t rightWheelTicks = 0;
+            struct sWheelTicks WheelTicks = {0};
             
             // Get encoder data, protect the global tick variables
+            /*
             xSemaphoreTake(xTickMutex, 15 / portTICK_PERIOD_MS);
                 leftWheelTicks = gLeftWheelTicks;
                 rightWheelTicks = gRightWheelTicks;
             xSemaphoreGive(xTickMutex);
+			*/
+
+            // Attempt to receive global tick data, move on after 15ms
+            if (xQueueReceive(globalWheelTicksQ, &WheelTicks, 15 / portTICK_PERIOD_MS)) {
+            	leftWheelTicks = WheelTicks.leftWheel;
+            	rightWheelTicks = WheelTicks.rightWheel;
+            }
             
             float dLeft = (float)(leftWheelTicks - previous_ticksLeft) * WHEEL_FACTOR_MM; // Distance left wheel has traveled since last sample
             float dRight = (float)(rightWheelTicks - previous_ticksRight) * WHEEL_FACTOR_MM; // Distance right wheel has traveled since last sample
@@ -751,9 +777,14 @@ void compassTask(void *par ) {
 	  float heading = 0;
 	  float gyroHeading = 0;
 	  float encoderHeading = 0;
-	  
+
+		/*	  
 	  gLeftWheelTicks = 0;
 	  gRightWheelTicks = 0;
+	  */
+	  struct sWheelTicks WheelTicks = {0};
+	  xQueueOverwrite(globalWheelTicksQ, &WheelTicks);
+
 	  float previous_ticksLeft = 0;
 	  float previous_ticksRight = 0;
 	  // Storing values for printing later
@@ -769,10 +800,17 @@ void compassTask(void *par ) {
 		vTaskDelayUntil(&xLastWakeTime, xDelay);
 		int16_t leftWheelTicks = 0;
 		int16_t rightWheelTicks = 0;
+		struct sWheelTicks WheelTicks = {0};
+		/*
 		taskENTER_CRITICAL();
 		leftWheelTicks = gLeftWheelTicks;
 		rightWheelTicks = gRightWheelTicks;
 		taskEXIT_CRITICAL();
+		*/
+		xQueueReceive(globalWheelTicksQ, &WheelTicks, 0);
+		leftWheelTicks = WheelTicks.leftWheel;
+		rightWheelTicks = WheelTicks.rightWheel;
+
 		float dLeft = (float)(leftWheelTicks - previous_ticksLeft) * WHEEL_FACTOR_MM; // Distance left wheel has traveled since last sample
 		float dRight =(float)(rightWheelTicks - previous_ticksRight) * WHEEL_FACTOR_MM; // Distance right wheel has traveled since last sample
 		previous_ticksLeft = leftWheelTicks;
@@ -915,9 +953,10 @@ int main(void){
   //vTraceEnable(TRC_START);
 
   /* Initialize RTOS utilities  */
-  movementQ = xQueueCreate(2,sizeof(uint8_t)); // For sending movements to vMainMovementTask
+  movementQ = xQueueCreate(2, sizeof(uint8_t)); // For sending movements to vMainMovementTask
   poseControllerQ = xQueueCreate(1, sizeof(struct sPolar)); // For setpoints to controller
-  scanStatusQ = xQueueCreate(1,sizeof(uint8_t)); // For robot status
+  scanStatusQ = xQueueCreate(1, sizeof(uint8_t)); // For robot status
+  globalWheelTicksQ = xQueueCreate(1, sizeof(struct sWheelTicks));
   
   xPoseMutex = xSemaphoreCreateMutex(); // Global variables for robot pose. Only updated from estimator, accessed from many
   //xUartMutex = xSemaphoreCreateMutex(); // Protected printf with a mutex, may cause fragmented bytes if higher priority task want to print as well
