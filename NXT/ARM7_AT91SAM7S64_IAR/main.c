@@ -51,7 +51,7 @@
 /* Semaphore handles */
 SemaphoreHandle_t xPoseMutex;
 //SemaphoreHandle_t xUartMutex;
-SemaphoreHandle_t xTickMutex;
+//SemaphoreHandle_t xTickMutex;
 SemaphoreHandle_t xCommandReadyBSem;
 
 /* Queues */
@@ -953,14 +953,14 @@ int main(void){
   //vTraceEnable(TRC_START);
 
   /* Initialize RTOS utilities  */
-  movementQ = xQueueCreate(2, sizeof(uint8_t)); // For sending movements to vMainMovementTask
+  movementQ = xQueueCreate(2, sizeof(uint8_t)); // For sending movements to vMainMovementTask (used in compass task only)
   poseControllerQ = xQueueCreate(1, sizeof(struct sPolar)); // For setpoints to controller
   scanStatusQ = xQueueCreate(1, sizeof(uint8_t)); // For robot status
   globalWheelTicksQ = xQueueCreate(1, sizeof(struct sWheelTicks));
   
   xPoseMutex = xSemaphoreCreateMutex(); // Global variables for robot pose. Only updated from estimator, accessed from many
   //xUartMutex = xSemaphoreCreateMutex(); // Protected printf with a mutex, may cause fragmented bytes if higher priority task want to print as well
-  xTickMutex = xSemaphoreCreateMutex(); // Global variable to hold robot tick values
+  //xTickMutex = xSemaphoreCreateMutex(); // Global variable to hold robot tick values
 
   xCommandReadyBSem = xSemaphoreCreateBinary(); 
 
