@@ -59,6 +59,7 @@ QueueHandle_t movementQ = 0;
 QueueHandle_t poseControllerQ = 0;
 QueueHandle_t scanStatusQ = 0;
 QueueHandle_t globalWheelTicksQ = 0;
+QueueHandle_t globalPoseQ = 0;
 
 /* Task handles */
 TaskHandle_t xPoseCtrlTask = NULL;
@@ -68,7 +69,7 @@ TaskHandle_t xPoseCtrlTask = NULL;
 volatile uint8_t gISR_rightWheelTicks = 0;
 volatile uint8_t gISR_leftWheelTicks = 0;
 
-// Global encoder tick values, could probably be replaced by a queue
+// Global encoder tick values. Replaced by globalWheelTicksQ
 /*
 volatile int16_t gRightWheelTicks = 0;
 volatile int16_t gLeftWheelTicks = 0;
@@ -94,9 +95,18 @@ struct sWheelTicks {
 };
 
 // Global robot pose
+/*
 float gTheta_hat = 0;
 int16_t gX_hat = 0;
 int16_t gY_hat = 0;
+*/
+
+// Struct for storing robot pose
+struct sPose {
+	float theta;
+	float x;
+	float y;
+};
 
 /// Struct for storing polar coordinates
 struct sPolar {
@@ -229,6 +239,8 @@ void vMainSensorTowerTask( void *pvParameters ) {
 	float thetahat = 0;
 	int16_t xhat = 0;
 	int16_t yhat = 0;
+
+	struct sPose globalPose = {0};
 	
 	uint8_t rotationDirection = moveCounterClockwise;
 	uint8_t servoStep = 0;
@@ -295,12 +307,20 @@ void vMainSensorTowerTask( void *pvParameters ) {
 		  	uint8_t rearSensor = distance_get_cm(2);
 		  	uint8_t rightSensor = distance_get_cm(3);
 		  
-		  	// Get latest pose estimate
+		  	/*
 		  	xSemaphoreTake(xPoseMutex, 40 / portTICK_PERIOD_MS);
 		  		thetahat = gTheta_hat;
 		  		xhat = gX_hat;
 		  		yhat = gY_hat;
 		  	xSemaphoreGive(xPoseMutex);
+			*/
+
+		  	// Get latest pose estimate
+		  	if (xQueuePeek(globalPoseQ, &globalPose, 40 / portTICK_PERIOD_MS)) {
+		  		thetahat = globalPose.theta;
+		  		xhat = globalPose.x;
+		  		yhat = globalPose.y;
+		  	}
 		  
 		  	if ((idleCounter > 10) && (robotMovement == moveStop)) {
 				// If the robot stands idle for 1 second, send 'status:idle' in case the server missed it.
@@ -393,6 +413,7 @@ void vMainPoseControllerTask( void *pvParameters ) {
 	float thetahat = 0;
 	int16_t xhat = 0;
 	int16_t yhat = 0;
+	struct sPose GlobalPose = {0};
 	
 	/* Goal variables*/
 	float distance = 0;
@@ -450,11 +471,19 @@ void vMainPoseControllerTask( void *pvParameters ) {
 			ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
 
 			// Get robot pose
+			/*
 			xSemaphoreTake(xPoseMutex, portMAX_DELAY);
 				thetahat = gTheta_hat;
 				xhat = gX_hat;
 				yhat = gY_hat;
 			xSemaphoreGive(xPoseMutex);
+			
+			*/
+			if (xQueuePeek(globalPoseQ, &GlobalPose, 2000 / portTICK_PERIOD_MS)) { // careful with the portmax_delay here
+				thetahat = GlobalPose.theta;
+				xhat = GlobalPose.x;
+				yhat = GlobalPose.y;
+			}
 			
 			// Check if a new update is received
 			if (xQueueReceive(poseControllerQ, &Setpoint, 20 / portTICK_PERIOD_MS)) { // Receive theta and radius set points from com task, wait for 20ms if necessary
@@ -575,6 +604,7 @@ void vMainPoseEstimatorTask( void *pvParameters ) {
     float predictedTheta = 0.0;
     float predictedX = 0.0;
     float predictedY = 0.0;
+    struct sPose PredictedPose = {0};
     
     float gyroOffset = 0.0;
     float compassOffset = 0.0;
@@ -704,11 +734,19 @@ void vMainPoseEstimatorTask( void *pvParameters ) {
             covariance_filter_predicted = (1 - kalmanGain) * covariance_filter_predicted;  
 
             // Update pose
+            /*
             xSemaphoreTake(xPoseMutex, 15 / portTICK_PERIOD_MS);
                 gTheta_hat = predictedTheta;
                 gX_hat = predictedX;
                 gY_hat = predictedY;
             xSemaphoreGive(xPoseMutex);
+			*/
+
+            // Write the predicted pose to the global queue
+            PredictedPose.theta = predictedTheta;
+            PredictedPose.x = predictedX;
+            PredictedPose.y = predictedY;
+            xQueueOverwrite(globalPoseQ, &PredictedPose);
             
             // Notify the pose controller about the updated position estimate
             xTaskNotifyGive(xPoseCtrlTask);
@@ -958,6 +996,7 @@ int main(void){
   poseControllerQ = xQueueCreate(1, sizeof(struct sPolar)); // For setpoints to controller
   scanStatusQ = xQueueCreate(1, sizeof(uint8_t)); // For robot status
   globalWheelTicksQ = xQueueCreate(1, sizeof(struct sWheelTicks));
+  globalPoseQ = xQueueCreate(1, sizeof(struct sPose)); // For storing and passing the global pose estimate
   
   xPoseMutex = xSemaphoreCreateMutex(); // Global variables for robot pose. Only updated from estimator, accessed from many
   //xUartMutex = xSemaphoreCreateMutex(); // Protected printf with a mutex, may cause fragmented bytes if higher priority task want to print as well
