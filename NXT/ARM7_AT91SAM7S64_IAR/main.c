@@ -324,7 +324,8 @@ void vMainSensorTowerTask( void *pvParameters ) {
 		  	if ((objectX > 0) && (objectX < 20)) {
 				// Stop controller
 				struct sPolar Setpoint = {0, 0};
-				xQueueSend(poseControllerQ, &Setpoint, 100);
+				//xQueueSend(poseControllerQ, &Setpoint, 100);
+				xQueueOverwrite(poseControllerQ, &Setpoint); // Uses overwrite, must stop immediately
 		  	}            
 		  
 		  	// Iterate in a increasing/decreasing manner and depending on the robots movement
