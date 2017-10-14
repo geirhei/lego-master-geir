@@ -49,7 +49,7 @@
 #include "network.h"
 
 /* Semaphore handles */
-SemaphoreHandle_t xPoseMutex;
+//SemaphoreHandle_t xPoseMutex;
 //SemaphoreHandle_t xUartMutex;
 //SemaphoreHandle_t xTickMutex;
 SemaphoreHandle_t xCommandReadyBSem;
@@ -66,8 +66,10 @@ TaskHandle_t xPoseCtrlTask = NULL;
 
 /* GLOBAL VARIABLES */
 // To store ticks from encoder, changed in ISR and motor controller
+/*
 volatile uint8_t gISR_rightWheelTicks = 0;
 volatile uint8_t gISR_leftWheelTicks = 0;
+*/
 
 // Global encoder tick values. Replaced by globalWheelTicksQ
 /*
@@ -315,7 +317,7 @@ void vMainSensorTowerTask( void *pvParameters ) {
 		  	xSemaphoreGive(xPoseMutex);
 			*/
 
-		  	// Get latest pose estimate
+		  	// Get latest pose estimate, dont't remove from queue
 		  	if (xQueuePeek(globalPoseQ, &globalPose, 40 / portTICK_PERIOD_MS)) {
 		  		thetahat = globalPose.theta;
 		  		xhat = globalPose.x;
@@ -445,12 +447,14 @@ void vMainPoseControllerTask( void *pvParameters ) {
 		if (gHandshook) {
 
 			// Disable interrupts to provide an atomic operation.
+			/*
 			taskENTER_CRITICAL();
 				leftEncoderVal = gISR_leftWheelTicks;
 				gISR_leftWheelTicks = 0;
 				rightEncoderVal = gISR_rightWheelTicks;
 				gISR_rightWheelTicks = 0;
 			taskEXIT_CRITICAL();
+			*/
 			
 			vMotorEncoderLeftTickFromISR(gLeftWheelDirection, &leftWheelTicks, leftEncoderVal);
 			vMotorEncoderRightTickFromISR(gRightWheelDirection, &rightWheelTicks, rightEncoderVal);
@@ -998,7 +1002,7 @@ int main(void){
   globalWheelTicksQ = xQueueCreate(1, sizeof(struct sWheelTicks));
   globalPoseQ = xQueueCreate(1, sizeof(struct sPose)); // For storing and passing the global pose estimate
   
-  xPoseMutex = xSemaphoreCreateMutex(); // Global variables for robot pose. Only updated from estimator, accessed from many
+  //xPoseMutex = xSemaphoreCreateMutex(); // Global variables for robot pose. Only updated from estimator, accessed from many
   //xUartMutex = xSemaphoreCreateMutex(); // Protected printf with a mutex, may cause fragmented bytes if higher priority task want to print as well
   //xTickMutex = xSemaphoreCreateMutex(); // Global variable to hold robot tick values
 
