@@ -77,7 +77,7 @@ volatile int16_t gRightWheelTicks = 0;
 volatile int16_t gLeftWheelTicks = 0;
 */
 
-// Flag to indicate connection status. Interrupt can change handshook status
+// Flag to indicate connection status.
 volatile uint8_t gHandshook = FALSE;
 volatile uint8_t gPaused = FALSE;
 volatile message_t message_in;
@@ -262,17 +262,18 @@ void vMainSensorTowerTask( void *pvParameters ) {
 			// Note that the iterations are skipped while robot is rotating (see further downbelow)
 			if (xQueueReceive(scanStatusQ, &robotMovement, 150 / portTICK_PERIOD_MS) == pdTRUE) {
 
+				//debug("%d", robotMovement);
 				switch (robotMovement)
 				{
 					case moveStop:
-						servoStep *= servoResolution;
+						//servoStep *= servoResolution;
 						servoResolution = 1;
 						idleCounter = 1;
 						break;
 					case moveForward:
 					case moveBackward:
 						servoResolution = 6; // NXT-specific?
-						servoStep /= servoResolution;
+						//servoStep /= servoResolution;
 						idleCounter = 0;
 						break;
 					case moveClockwise:
@@ -284,6 +285,7 @@ void vMainSensorTowerTask( void *pvParameters ) {
 						idleCounter = 0;
 						break;
 				}
+				debug("%d", servoStep);
 			}
 
 			/* TEST */
