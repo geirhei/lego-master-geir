@@ -52,9 +52,16 @@ typedef struct {
   uint8_t sensor4;
 } __attribute__((packed)) update_message_t;
 
+/*
 typedef struct {
   int16_t orientation;
   int16_t distance;
+} __attribute__((packed)) order_message_t;
+*/
+
+typedef struct {
+  int16_t x;
+  int16_t y;
 } __attribute__((packed)) order_message_t;
 
 union Message {

@@ -53,6 +53,7 @@
 //SemaphoreHandle_t xUartMutex;
 //SemaphoreHandle_t xTickMutex;
 SemaphoreHandle_t xCommandReadyBSem;
+SemaphoreHandle_t xCollisionBSem;
 
 /* Queues */
 QueueHandle_t movementQ = 0;
@@ -137,7 +138,8 @@ struct sCartesian {
  */
 void vMainCommunicationTask( void *pvParameters ) {
 	// Setup for the communication task
-	struct sPolar Setpoint = {0}; // Struct for setpoints from server
+	//struct sPolar Setpoint = {0}; // Struct for setpoints from server
+	struct sCartesian Target = {0}; // Structs for target coordinates from server
 	message_t command_in; // Buffer for recieved messages
 
 	server_communication_init();
@@ -177,6 +179,7 @@ void vMainCommunicationTask( void *pvParameters ) {
 					send_ping_response();
 					break;
 				case TYPE_ORDER:
+					/*
 					Setpoint.heading = command_in.message.order.orientation;
 					Setpoint.distance = command_in.message.order.distance;
 					// Ensure max values are not exceeded
@@ -185,16 +188,19 @@ void vMainCommunicationTask( void *pvParameters ) {
 					} else if (Setpoint.distance < -320) {
 						Setpoint.distance = -320;
 					}
-
-					//
-					//Setpoint.distance *= 10; // Received SP is in cm, but mm is used in the controller
-					// changed with new controller
 					
 					Setpoint.heading *= DEG2RAD; // Convert received set point to radians
 					vFunc_Inf2pi(&Setpoint.heading);
-					
+					*/
+
+					Target.x = (float) command_in.message.order.x;
+					Target.y = (float) command_in.message.order.y;
+
+					//debug("%iTarget x: ", Target.x);
+					//debug("%iTarget y: ", Target.y);
+
 					/* Relay new coordinates to position controller */
-					xQueueSend(poseControllerQ, &Setpoint, 100);
+					xQueueOverwrite(poseControllerQ, &Target);
 					break;
 				case TYPE_PAUSE:
 					//led_set(LED_YELLOW);
@@ -202,11 +208,9 @@ void vMainCommunicationTask( void *pvParameters ) {
 					taskENTER_CRITICAL();
 					gPaused = TRUE;
 					taskEXIT_CRITICAL();
-					// Stop controller
-					Setpoint.distance = 0;
-					Setpoint.heading = 0;
-					xQueueSend(poseControllerQ, &Setpoint, 100);
-					//led_clear(LED_YELLOW);
+					// Stop controller - pass the current position
+					xQueuePeek(globalPoseQ, &Target, 1);
+					xQueueOverwrite(poseControllerQ, &Target);
 					break;
 				case TYPE_UNPAUSE:
 					//led_set(LED_RED);
@@ -252,7 +256,7 @@ void vMainSensorTowerTask( void *pvParameters ) {
 	  
 	// Initialise the xLastWakeTime variable with the current time.
 	TickType_t xLastWakeTime;
-	  
+	
 	while(1) {
 		// Loop
 		if ((gHandshook == TRUE) && (gPaused == FALSE)) {
@@ -266,14 +270,14 @@ void vMainSensorTowerTask( void *pvParameters ) {
 				switch (robotMovement)
 				{
 					case moveStop:
-						//servoStep *= servoResolution;
+						servoStep *= servoResolution;
 						servoResolution = 1;
 						idleCounter = 1;
 						break;
 					case moveForward:
 					case moveBackward:
-						servoResolution = 6; // NXT-specific?
-						//servoStep /= servoResolution;
+						servoResolution = 1;
+						servoStep /= servoResolution;
 						idleCounter = 0;
 						break;
 					case moveClockwise:
@@ -285,20 +289,8 @@ void vMainSensorTowerTask( void *pvParameters ) {
 						idleCounter = 0;
 						break;
 				}
-				debug("%d", servoStep);
+				//debug("%d", servoStep);
 			}
-
-			/* TEST */
-			/*
-			if (servoStep == 0) {
-				led_set(LED_YELLOW);
-			} /*else if (servoResolution == 0) {
-				led_set(LED_YELLOW);
-			}
-			
-			vTaskDelay(20 / portTICK_PERIOD_MS);
-			led_clear(LED_YELLOW);
-			*/
 
 			vMotorSetAngle(servoTower, servoStep*servoResolution);
 	  
@@ -347,9 +339,11 @@ void vMainSensorTowerTask( void *pvParameters ) {
 		  
 		  	if ((objectX > 0) && (objectX < 20)) {
 				// Stop controller
-				struct sPolar Setpoint = {0, 0};
+				//struct sPolar Setpoint = {0, 0};
+				struct sCartesian Target = {0};
+				xQueuePeek(globalPoseQ, &Target, 100);
 				//xQueueSend(poseControllerQ, &Setpoint, 100);
-				xQueueOverwrite(poseControllerQ, &Setpoint); // Uses overwrite, must stop immediately
+				xQueueOverwrite(poseControllerQ, &Target); // Uses overwrite, must stop immediately
 		  	}            
 		  
 		  	// Iterate in a increasing/decreasing manner and depending on the robots movement
@@ -366,13 +360,14 @@ void vMainSensorTowerTask( void *pvParameters ) {
 		  	else if ((servoStep*servoResolution <= 0) && (rotationDirection == moveClockwise)) {
 				rotationDirection = moveCounterClockwise;
 		  	}
+
 		}
 
-	    else if (gHandshook == TRUE && gPaused == TRUE) {
+		else if (gHandshook == TRUE && gPaused == TRUE) {
     		vTaskDelay(200 / portTICK_PERIOD_MS);
 	    }
 
-		else { // Disconnected or unconfirmed
+	    else { // Disconnected or unconfirmed
 		    xLastWakeTime = xTaskGetTickCount();
 		  	vMotorSetAngle(servoTower, 0);
 		  	//led_set(LED_YELLOW);
@@ -394,7 +389,8 @@ void vMainPoseControllerTask( void *pvParameters ) {
     #endif
 
     /* Task init */
-    struct sPolar Setpoint = {0}; // Updates from server
+    //struct sPolar Setpoint = {0}; // Updates from server
+    struct sCartesian Target = {0};
     //struct sCartesian Error = {0}; // Error values
     //struct sPolar oldVal = {0};
     //struct sPolar referenceModel = {0};
@@ -402,8 +398,8 @@ void vMainPoseControllerTask( void *pvParameters ) {
 	uint8_t lastMovement = 0;
 	
 	// Find better values for NXT
-	uint8_t maxRotateActuation = 50; //The max speed the motors will run at during rotation (was 75)
-	uint8_t maxDriveActuation = 50; //The max speed the motors will run at during drive (was 100)
+	uint8_t maxRotateActuation = 40; //The max speed the motors will run at during rotation (was 75)
+	uint8_t maxDriveActuation = 45; //The max speed the motors will run at during drive (was 100)
 	uint8_t currentDriveActuation = maxRotateActuation;
 	
 	/* Controller variables for tuning, probably needs calculation for NXT */
@@ -415,8 +411,8 @@ void vMainPoseControllerTask( void *pvParameters ) {
 	
 	/* Current position variables */	
 	float thetahat = 0;
-	int16_t xhat = 0;
-	int16_t yhat = 0;
+	float xhat = 0;
+	float yhat = 0;
 	struct sPose GlobalPose = {0};
 	
 	/* Goal variables*/
@@ -447,59 +443,44 @@ void vMainPoseControllerTask( void *pvParameters ) {
 	while(1) {
 		// Checking if server is ready
 		if (gHandshook) {
-
-			// Disable interrupts to provide an atomic operation.
-			/*
-			taskENTER_CRITICAL();
-				leftEncoderVal = gISR_leftWheelTicks;
-				gISR_leftWheelTicks = 0;
-				rightEncoderVal = gISR_rightWheelTicks;
-				gISR_rightWheelTicks = 0;
-			taskEXIT_CRITICAL();
-			*/
 			
 			vMotorEncoderLeftTickFromISR(gLeftWheelDirection, &leftWheelTicks, leftEncoderVal);
 			vMotorEncoderRightTickFromISR(gRightWheelDirection, &rightWheelTicks, rightEncoderVal);
 			
 			WheelTicks.leftWheel = leftWheelTicks;
 			WheelTicks.rightWheel = rightWheelTicks;
-			/*
-			xSemaphoreTake(xTickMutex, 1 / portTICK_PERIOD_MS);
-				gLeftWheelTicks = leftWheelTicks;
-				gRightWheelTicks = rightWheelTicks;
-			xSemaphoreGive(xTickMutex);
-			*/
 
 			// Send wheel ticks received from ISR to the global wheel tick Q. Wait 1ms - increase this?
 			xQueueOverwrite(globalWheelTicksQ, &WheelTicks);
 			
-			// Wait for synchronization by direct notification from the estimator task. Blocks indefinetely
-			ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+			// Wait for synchronization by direct notification from the estimator task. Blocks indefinetely?
+			ulTaskNotifyTake(pdTRUE, 100 / portTICK_PERIOD_MS);
 
-			// Get robot pose
-			/*
-			xSemaphoreTake(xPoseMutex, portMAX_DELAY);
-				thetahat = gTheta_hat;
-				xhat = gX_hat;
-				yhat = gY_hat;
-			xSemaphoreGive(xPoseMutex);
-			
-			*/
-			if (xQueuePeek(globalPoseQ, &GlobalPose, 2000 / portTICK_PERIOD_MS)) { // careful with the portmax_delay here
+			if (xQueuePeek(globalPoseQ, &GlobalPose, 100 / portTICK_PERIOD_MS)) { // careful with the portmax_delay here
 				thetahat = GlobalPose.theta;
 				xhat = GlobalPose.x;
 				yhat = GlobalPose.y;
+
+				//debug("%f", thetahat);
+				//debug("%f", yhat);
 			}
 			
 			// Check if a new update is received
-			if (xQueueReceive(poseControllerQ, &Setpoint, 20 / portTICK_PERIOD_MS)) { // Receive theta and radius set points from com task, wait for 20ms if necessary
-				Setpoint.distance = Setpoint.distance*10; //Distance is received in cm, convert to mm for continuity
+			if (xQueueReceive(poseControllerQ, &Target, 20 / portTICK_PERIOD_MS)) { // Receive theta and radius set points from com task, wait for 20ms if necessary
+				//Setpoint.distance = Setpoint.distance*10; //Distance is received in cm, convert to mm for continuity
+				//xTargt = xhat + Setpoint.distance*cos(Setpoint.heading + thetahat);
+				//yTargt = yhat + Setpoint.distance*sin(Setpoint.heading + thetahat);
 
-				xTargt = xhat + Setpoint.distance*cos(Setpoint.heading + thetahat);
-				yTargt = yhat + Setpoint.distance*sin(Setpoint.heading + thetahat);
+				// Coordinates received in cm, convert to mm for continuity
+				xTargt = Target.x*10;
+				yTargt = Target.y*10;
+
+				//debug("%f", xTargt);
+				//debug("%f", yTargt);
 			}
 			
-			distance = (float)sqrt((xTargt-xhat)*(xTargt-xhat) + (yTargt-yhat)*(yTargt-yhat));
+			distance = sqrt((xTargt-xhat)*(xTargt-xhat) + (yTargt-yhat)*(yTargt-yhat));
+			//debug("%f", distance);
 			
 			//Simple speed controller as the robot nears the target
 			if (distance < speedDecreaseThreshold) {
@@ -607,7 +588,7 @@ void vMainPoseEstimatorTask( void *pvParameters ) {
     
     float kalmanGain = 0.5;
     
-    float predictedTheta = 0.0;
+    float predictedTheta = 0.5*M_PI; // Start-heading i 90 degrees
     float predictedX = 0.0;
     float predictedY = 0.0;
     struct sPose PredictedPose = {0};
@@ -649,14 +630,6 @@ void vMainPoseEstimatorTask( void *pvParameters ) {
             int16_t leftWheelTicks = 0;
             int16_t rightWheelTicks = 0;
             struct sWheelTicks WheelTicks = {0};
-            
-            // Get encoder data, protect the global tick variables
-            /*
-            xSemaphoreTake(xTickMutex, 15 / portTICK_PERIOD_MS);
-                leftWheelTicks = gLeftWheelTicks;
-                rightWheelTicks = gRightWheelTicks;
-            xSemaphoreGive(xTickMutex);
-			*/
 
             // Attempt to receive global tick data, move on after 15ms
             if (xQueueReceive(globalWheelTicksQ, &WheelTicks, 15 / portTICK_PERIOD_MS)) {
@@ -738,15 +711,6 @@ void vMainPoseEstimatorTask( void *pvParameters ) {
             
             // Updated (a posteriori) estimate covariance
             covariance_filter_predicted = (1 - kalmanGain) * covariance_filter_predicted;  
-
-            // Update pose
-            /*
-            xSemaphoreTake(xPoseMutex, 15 / portTICK_PERIOD_MS);
-                gTheta_hat = predictedTheta;
-                gX_hat = predictedX;
-                gY_hat = predictedY;
-            xSemaphoreGive(xPoseMutex);
-			*/
 
             // Write the predicted pose to the global queue
             PredictedPose.theta = predictedTheta;
@@ -975,6 +939,10 @@ void vApplicationStackOverflowHook(xTaskHandle *pxTask, signed char *pcTaskName)
   led_set(LED_GREEN);
   led_set(LED_YELLOW);
   led_set(LED_RED);
+
+  #ifdef DEBUG
+  	debug("s", "Stack overflow!\n");
+  #endif
   
   while(1){
   }// While(1) end
@@ -1008,14 +976,15 @@ int main(void){
   //xUartMutex = xSemaphoreCreateMutex(); // Protected printf with a mutex, may cause fragmented bytes if higher priority task want to print as well
   //xTickMutex = xSemaphoreCreateMutex(); // Global variable to hold robot tick values
 
-  xCommandReadyBSem = xSemaphoreCreateBinary(); 
+  xCommandReadyBSem = xSemaphoreCreateBinary();
+  xCollisionBSem = xSemaphoreCreateBinary();
 
   BaseType_t ret;
   xTaskCreate(vMainCommunicationTask, "Comm", 250, NULL, 3, NULL);  // Dependant on IO, sends instructions to other tasks
 #ifndef COMPASS_CALIBRATE
-  xTaskCreate(vMainPoseControllerTask, "PoseCon", 125, NULL, 2, &xPoseCtrlTask);// Dependant on estimator, sends instructions to movement task
+  xTaskCreate(vMainPoseControllerTask, "PoseCon", 125, NULL, 1, &xPoseCtrlTask);// Dependant on estimator, sends instructions to movement task //2
   xTaskCreate(vMainPoseEstimatorTask, "PoseEst", 125, NULL, 5, NULL); // Independent task,
-  ret = xTaskCreate(vMainSensorTowerTask,"Tower", 125, NULL, 1, NULL); // Independent task, but use pose updates from estimator
+  ret = xTaskCreate(vMainSensorTowerTask,"Tower", 125, NULL, 2, NULL); // Independent task, but use pose updates from estimator //1
 #endif
   if(ret != pdPASS) {
 	display_goto_xy(0,2);
