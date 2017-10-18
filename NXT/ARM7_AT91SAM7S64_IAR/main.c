@@ -61,6 +61,7 @@ QueueHandle_t poseControllerQ = 0;
 QueueHandle_t scanStatusQ = 0;
 QueueHandle_t globalWheelTicksQ = 0;
 QueueHandle_t globalPoseQ = 0;
+QueueHandle_t priorityOrderQ = 0;
 
 /* Task handles */
 TaskHandle_t xPoseCtrlTask = NULL;
@@ -113,7 +114,7 @@ struct sPose {
 
 /// Struct for storing polar coordinates
 struct sPolar {
-  float heading;
+  int16_t heading;
   int16_t distance;
 };
 
@@ -140,6 +141,7 @@ void vMainCommunicationTask( void *pvParameters ) {
 	// Setup for the communication task
 	//struct sPolar Setpoint = {0}; // Struct for setpoints from server
 	struct sCartesian Target = {0}; // Structs for target coordinates from server
+	struct sPolar PriorityOrder = {0};
 	message_t command_in; // Buffer for recieved messages
 
 	server_communication_init();
@@ -177,6 +179,12 @@ void vMainCommunicationTask( void *pvParameters ) {
 					break;
 				case TYPE_PING:
 					send_ping_response();
+					break;
+				case TYPE_PRIORITY_ORDER:
+					// Pass the received order to the priorityOrderQ
+					PriorityOrder.heading = command_in.message.priority_order.heading;
+					PriorityOrder.distance = command_in.message.priority_order.distance;
+					xQueueOverwrite(priorityOrderQ, &PriorityOrder);
 					break;
 				case TYPE_ORDER:
 					/*
@@ -971,6 +979,7 @@ int main(void){
   scanStatusQ = xQueueCreate(1, sizeof(uint8_t)); // For robot status
   globalWheelTicksQ = xQueueCreate(1, sizeof(struct sWheelTicks));
   globalPoseQ = xQueueCreate(1, sizeof(struct sPose)); // For storing and passing the global pose estimate
+  priorityOrderQ = xQueueCreate(1, sizeof(struct sPolar)); // For sending priority orders received from the server
   
   //xPoseMutex = xSemaphoreCreateMutex(); // Global variables for robot pose. Only updated from estimator, accessed from many
   //xUartMutex = xSemaphoreCreateMutex(); // Protected printf with a mutex, may cause fragmented bytes if higher priority task want to print as well
