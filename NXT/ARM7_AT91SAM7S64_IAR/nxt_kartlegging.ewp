@@ -2153,6 +2153,9 @@
     <group>
         <name>Source</name>
         <file>
+            <name>$PROJ_DIR$\..\Source\event_groups.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\Source\portable\MemMang\heap_4.c</name>
         </file>
         <file>

@@ -28,6 +28,7 @@
 #include "task.h"     /* RTOS task related API prototypes */
 #include "semphr.h"   /* Semaphore related API prototypes */
 #include "queue.h"    /* RTOS queue related API prototypes */
+#include "event_groups.h" /* RTOS event group related APT prototypes */
 
 #include <stdlib.h>         // For itoa();
 #include <string.h>         // For stringstuff
@@ -48,6 +49,9 @@
 #include "simple_protocol.h"
 #include "network.h"
 
+/* Event group handles */
+EventGroupHandle_t xGlobalFlagsEventGroup;
+
 /* Semaphore handles */
 //SemaphoreHandle_t xPoseMutex;
 //SemaphoreHandle_t xUartMutex;
@@ -61,7 +65,6 @@ QueueHandle_t poseControllerQ = 0;
 QueueHandle_t scanStatusQ = 0;
 QueueHandle_t globalWheelTicksQ = 0;
 QueueHandle_t globalPoseQ = 0;
-//QueueHandle_t priorityOrderQ = 0;
 
 /* Task handles */
 TaskHandle_t xPoseCtrlTask = NULL;
@@ -942,7 +945,6 @@ int main(void){
   scanStatusQ = xQueueCreate(1, sizeof(uint8_t)); // For robot status
   globalWheelTicksQ = xQueueCreate(1, sizeof(struct sWheelTicks));
   globalPoseQ = xQueueCreate(1, sizeof(struct sPose)); // For storing and passing the global pose estimate
-  //priorityOrderQ = xQueueCreate(1, sizeof(struct sPolar)); // For sending priority orders received from the server
   
   //xPoseMutex = xSemaphoreCreateMutex(); // Global variables for robot pose. Only updated from estimator, accessed from many
   //xUartMutex = xSemaphoreCreateMutex(); // Protected printf with a mutex, may cause fragmented bytes if higher priority task want to print as well
