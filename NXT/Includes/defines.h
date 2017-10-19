@@ -61,5 +61,10 @@
 #define RAD2DEG 180.0 / M_PI
 #define ROUND(x) ((x)>=0?(long)((x)+0.5):(long)((x)-0.5))
 
+/************************************************************************/
+/* Event group defines */
+#define HANDSHOOK_BIT	(1 << 0)
+#define PAUSED_BIT		(1 << 1)
+
 
 #endif /* DEFINES_H_ */

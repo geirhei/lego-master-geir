@@ -166,9 +166,13 @@ void vMainCommunicationTask( void *pvParameters ) {
 			switch (command_in.type)
 			{
 				case TYPE_CONFIRM:
+					/*
 					taskENTER_CRITICAL();
 					gHandshook = TRUE; // Set start flag true
 					taskEXIT_CRITICAL();
+					*/
+
+					xEventGroupSetBits(xGlobalFlagsEventGroup, HANDSHOOK_BIT);
 					
 					display_goto_xy(0,1);
 					display_string("Connected");
@@ -254,6 +258,8 @@ void vMainSensorTowerTask( void *pvParameters ) {
 	
 	while(1) {
 		// Loop
+		// Check if we are handshook and NOT paused. Does not block.
+		xEventGroupWaitBits(xGlobalFlagsEventGroup, HANDSHOOK_BIT & !PAUSED_BIT, pdFALSE, pdTRUE, 0);
 		if ((gHandshook == TRUE) && (gPaused == FALSE)) {
 			// xLastWakeTime variable with the current time.
 			xLastWakeTime = xTaskGetTickCount();
@@ -938,8 +944,12 @@ int main(void){
 
   /* Init and start tracing */
   //vTraceEnable(TRC_START);
+  
+ 
 
   /* Initialize RTOS utilities  */
+  xGlobalFlagsEventGroup = xEventGroupCreate();
+
   movementQ = xQueueCreate(2, sizeof(uint8_t)); // For sending movements to vMainMovementTask (used in compass task only)
   poseControllerQ = xQueueCreate(1, sizeof(struct sCartesian)); // For setpoints to controller
   scanStatusQ = xQueueCreate(1, sizeof(uint8_t)); // For robot status
