@@ -187,13 +187,10 @@ void vMainCommunicationTask( void *pvParameters ) {
 					vFunc_Inf2pi(&Setpoint.heading);
 					*/
 
+					// Coordinates received in cm, convert to mm for internal use in the robot.
 					// Should cast from int to float happen here or in estimator/controller?
-					Target.x = (float) command_in.message.order.x;
-					Target.y = (float) command_in.message.order.y;
-
-					//debug("%iTarget x: ", Target.x);
-					//debug("%iTarget y: ", Target.y);
-
+					Target.x = (float) command_in.message.order.x * 10;
+					Target.y = (float) command_in.message.order.y * 10;
 					/* Relay new coordinates to position controller */
 					xQueueSendToFront(poseControllerQ, &Target, 0);
 					break;
@@ -238,10 +235,10 @@ void vMainCommunicationTask( void *pvParameters ) {
 void vMainSensorTowerTask( void *pvParameters ) {
 	/* Task init */
 	float thetahat = 0;
-	int16_t xhat = 0;
-	int16_t yhat = 0;
+	float xhat = 0;
+	float yhat = 0;
 
-	struct sPose globalPose = {0};
+	struct sPose GlobalPose = {0};
 	
 	uint8_t rotationDirection = moveCounterClockwise;
 	uint8_t servoStep = 0;
@@ -260,8 +257,6 @@ void vMainSensorTowerTask( void *pvParameters ) {
 			// Set scanning resolution depending on which movement the robot is executing.
 			// Note that the iterations are skipped while robot is rotating (see further downbelow)
 			if (xQueueReceive(scanStatusQ, &robotMovement, 150 / portTICK_PERIOD_MS) == pdTRUE) {
-
-				//debug("%d", robotMovement);
 				switch (robotMovement)
 				{
 					case moveStop:
@@ -284,7 +279,6 @@ void vMainSensorTowerTask( void *pvParameters ) {
 						idleCounter = 0;
 						break;
 				}
-				//debug("%d", servoStep);
 			}
 
 			vMotorSetAngle(servoTower, servoStep*servoResolution);
@@ -297,20 +291,12 @@ void vMainSensorTowerTask( void *pvParameters ) {
 		  	uint8_t leftSensor = distance_get_cm(1);
 		  	uint8_t rearSensor = distance_get_cm(2);
 		  	uint8_t rightSensor = distance_get_cm(3);
-		  
-		  	/*
-		  	xSemaphoreTake(xPoseMutex, 40 / portTICK_PERIOD_MS);
-		  		thetahat = gTheta_hat;
-		  		xhat = gX_hat;
-		  		yhat = gY_hat;
-		  	xSemaphoreGive(xPoseMutex);
-			*/
 
 		  	// Get latest pose estimate, dont't remove from queue
-		  	if (xQueuePeek(globalPoseQ, &globalPose, 40 / portTICK_PERIOD_MS)) {
-		  		thetahat = globalPose.theta;
-		  		xhat = globalPose.x;
-		  		yhat = globalPose.y;
+		  	if (xQueuePeek(globalPoseQ, &GlobalPose, 0)) {
+		  		thetahat = GlobalPose.theta;
+		  		xhat = GlobalPose.x;
+		  		yhat = GlobalPose.y;
 		  	}
 		  
 		  	if ((idleCounter > 10) && (robotMovement == moveStop)) {
@@ -449,33 +435,22 @@ void vMainPoseControllerTask( void *pvParameters ) {
 			xQueueOverwrite(globalWheelTicksQ, &WheelTicks);
 			
 			// Wait for synchronization by direct notification from the estimator task. Blocks indefinetely?
-			ulTaskNotifyTake(pdTRUE, 5 / portTICK_PERIOD_MS);
+			ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
 
-			if (xQueuePeek(globalPoseQ, &GlobalPose, 0)) { // careful with the portmax_delay here
+			if (xQueuePeek(globalPoseQ, &GlobalPose, 0)) { // Block time?
 				thetahat = GlobalPose.theta;
 				xhat = GlobalPose.x;
 				yhat = GlobalPose.y;
-
-				//debug("%f", thetahat);
-				//debug("%f", yhat);
 			}
 			
 			// Check if a new update is received
 			if (xQueueReceive(poseControllerQ, &Target, 0)) { // Receive theta and radius set points from com task, wait for 20ms if necessary
-				//Setpoint.distance = Setpoint.distance*10; //Distance is received in cm, convert to mm for continuity
-				//xTargt = xhat + Setpoint.distance*cos(Setpoint.heading + thetahat);
-				//yTargt = yhat + Setpoint.distance*sin(Setpoint.heading + thetahat);
-
 				// Coordinates received in cm, convert to mm for continuity
-				xTargt = Target.x*10;
-				yTargt = Target.y*10;
-
-				//debug("%f", xTargt);
-				//debug("%f", yTargt);
+				xTargt = Target.x;
+				yTargt = Target.y;
 			}
 			
 			distance = sqrt((xTargt-xhat)*(xTargt-xhat) + (yTargt-yhat)*(yTargt-yhat));
-			//debug("%f", distance);
 			
 			//Simple speed controller as the robot nears the target
 			if (distance < speedDecreaseThreshold) {
