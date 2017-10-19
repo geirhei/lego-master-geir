@@ -17,7 +17,7 @@ extern message_t message_in;
 extern SemaphoreHandle_t xCommandReadyBSem;
 extern uint8_t gHandshook;
 
-uint8_t use_arq[12] = { 
+uint8_t use_arq[11] = { 
   [TYPE_HANDSHAKE] = 1,
   [TYPE_UPDATE] = 0, 
   [TYPE_IDLE] = 1, 
@@ -28,15 +28,15 @@ uint8_t use_arq[12] = {
 #define TYPE_HANDSHAKE      0
 #define TYPE_UPDATE         1
 #define TYPE_ORDER          2
-#define TPYE_PRIORITY_ORDER 3
-#define TYPE_IDLE           4
-#define TYPE_PAUSE          5
-#define TYPE_UNPAUSE        6
-#define TYPE_CONFIRM        7
-#define TYPE_FINISH         8
-#define TYPE_PING           9
-#define TYPE_PING_RESPONSE  10
-#define TYPE_DEBUG          11
+//#define TPYE_PRIORITY_ORDER 3
+#define TYPE_IDLE           3
+#define TYPE_PAUSE          4
+#define TYPE_UNPAUSE        5
+#define TYPE_CONFIRM        6
+#define TYPE_FINISH         7
+#define TYPE_PING           8
+#define TYPE_PING_RESPONSE  9
+#define TYPE_DEBUG          10
 
 void server_communication_init(void) {
   if(connected) return;

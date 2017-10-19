@@ -61,7 +61,7 @@ QueueHandle_t poseControllerQ = 0;
 QueueHandle_t scanStatusQ = 0;
 QueueHandle_t globalWheelTicksQ = 0;
 QueueHandle_t globalPoseQ = 0;
-QueueHandle_t priorityOrderQ = 0;
+//QueueHandle_t priorityOrderQ = 0;
 
 /* Task handles */
 TaskHandle_t xPoseCtrlTask = NULL;
@@ -98,13 +98,6 @@ struct sWheelTicks {
 	int16_t leftWheel;
 };
 
-// Global robot pose
-/*
-float gTheta_hat = 0;
-int16_t gX_hat = 0;
-int16_t gY_hat = 0;
-*/
-
 // Struct for storing robot pose
 struct sPose {
 	float theta;
@@ -113,10 +106,12 @@ struct sPose {
 };
 
 /// Struct for storing polar coordinates
+/*
 struct sPolar {
   int16_t heading;
   int16_t distance;
 };
+*/
 
 /// Struct for storing cartesian coordinates
 struct sCartesian {
@@ -141,7 +136,6 @@ void vMainCommunicationTask( void *pvParameters ) {
 	// Setup for the communication task
 	//struct sPolar Setpoint = {0}; // Struct for setpoints from server
 	struct sCartesian Target = {0}; // Structs for target coordinates from server
-	struct sPolar PriorityOrder = {0};
 	message_t command_in; // Buffer for recieved messages
 
 	server_communication_init();
@@ -180,16 +174,8 @@ void vMainCommunicationTask( void *pvParameters ) {
 				case TYPE_PING:
 					send_ping_response();
 					break;
-				case TYPE_PRIORITY_ORDER:
-					// Pass the received order to the priorityOrderQ
-					PriorityOrder.heading = command_in.message.priority_order.heading;
-					PriorityOrder.distance = command_in.message.priority_order.distance;
-					xQueueOverwrite(priorityOrderQ, &PriorityOrder);
-					break;
 				case TYPE_ORDER:
 					/*
-					Setpoint.heading = command_in.message.order.orientation;
-					Setpoint.distance = command_in.message.order.distance;
 					// Ensure max values are not exceeded
 					if (Setpoint.distance > 320) {
 						Setpoint.distance = 320;
@@ -201,6 +187,7 @@ void vMainCommunicationTask( void *pvParameters ) {
 					vFunc_Inf2pi(&Setpoint.heading);
 					*/
 
+					// Should cast from int to float happen here or in estimator/controller?
 					Target.x = (float) command_in.message.order.x;
 					Target.y = (float) command_in.message.order.y;
 
@@ -208,7 +195,7 @@ void vMainCommunicationTask( void *pvParameters ) {
 					//debug("%iTarget y: ", Target.y);
 
 					/* Relay new coordinates to position controller */
-					xQueueOverwrite(poseControllerQ, &Target);
+					xQueueSendToFront(poseControllerQ, &Target, 0);
 					break;
 				case TYPE_PAUSE:
 					//led_set(LED_YELLOW);
@@ -462,9 +449,9 @@ void vMainPoseControllerTask( void *pvParameters ) {
 			xQueueOverwrite(globalWheelTicksQ, &WheelTicks);
 			
 			// Wait for synchronization by direct notification from the estimator task. Blocks indefinetely?
-			ulTaskNotifyTake(pdTRUE, 100 / portTICK_PERIOD_MS);
+			ulTaskNotifyTake(pdTRUE, 5 / portTICK_PERIOD_MS);
 
-			if (xQueuePeek(globalPoseQ, &GlobalPose, 100 / portTICK_PERIOD_MS)) { // careful with the portmax_delay here
+			if (xQueuePeek(globalPoseQ, &GlobalPose, 0)) { // careful with the portmax_delay here
 				thetahat = GlobalPose.theta;
 				xhat = GlobalPose.x;
 				yhat = GlobalPose.y;
@@ -474,7 +461,7 @@ void vMainPoseControllerTask( void *pvParameters ) {
 			}
 			
 			// Check if a new update is received
-			if (xQueueReceive(poseControllerQ, &Target, 20 / portTICK_PERIOD_MS)) { // Receive theta and radius set points from com task, wait for 20ms if necessary
+			if (xQueueReceive(poseControllerQ, &Target, 0)) { // Receive theta and radius set points from com task, wait for 20ms if necessary
 				//Setpoint.distance = Setpoint.distance*10; //Distance is received in cm, convert to mm for continuity
 				//xTargt = xhat + Setpoint.distance*cos(Setpoint.heading + thetahat);
 				//yTargt = yhat + Setpoint.distance*sin(Setpoint.heading + thetahat);
@@ -503,9 +490,11 @@ void vMainPoseControllerTask( void *pvParameters ) {
 				float xdiff = xTargt - xhat;
 				float ydiff = yTargt - yhat;
 				float thetaTargt = atan2(ydiff,xdiff); //atan() returns radians
+				//debug("%f", thetaTargt);
 				float thetaDiff = thetaTargt - thetahat; //Might be outside pi to -pi degrees
+				//float thetaDiff = thetahat - thetaTargt; //Might be outside pi to -pi degrees - testing with oppositve sign
 				vFunc_Inf2pi(&thetaDiff);
-				
+
 				//Hysteresis mechanics
 				if (fabs(thetaDiff) > rotateThreshold) {
 					doneTurning = FALSE;
@@ -596,7 +585,7 @@ void vMainPoseEstimatorTask( void *pvParameters ) {
     
     float kalmanGain = 0.5;
     
-    float predictedTheta = 0.5*M_PI; // Start-heading i 90 degrees
+    float predictedTheta = 0.0; // Start-heading i 90 degrees ?
     float predictedX = 0.0;
     float predictedY = 0.0;
     struct sPose PredictedPose = {0};
@@ -619,13 +608,6 @@ void vMainPoseEstimatorTask( void *pvParameters ) {
     
     float gyroWeight = 0.5;//encoderError / (encoderError + gyroError);
     uint8_t robot_is_turning = 0;
-    
-    #ifdef DEBUG
-        printf("Estimator OK");
-        printf("[%i]",PERIOD_ESTIMATOR_MS);
-        printf("ms\n");   
-        uint8_t printerTellar = 0;     
-    #endif
     
     // Initialise the xLastWakeTime variable with the current time.
     TickType_t xLastWakeTime;
@@ -694,8 +676,11 @@ void vMainPoseEstimatorTask( void *pvParameters ) {
             // calculate heading
             float compassHeading;
             compassHeading = atan2(yCom, xCom) - compassOffset; // returns -pi, pi
+            //debug("%f", compassHeading);
+
             // Update predicted state:    
-            float error = (compassHeading - predictedTheta);
+            //float error = (compassHeading - predictedTheta);
+            float error = 0; // testing
             vFunc_Inf2pi(&error);
             
             //kalmanGain = covariance_filter_predicted / (covariance_filter_predicted + CONST_VARIANCE_COMPASS);
@@ -715,6 +700,7 @@ void vMainPoseEstimatorTask( void *pvParameters ) {
             }
            
             predictedTheta += kalmanGain*(error);
+            //predictedTheta += 0.5*M_PI; // For testing with server -> is it 90 degrees off?
 			vFunc_Inf2pi(&predictedTheta);            
             
             // Updated (a posteriori) estimate covariance
@@ -743,11 +729,13 @@ void vMainPoseEstimatorTask( void *pvParameters ) {
             xCom += xComOff;
             yCom += yComOff;
             
-            // Initialize pose to 0 and reset offset variables
+            // Initialize pose to 0 and reset offset variables (isn't this done at start of task?)
+            /*
             predictedX = 0;
             predictedY = 0;
             predictedTheta = 0;
-            
+            */
+
             compassOffset = atan2(yCom, xCom);    
             gyroOffset = gyro / (float)i;               
         }
@@ -975,11 +963,11 @@ int main(void){
 
   /* Initialize RTOS utilities  */
   movementQ = xQueueCreate(2, sizeof(uint8_t)); // For sending movements to vMainMovementTask (used in compass task only)
-  poseControllerQ = xQueueCreate(1, sizeof(struct sPolar)); // For setpoints to controller
+  poseControllerQ = xQueueCreate(1, sizeof(struct sCartesian)); // For setpoints to controller
   scanStatusQ = xQueueCreate(1, sizeof(uint8_t)); // For robot status
   globalWheelTicksQ = xQueueCreate(1, sizeof(struct sWheelTicks));
   globalPoseQ = xQueueCreate(1, sizeof(struct sPose)); // For storing and passing the global pose estimate
-  priorityOrderQ = xQueueCreate(1, sizeof(struct sPolar)); // For sending priority orders received from the server
+  //priorityOrderQ = xQueueCreate(1, sizeof(struct sPolar)); // For sending priority orders received from the server
   
   //xPoseMutex = xSemaphoreCreateMutex(); // Global variables for robot pose. Only updated from estimator, accessed from many
   //xUartMutex = xSemaphoreCreateMutex(); // Protected printf with a mutex, may cause fragmented bytes if higher priority task want to print as well
