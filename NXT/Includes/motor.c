@@ -16,10 +16,12 @@
 extern QueueHandle_t globalWheelTicksQ;
 
 /// Struct for storing wheel ticks
+
 struct sWheelTicks {
 	int16_t rightWheel;
 	int16_t leftWheel;
 };
+
 
 void vMotor_init(void) {
   nxt_motor_set_speed(servoLeft, 0, 1);
@@ -51,11 +53,11 @@ static void vMotorMoveRightBackward(uint8_t actuation, uint8_t *rightWheelDirect
     *rightWheelDirection = motorBackward;
 }
 
-void vMotorBrakeLeft() {
+static void vMotorBrakeLeft() {
 	nxt_motor_set_speed(servoLeft, 0, 1); // use break here?
 }
 
-void vMotorBrakeRight() {
+static void vMotorBrakeRight() {
 	nxt_motor_set_speed(servoRight, 0, 1); // use break here?
 }
 
@@ -84,8 +86,8 @@ void vMotorSetAngle(uint8_t motor, int16_t angle) {
   nxt_motor_command(motor, (int) floor(angle*TICKS_PER_DEGREE), TOWER_SPEED);
 }
 
-void vMotorCountUpdate(void){
-  struct sWheelTicks WheelTicks = {0};
+void vMotorCountUpdate(void) {
+  struct sWheelTicks WheelTicks;
   WheelTicks.rightWheel = nxt_motor_get_count(servoRight);
   WheelTicks.leftWheel = nxt_motor_get_count(servoLeft);
   // Pass the motor count values to the global queue containing wheel ticks

@@ -424,19 +424,12 @@ void vMainPoseControllerTask( void *pvParameters ) {
 	uint8_t gRightWheelDirection = 0;
 	
 	uint8_t idleSent = FALSE;
+
+	struct sActuation ActuationOut = {0};
       
 	while(1) {
 		// Checking if server is ready
 		if (gHandshook) {
-			
-			vMotorEncoderLeftTickFromISR(gLeftWheelDirection, &leftWheelTicks, leftEncoderVal);
-			vMotorEncoderRightTickFromISR(gRightWheelDirection, &rightWheelTicks, rightEncoderVal);
-			
-			WheelTicks.leftWheel = leftWheelTicks;
-			WheelTicks.rightWheel = rightWheelTicks;
-
-			// Send wheel ticks received from ISR to the global wheel tick Q. Wait 1ms - increase this?
-			xQueueOverwrite(globalWheelTicksQ, &WheelTicks);
 			
 			// Wait for synchronization by direct notification from the estimator task. Blocks indefinetely?
 			ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
@@ -533,16 +526,23 @@ void vMainPoseControllerTask( void *pvParameters ) {
 					rightIntError = 0;
 				}
 				
-				vMotorMovementSwitch(LSpeed, RSpeed, &gLeftWheelDirection, &gRightWheelDirection);
+				ActuationOut.leftWheel = LSpeed;
+				ActuationOut.rightWheel = RSpeed;
+				// Pass actuation values to motor task
+				xQueueSendToBack(actuationQ, &ActuationOut, 0);
+				//vMotorMovementSwitch(LSpeed, RSpeed, &gLeftWheelDirection, &gRightWheelDirection);
 		
 			} else {
 				if (idleSent == FALSE) {
 					send_idle();
 					idleSent = TRUE;
 				}
-				
-				vMotorBrakeLeft();
-				vMotorBrakeRight();
+				ActuationOut.leftWheel = 0;
+				ActuationOut.rightWheel = 0;
+				// Tell motor task to brake
+				xQueueSendToBack(actuationQ, &ActuationOut, 0);
+				//vMotorBrakeLeft();
+				//vMotorBrakeRight();
 				lastMovement = moveStop;
 			}
 
@@ -555,12 +555,39 @@ void vMainPoseControllerTask( void *pvParameters ) {
 
 void vMainMotorTask( void *pvParameters ) {
 	struct sActuation Actuation = {0};
+	uint8_t leftWheelDirection = moveStop;
+	uint8_t rightWheelDirection = moveStop;
+
+	int16_t leftWheelTicks = 0;
+	int16_t rightWheelTicks = 0;
+	struct sWheelTicks WheelTicks = {0};
+	
+	uint8_t leftEncoderVal = 0;
+	uint8_t rightEncoderVal = 0;
+	
+	uint8_t gLeftWheelDirection = 0;
+	uint8_t gRightWheelDirection = 0;
+	
 	TickType_t xLastWakeTime;
 
 	while (1)
 	{
 		xLastWakeTime = xTaskGetTickCount();
-		xQueueReceive(actuationQ, &Actuation, 500 / portTICK_PERIOD_MS);
+
+		vMotorEncoderLeftTickFromISR(gLeftWheelDirection, &leftWheelTicks, leftEncoderVal);
+		vMotorEncoderRightTickFromISR(gRightWheelDirection, &rightWheelTicks, rightEncoderVal);
+		
+		WheelTicks.leftWheel = leftWheelTicks;
+		WheelTicks.rightWheel = rightWheelTicks;
+
+		// Send wheel ticks received from ISR to the global wheel tick Q. Wait 0ms - increase this?
+		xQueueOverwrite(globalWheelTicksQ, &WheelTicks);
+		
+		if (xQueueReceive(actuationQ, &Actuation, 500 / portTICK_PERIOD_MS)) {
+			vMotorMovementSwitch(Actuation.leftWheel, Actuation.rightWheel, &leftWheelDirection, &rightWheelDirection);
+		}
+
+
 
 		vTaskDelayUntil(&xLastWakeTime, 50 / portTICK_PERIOD_MS);	
 	}
