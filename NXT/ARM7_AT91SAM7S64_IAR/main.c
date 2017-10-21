@@ -58,6 +58,7 @@ QueueHandle_t poseControllerQ = 0;
 QueueHandle_t scanStatusQ = 0;
 QueueHandle_t globalWheelTicksQ = 0;
 QueueHandle_t globalPoseQ = 0;
+QueueHandle_t actuationQ = 0;
 
 /* Task handles */
 TaskHandle_t xPoseCtrlTask = NULL;
@@ -86,6 +87,7 @@ void vMainSensorTowerTask( void *pvParameters );
 void vMainPoseControllerTask( void *pvParameters );
 void vARQTask( void *pvParameters );
 void vMainPoseEstimatorTask( void *pvParameters );
+void vMainMotorTask( void *pvParameters );
 void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName );
 
 /// Struct for storing wheel ticks
@@ -113,6 +115,12 @@ struct sPolar {
 struct sCartesian {
 	float x;
 	float y;
+};
+
+// Struct for storing actuation values
+struct sActuation {
+	int16_t leftWheel;
+	int16_t rightWheel;
 };
 
 #ifdef DEBUG
@@ -545,6 +553,19 @@ void vMainPoseControllerTask( void *pvParameters ) {
 	}
 }
 
+void vMainMotorTask( void *pvParameters ) {
+	struct sActuation Actuation = {0};
+	TickType_t xLastWakeTime;
+
+	while (1)
+	{
+		xLastWakeTime = xTaskGetTickCount();
+		xQueueReceive(actuationQ, &Actuation, 500 / portTICK_PERIOD_MS);
+
+		vTaskDelayUntil(&xLastWakeTime, 50 / portTICK_PERIOD_MS);	
+	}
+}
+
 /* Pose estimator task */
 // New values and constants should be calibrated for the NXT
 void vMainPoseEstimatorTask( void *pvParameters ) {
@@ -932,14 +953,13 @@ int main(void){
   /* Init and start tracing */
   //vTraceEnable(TRC_START);
   
- 
-
   /* Initialize RTOS utilities  */
   movementQ = xQueueCreate(2, sizeof(uint8_t)); // For sending movements to vMainMovementTask (used in compass task only)
   poseControllerQ = xQueueCreate(1, sizeof(struct sCartesian)); // For setpoints to controller
   scanStatusQ = xQueueCreate(1, sizeof(uint8_t)); // For robot status
   globalWheelTicksQ = xQueueCreate(1, sizeof(struct sWheelTicks));
   globalPoseQ = xQueueCreate(1, sizeof(struct sPose)); // For storing and passing the global pose estimate
+  actuationQ = xQueueCreate(3, sizeof(struct sActuation)); // For passing actuation values from controller to motor task, buffer of size 3
 
   xCommandReadyBSem = xSemaphoreCreateBinary();
 
@@ -947,6 +967,7 @@ int main(void){
   xTaskCreate(vMainCommunicationTask, "Comm", 250, NULL, 3, NULL);  // Dependant on IO, sends instructions to other tasks
 #ifndef COMPASS_CALIBRATE
   xTaskCreate(vMainPoseControllerTask, "PoseCon", 125, NULL, 1, &xPoseCtrlTask);// Dependant on estimator, sends instructions to movement task //2
+  xTaskCreate(vMainMotorTask, "Wheels", 125, NULL, 1, NULL); // Receives actuation values from controller task
   xTaskCreate(vMainPoseEstimatorTask, "PoseEst", 125, NULL, 5, NULL); // Independent task,
   ret = xTaskCreate(vMainSensorTowerTask,"Tower", 125, NULL, 2, NULL); // Independent task, but use pose updates from estimator //1
 #endif
