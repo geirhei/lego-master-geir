@@ -49,15 +49,8 @@
 #include "simple_protocol.h"
 #include "network.h"
 
-/* Event group handles */
-EventGroupHandle_t xGlobalFlagsEventGroup;
-
 /* Semaphore handles */
-//SemaphoreHandle_t xPoseMutex;
-//SemaphoreHandle_t xUartMutex;
-//SemaphoreHandle_t xTickMutex;
 SemaphoreHandle_t xCommandReadyBSem;
-SemaphoreHandle_t xCollisionBSem;
 
 /* Queues */
 QueueHandle_t movementQ = 0;
@@ -166,13 +159,9 @@ void vMainCommunicationTask( void *pvParameters ) {
 			switch (command_in.type)
 			{
 				case TYPE_CONFIRM:
-					/*
 					taskENTER_CRITICAL();
 					gHandshook = TRUE; // Set start flag true
 					taskEXIT_CRITICAL();
-					*/
-
-					xEventGroupSetBits(xGlobalFlagsEventGroup, HANDSHOOK_BIT);
 					
 					display_goto_xy(0,1);
 					display_string("Connected");
@@ -258,8 +247,6 @@ void vMainSensorTowerTask( void *pvParameters ) {
 	
 	while(1) {
 		// Loop
-		// Check if we are handshook and NOT paused. Does not block.
-		xEventGroupWaitBits(xGlobalFlagsEventGroup, HANDSHOOK_BIT & !PAUSED_BIT, pdFALSE, pdTRUE, 0);
 		if ((gHandshook == TRUE) && (gPaused == FALSE)) {
 			// xLastWakeTime variable with the current time.
 			xLastWakeTime = xTaskGetTickCount();
@@ -948,20 +935,13 @@ int main(void){
  
 
   /* Initialize RTOS utilities  */
-  xGlobalFlagsEventGroup = xEventGroupCreate();
-
   movementQ = xQueueCreate(2, sizeof(uint8_t)); // For sending movements to vMainMovementTask (used in compass task only)
   poseControllerQ = xQueueCreate(1, sizeof(struct sCartesian)); // For setpoints to controller
   scanStatusQ = xQueueCreate(1, sizeof(uint8_t)); // For robot status
   globalWheelTicksQ = xQueueCreate(1, sizeof(struct sWheelTicks));
   globalPoseQ = xQueueCreate(1, sizeof(struct sPose)); // For storing and passing the global pose estimate
-  
-  //xPoseMutex = xSemaphoreCreateMutex(); // Global variables for robot pose. Only updated from estimator, accessed from many
-  //xUartMutex = xSemaphoreCreateMutex(); // Protected printf with a mutex, may cause fragmented bytes if higher priority task want to print as well
-  //xTickMutex = xSemaphoreCreateMutex(); // Global variable to hold robot tick values
 
   xCommandReadyBSem = xSemaphoreCreateBinary();
-  xCollisionBSem = xSemaphoreCreateBinary();
 
   BaseType_t ret;
   xTaskCreate(vMainCommunicationTask, "Comm", 250, NULL, 3, NULL);  // Dependant on IO, sends instructions to other tasks
