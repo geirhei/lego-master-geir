@@ -181,20 +181,7 @@ void vMainCommunicationTask( void *pvParameters ) {
 					send_ping_response();
 					break;
 				case TYPE_ORDER:
-					/*
-					// Ensure max values are not exceeded
-					if (Setpoint.distance > 320) {
-						Setpoint.distance = 320;
-					} else if (Setpoint.distance < -320) {
-						Setpoint.distance = -320;
-					}
-					
-					Setpoint.heading *= DEG2RAD; // Convert received set point to radians
-					vFunc_Inf2pi(&Setpoint.heading);
-					*/
-
 					// Coordinates received in cm, convert to mm for internal use in the robot.
-					// Should cast from int to float happen here or in estimator/controller?
 					Target.x = (float) command_in.message.order.x * 10;
 					Target.y = (float) command_in.message.order.y * 10;
 					/* Relay new coordinates to position controller */
@@ -207,7 +194,7 @@ void vMainCommunicationTask( void *pvParameters ) {
 					gPaused = TRUE;
 					taskEXIT_CRITICAL();
 					// Stop controller - pass the current position
-					xQueuePeek(globalPoseQ, &Target, 1);
+					xQueuePeek(globalPoseQ, &Target, 0);
 					xQueueOverwrite(poseControllerQ, &Target);
 					break;
 				case TYPE_UNPAUSE:
@@ -330,7 +317,7 @@ void vMainSensorTowerTask( void *pvParameters ) {
 				struct sCartesian Target = {0};
 				xQueuePeek(globalPoseQ, &Target, 100);
 				//xQueueSend(poseControllerQ, &Setpoint, 100);
-				xQueueOverwrite(poseControllerQ, &Target); // Uses overwrite, must stop immediately
+				xQueueOverwrite(poseControllerQ, &Target); // Uses overwrite, robot must stop immediately
 		  	}            
 		  
 		  	// Iterate in a increasing/decreasing manner and depending on the robots movement
@@ -453,8 +440,7 @@ void vMainPoseControllerTask( void *pvParameters ) {
 			}
 			
 			// Check if a new update is received
-			if (xQueueReceive(poseControllerQ, &Target, 0)) { // Receive theta and radius set points from com task, wait for 20ms if necessary
-				// Coordinates received in cm, convert to mm for continuity
+			if (xQueueReceive(poseControllerQ, &Target, 0)) { // Receive theta and radius set points from com task
 				xTargt = Target.x;
 				yTargt = Target.y;
 			}
@@ -549,20 +535,14 @@ void vMainPoseControllerTask( void *pvParameters ) {
 					send_idle();
 					idleSent = TRUE;
 				}
-				//ActuationOut.leftWheel = 0;
-				//ActuationOut.rightWheel = 0;
-				// Tell motor task to brake
-				//xQueueSendToBack(actuationQ, &ActuationOut, 0);
-				//vMotorBrakeLeft();
-				//vMotorBrakeRight();
+				// Set speed of both motors to 0
 				vMotorMovementSwitch(0, 0, &gLeftWheelDirection, &gRightWheelDirection);
 				lastMovement = moveStop;
 			}
 
-			xQueueSend(scanStatusQ, &lastMovement, 0); // Send the current movement to the sensor tower task
+			xQueueSendToBack(scanStatusQ, &lastMovement, 0); // Send the current movement to the sensor tower task
 			
-		//} // No semaphore available, task is blocking
-		} //if(gHandshook) end
+		}
 	}
 }
 
@@ -792,7 +772,7 @@ void compassTask(void *par ) {
 	  
 	  uint8_t movement;
 	  movement = moveCounterClockwise;
-	  xQueueSend(movementQ, &movement, 10);
+	  xQueueSendToBack(movementQ, &movement, 10);
 
 	  float heading = 0;
 	  float gyroHeading = 0;
@@ -856,9 +836,9 @@ void compassTask(void *par ) {
 		if(yCom < yComMin) yComMin = yCom;
 	  }
 	  movement = moveClockwise;
-	  xQueueSend(movementQ, &movement, 10);
+	  xQueueSendToBack(movementQ, &movement, 10);
 	  movement = moveStop;
-	  xQueueSend(movementQ, &movement, 10);
+	  xQueueSendToBack(movementQ, &movement, 10);
 	  // Printing said values
 	  //         int i = 0;
 	  //         for (i = 0; i < tellar; i++){
