@@ -58,23 +58,9 @@ QueueHandle_t poseControllerQ = 0;
 QueueHandle_t scanStatusQ = 0;
 QueueHandle_t globalWheelTicksQ = 0;
 QueueHandle_t globalPoseQ = 0;
-//QueueHandle_t actuationQ = 0;
 
 /* Task handles */
 TaskHandle_t xPoseCtrlTask = NULL;
-
-/* GLOBAL VARIABLES */
-// To store ticks from encoder, changed in ISR and motor controller
-/*
-volatile uint8_t gISR_rightWheelTicks = 0;
-volatile uint8_t gISR_leftWheelTicks = 0;
-*/
-
-// Global encoder tick values. Replaced by globalWheelTicksQ
-/*
-volatile int16_t gRightWheelTicks = 0;
-volatile int16_t gLeftWheelTicks = 0;
-*/
 
 // Flag to indicate connection status.
 volatile uint8_t gHandshook = FALSE;
@@ -87,7 +73,6 @@ void vMainSensorTowerTask( void *pvParameters );
 void vMainPoseControllerTask( void *pvParameters );
 void vARQTask( void *pvParameters );
 void vMainPoseEstimatorTask( void *pvParameters );
-//void vMainMotorTask( void *pvParameters );
 void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName );
 
 /// Struct for storing wheel ticks
@@ -117,13 +102,6 @@ struct sCartesian {
 	float y;
 };
 
-// Struct for storing actuation values
-/*
-struct sActuation {
-	int16_t leftWheel;
-	int16_t rightWheel;
-};
-*/
 
 #ifdef DEBUG
 	#warning DEBUG IS ACTIVE
@@ -313,10 +291,8 @@ void vMainSensorTowerTask( void *pvParameters ) {
 		  
 		  	if ((objectX > 0) && (objectX < 20)) {
 				// Stop controller
-				//struct sPolar Setpoint = {0, 0};
 				struct sCartesian Target = {0};
 				xQueuePeek(globalPoseQ, &Target, 100);
-				//xQueueSend(poseControllerQ, &Setpoint, 100);
 				xQueueOverwrite(poseControllerQ, &Target); // Uses overwrite, robot must stop immediately
 		  	}            
 		  
@@ -363,11 +339,7 @@ void vMainPoseControllerTask( void *pvParameters ) {
     #endif
 
     /* Task init */
-    //struct sPolar Setpoint = {0}; // Updates from server
     struct sCartesian Target = {0};
-    //struct sCartesian Error = {0}; // Error values
-    //struct sPolar oldVal = {0};
-    //struct sPolar referenceModel = {0};
 	float radiusEpsilon = 15; //[mm]The acceptable radius from goal for completion
 	uint8_t lastMovement = 0;
 	
@@ -391,12 +363,10 @@ void vMainPoseControllerTask( void *pvParameters ) {
 	
 	/* Goal variables*/
 	float distance = 0;
-	//float thetaDiff = 0;
+	float thetaDiff = 0;
 	float xTargt = 0;
 	float yTargt = 0;
 	
-	//float prevLeftActuation = 0;
-	//float prevRightActtion = 0;
 	float leftIntError = 0;
 	float rightIntError = 0;
 	
@@ -460,9 +430,7 @@ void vMainPoseControllerTask( void *pvParameters ) {
 				float xdiff = xTargt - xhat;
 				float ydiff = yTargt - yhat;
 				float thetaTargt = atan2(ydiff,xdiff); //atan() returns radians
-				//debug("%f", thetaTargt);
-				float thetaDiff = thetaTargt - thetahat; //Might be outside pi to -pi degrees
-				//float thetaDiff = thetahat - thetaTargt; //Might be outside pi to -pi degrees - testing with oppositve sign
+				thetaDiff = thetaTargt - thetahat; //Might be outside pi to -pi degrees
 				vFunc_Inf2pi(&thetaDiff);
 
 				//Hysteresis mechanics
@@ -523,11 +491,7 @@ void vMainPoseControllerTask( void *pvParameters ) {
 					leftIntError = 0;
 					rightIntError = 0;
 				}
-				
-				//ActuationOut.leftWheel = LSpeed;
-				//ActuationOut.rightWheel = RSpeed;
-				// Pass actuation values to motor task
-				//xQueueSendToBack(actuationQ, &ActuationOut, 0);
+
 				vMotorMovementSwitch(LSpeed, RSpeed, &gLeftWheelDirection, &gRightWheelDirection);
 		
 			} else {
@@ -545,29 +509,6 @@ void vMainPoseControllerTask( void *pvParameters ) {
 		}
 	}
 }
-
-/*
-void vMainMotorTask( void *pvParameters ) {
-	
-	
-	TickType_t xLastWakeTime;
-
-	while (1)
-	{
-		xLastWakeTime = xTaskGetTickCount();
-
-		
-		
-		if (xQueueReceive(actuationQ, &Actuation, 500 / portTICK_PERIOD_MS)) {
-			vMotorMovementSwitch(Actuation.leftWheel, Actuation.rightWheel, &leftWheelDirection, &rightWheelDirection);
-		}
-
-
-
-		vTaskDelayUntil(&xLastWakeTime, 50 / portTICK_PERIOD_MS);	
-	}
-}
-*/
 
 /* Pose estimator task */
 // New values and constants should be calibrated for the NXT
@@ -962,7 +903,6 @@ int main(void){
   scanStatusQ = xQueueCreate(1, sizeof(uint8_t)); // For robot status
   globalWheelTicksQ = xQueueCreate(1, sizeof(struct sWheelTicks));
   globalPoseQ = xQueueCreate(1, sizeof(struct sPose)); // For storing and passing the global pose estimate
-  //actuationQ = xQueueCreate(3, sizeof(struct sActuation)); // For passing actuation values from controller to motor task, buffer of size 3
 
   xCommandReadyBSem = xSemaphoreCreateBinary();
 
@@ -970,7 +910,6 @@ int main(void){
   xTaskCreate(vMainCommunicationTask, "Comm", 250, NULL, 3, NULL);  // Dependant on IO, sends instructions to other tasks
 #ifndef COMPASS_CALIBRATE
   xTaskCreate(vMainPoseControllerTask, "PoseCon", 125, NULL, 1, &xPoseCtrlTask);// Dependant on estimator, sends instructions to movement task //2
-  //xTaskCreate(vMainMotorTask, "Wheels", 125, NULL, 1, NULL); // Receives actuation values from controller task
   xTaskCreate(vMainPoseEstimatorTask, "PoseEst", 125, NULL, 5, NULL); // Independent task,
   ret = xTaskCreate(vMainSensorTowerTask,"Tower", 125, NULL, 2, NULL); // Independent task, but use pose updates from estimator //1
 #endif
