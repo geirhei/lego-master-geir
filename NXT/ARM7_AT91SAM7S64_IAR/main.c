@@ -58,7 +58,7 @@ QueueHandle_t poseControllerQ = 0;
 QueueHandle_t scanStatusQ = 0;
 QueueHandle_t globalWheelTicksQ = 0;
 QueueHandle_t globalPoseQ = 0;
-QueueHandle_t actuationQ = 0;
+//QueueHandle_t actuationQ = 0;
 
 /* Task handles */
 TaskHandle_t xPoseCtrlTask = NULL;
@@ -87,7 +87,7 @@ void vMainSensorTowerTask( void *pvParameters );
 void vMainPoseControllerTask( void *pvParameters );
 void vARQTask( void *pvParameters );
 void vMainPoseEstimatorTask( void *pvParameters );
-void vMainMotorTask( void *pvParameters );
+//void vMainMotorTask( void *pvParameters );
 void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName );
 
 /// Struct for storing wheel ticks
@@ -118,10 +118,12 @@ struct sCartesian {
 };
 
 // Struct for storing actuation values
+/*
 struct sActuation {
 	int16_t leftWheel;
 	int16_t rightWheel;
 };
+*/
 
 #ifdef DEBUG
 	#warning DEBUG IS ACTIVE
@@ -425,12 +427,22 @@ void vMainPoseControllerTask( void *pvParameters ) {
 	
 	uint8_t idleSent = FALSE;
 
-	struct sActuation ActuationOut = {0};
+	uint8_t leftWheelDirection = moveStop;
+	uint8_t rightWheelDirection = moveStop;
       
 	while(1) {
 		// Checking if server is ready
 		if (gHandshook) {
 			
+			vMotorEncoderLeftTickFromISR(gLeftWheelDirection, &leftWheelTicks, leftEncoderVal);
+			vMotorEncoderRightTickFromISR(gRightWheelDirection, &rightWheelTicks, rightEncoderVal);
+		
+			WheelTicks.leftWheel = leftWheelTicks;
+			WheelTicks.rightWheel = rightWheelTicks;
+
+			// Send wheel ticks received from ISR to the global wheel tick Q. Wait 0ms - increase this?
+			xQueueOverwrite(globalWheelTicksQ, &WheelTicks);
+
 			// Wait for synchronization by direct notification from the estimator task. Blocks indefinetely?
 			ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
 
@@ -526,23 +538,24 @@ void vMainPoseControllerTask( void *pvParameters ) {
 					rightIntError = 0;
 				}
 				
-				ActuationOut.leftWheel = LSpeed;
-				ActuationOut.rightWheel = RSpeed;
+				//ActuationOut.leftWheel = LSpeed;
+				//ActuationOut.rightWheel = RSpeed;
 				// Pass actuation values to motor task
-				xQueueSendToBack(actuationQ, &ActuationOut, 0);
-				//vMotorMovementSwitch(LSpeed, RSpeed, &gLeftWheelDirection, &gRightWheelDirection);
+				//xQueueSendToBack(actuationQ, &ActuationOut, 0);
+				vMotorMovementSwitch(LSpeed, RSpeed, &gLeftWheelDirection, &gRightWheelDirection);
 		
 			} else {
 				if (idleSent == FALSE) {
 					send_idle();
 					idleSent = TRUE;
 				}
-				ActuationOut.leftWheel = 0;
-				ActuationOut.rightWheel = 0;
+				//ActuationOut.leftWheel = 0;
+				//ActuationOut.rightWheel = 0;
 				// Tell motor task to brake
-				xQueueSendToBack(actuationQ, &ActuationOut, 0);
+				//xQueueSendToBack(actuationQ, &ActuationOut, 0);
 				//vMotorBrakeLeft();
 				//vMotorBrakeRight();
+				vMotorMovementSwitch(0, 0, &gLeftWheelDirection, &gRightWheelDirection);
 				lastMovement = moveStop;
 			}
 
@@ -553,20 +566,9 @@ void vMainPoseControllerTask( void *pvParameters ) {
 	}
 }
 
+/*
 void vMainMotorTask( void *pvParameters ) {
-	struct sActuation Actuation = {0};
-	uint8_t leftWheelDirection = moveStop;
-	uint8_t rightWheelDirection = moveStop;
-
-	int16_t leftWheelTicks = 0;
-	int16_t rightWheelTicks = 0;
-	struct sWheelTicks WheelTicks = {0};
 	
-	uint8_t leftEncoderVal = 0;
-	uint8_t rightEncoderVal = 0;
-	
-	uint8_t gLeftWheelDirection = 0;
-	uint8_t gRightWheelDirection = 0;
 	
 	TickType_t xLastWakeTime;
 
@@ -574,14 +576,7 @@ void vMainMotorTask( void *pvParameters ) {
 	{
 		xLastWakeTime = xTaskGetTickCount();
 
-		vMotorEncoderLeftTickFromISR(gLeftWheelDirection, &leftWheelTicks, leftEncoderVal);
-		vMotorEncoderRightTickFromISR(gRightWheelDirection, &rightWheelTicks, rightEncoderVal);
 		
-		WheelTicks.leftWheel = leftWheelTicks;
-		WheelTicks.rightWheel = rightWheelTicks;
-
-		// Send wheel ticks received from ISR to the global wheel tick Q. Wait 0ms - increase this?
-		xQueueOverwrite(globalWheelTicksQ, &WheelTicks);
 		
 		if (xQueueReceive(actuationQ, &Actuation, 500 / portTICK_PERIOD_MS)) {
 			vMotorMovementSwitch(Actuation.leftWheel, Actuation.rightWheel, &leftWheelDirection, &rightWheelDirection);
@@ -592,6 +587,7 @@ void vMainMotorTask( void *pvParameters ) {
 		vTaskDelayUntil(&xLastWakeTime, 50 / portTICK_PERIOD_MS);	
 	}
 }
+*/
 
 /* Pose estimator task */
 // New values and constants should be calibrated for the NXT
@@ -986,7 +982,7 @@ int main(void){
   scanStatusQ = xQueueCreate(1, sizeof(uint8_t)); // For robot status
   globalWheelTicksQ = xQueueCreate(1, sizeof(struct sWheelTicks));
   globalPoseQ = xQueueCreate(1, sizeof(struct sPose)); // For storing and passing the global pose estimate
-  actuationQ = xQueueCreate(3, sizeof(struct sActuation)); // For passing actuation values from controller to motor task, buffer of size 3
+  //actuationQ = xQueueCreate(3, sizeof(struct sActuation)); // For passing actuation values from controller to motor task, buffer of size 3
 
   xCommandReadyBSem = xSemaphoreCreateBinary();
 
@@ -994,7 +990,7 @@ int main(void){
   xTaskCreate(vMainCommunicationTask, "Comm", 250, NULL, 3, NULL);  // Dependant on IO, sends instructions to other tasks
 #ifndef COMPASS_CALIBRATE
   xTaskCreate(vMainPoseControllerTask, "PoseCon", 125, NULL, 1, &xPoseCtrlTask);// Dependant on estimator, sends instructions to movement task //2
-  xTaskCreate(vMainMotorTask, "Wheels", 125, NULL, 1, NULL); // Receives actuation values from controller task
+  //xTaskCreate(vMainMotorTask, "Wheels", 125, NULL, 1, NULL); // Receives actuation values from controller task
   xTaskCreate(vMainPoseEstimatorTask, "PoseEst", 125, NULL, 5, NULL); // Independent task,
   ret = xTaskCreate(vMainSensorTowerTask,"Tower", 125, NULL, 2, NULL); // Independent task, but use pose updates from estimator //1
 #endif
