@@ -213,7 +213,7 @@ void vMainSensorTowerTask( void *pvParameters ) {
 	
 	uint8_t rotationDirection = moveCounterClockwise;
 	uint8_t servoStep = 0;
-	uint8_t servoResolution = 1;
+    uint8_t servoResolution = 1;
 	uint8_t robotMovement = moveStop;
 	uint8_t idleCounter = 0;
 	  
@@ -231,16 +231,15 @@ void vMainSensorTowerTask( void *pvParameters ) {
 				switch (robotMovement)
 				{
 					case moveStop:
-						servoStep *= servoResolution;
-						servoResolution = 1;
-						idleCounter = 1;
-						break;
+						//servoStep *= servoResolution;
+                    	servoResolution = 1;
+                    	idleCounter = 1;
 					case moveForward:
 					case moveBackward:
-						servoResolution = 1;
-						servoStep /= servoResolution;
-						idleCounter = 0;
-						break;
+						servoResolution = 2;
+                    	//servoStep /= servoResolution;
+                    	idleCounter = 0;
+                    	break;
 					case moveClockwise:
 					case moveCounterClockwise:
 						// Iterations are frozen while rotating, see further down
@@ -252,7 +251,8 @@ void vMainSensorTowerTask( void *pvParameters ) {
 				}
 			}
 
-			vMotorSetAngle(servoTower, servoStep*servoResolution);
+			vMotorSetAngle(servoTower, servoStep);
+			//vMotorSetAngle(servoTower, servoStep*servoResolution);
 	  
 		  	// Wait total of 200 ms for servo to reach set point and allow previous update message to be transfered.
 		  	vTaskDelayUntil(&xLastWakeTime, 200 / portTICK_PERIOD_MS);   
@@ -280,13 +280,13 @@ void vMainSensorTowerTask( void *pvParameters ) {
 		  	}
 		  
 		  	//Send updates to server in the correct format (centimeter and degrees, rounded)
-		  	send_update(ROUND(xhat/10), ROUND(yhat/10), ROUND(thetahat*RAD2DEG), servoStep*servoResolution, forwardSensor, leftSensor, rearSensor, rightSensor);
+		  	send_update(ROUND(xhat/10), ROUND(yhat/10), ROUND(thetahat*RAD2DEG), servoStep, forwardSensor, leftSensor, rearSensor, rightSensor);
 		  
 		  	// Low level anti collision
 		  	uint8_t objectX;
 		  
-		  	if ((servoStep*servoResolution) <= 30) objectX = forwardSensor; // * cos(servoStep*5);
-		  	else if ((servoStep*servoResolution) >= 60) objectX = rightSensor; // * cos(270 + servoStep*5);
+		  	if ((servoStep) <= 30) objectX = forwardSensor; // * cos(servoStep*5);
+		  	else if ((servoStep) >= 60) objectX = rightSensor; // * cos(270 + servoStep*5);
 		  	else objectX = 0;
 		  
 		  	if ((objectX > 0) && (objectX < 20)) {
@@ -297,17 +297,19 @@ void vMainSensorTowerTask( void *pvParameters ) {
 		  	}            
 		  
 		  	// Iterate in a increasing/decreasing manner and depending on the robots movement
-		  	if ((servoStep*servoResolution <= 90) && (rotationDirection == moveCounterClockwise) && (robotMovement < moveClockwise)) {
-				servoStep++;                
+		  	if ((servoStep <= 90) && (rotationDirection == moveCounterClockwise) && (robotMovement < moveClockwise)) {
+				//servoStep++;
+				servoStep = servoStep + servoResolution;
 		  	} 
-		  	else if ((servoStep*servoResolution > 0) && (rotationDirection == moveClockwise) && (robotMovement < moveClockwise)) {
-				servoStep--;
+		  	else if ((servoStep > 0) && (rotationDirection == moveClockwise) && (robotMovement < moveClockwise)) {
+				//servoStep--;
+				servoStep = servoStep - servoResolution;
 		  	}
 		  
-		  	if ((servoStep*servoResolution >= 90) && (rotationDirection == moveCounterClockwise)) {
+		  	if ((servoStep >= 90) && (rotationDirection == moveCounterClockwise)) {
 				rotationDirection = moveClockwise;
 		  	}
-		  	else if ((servoStep*servoResolution <= 0) && (rotationDirection == moveClockwise)) {
+		  	else if ((servoStep <= 0) && (rotationDirection == moveClockwise)) {
 				rotationDirection = moveCounterClockwise;
 		  	}
 
