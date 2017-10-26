@@ -20,6 +20,14 @@ void vFunc_Inf2pi(float *angle_in_radians){
     } while (fabs(*angle_in_radians) > M_PI);
 }
 
+/* Wrap any angle in radians into the interval [0,2pi) */
+void vFunc_wrapTo2Pi(float *angle_in_radians) {
+    do {
+        if (*angle_in_radians >= 2*M_PI) *angle_in_radians -= 2*M_PI;
+        else if (*angle_in_radians < 0) *angle_in_radians += 2*M_PI;
+    } while (fabs(*angle_in_radians) >= 2*M_PI);
+}
+
 /* Parse the update message from uart by using tokens */
 void vFunc_ParseUpdate(char *cin, float *theta, signed short *radius){
     char *token;

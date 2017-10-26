@@ -13,6 +13,9 @@
 /* Take any angle and put it inside -pi,pi */
 void vFunc_Inf2pi(float *angle_in_radians);
 
+/* Wrap any angle in radians into the interval [0,2pi) */
+void vFunc_wrapTo2Pi(float *angle_in_radians);
+
 /* Parse the update message from uart by using tokens */
 void vFunc_ParseUpdate(char *cin, float *theta, int16_t *radius);
 
