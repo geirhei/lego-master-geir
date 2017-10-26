@@ -278,6 +278,9 @@ void vMainSensorTowerTask( void *pvParameters ) {
 		  	else if ((idleCounter >= 1) && (robotMovement == moveStop)) {
 				idleCounter++;
 		  	}
+
+		  	// Convert to range [0,2pi) for compatibility with server
+		  	vFunc_wrapTo2Pi(&thetahat);
 		  
 		  	//Send updates to server in the correct format (centimeter and degrees, rounded)
 		  	send_update(ROUND(xhat/10), ROUND(yhat/10), ROUND(thetahat*RAD2DEG), servoStep, forwardSensor, leftSensor, rearSensor, rightSensor);
@@ -638,8 +641,7 @@ void vMainPoseEstimatorTask( void *pvParameters ) {
             }
            
             predictedTheta += kalmanGain*(error);
-            //predictedTheta += 0.5*M_PI; // For testing with server -> is it 90 degrees off?
-			vFunc_Inf2pi(&predictedTheta);            
+			vFunc_Inf2pi(&predictedTheta); // Converts to (-pi,pi]
             
             // Updated (a posteriori) estimate covariance
             covariance_filter_predicted = (1 - kalmanGain) * covariance_filter_predicted;  
