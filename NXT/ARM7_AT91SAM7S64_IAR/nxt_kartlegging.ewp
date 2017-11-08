@@ -2102,9 +2102,6 @@
             <name>$PROJ_DIR$\..\Includes\emlist.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\Includes\emlist.h</name>
-        </file>
-        <file>
             <name>$PROJ_DIR$\..\Includes\functions.c</name>
         </file>
         <file>

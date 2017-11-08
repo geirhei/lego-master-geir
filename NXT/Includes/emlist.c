@@ -1,3 +1,4 @@
+#include "FreeRTOS.h"
 #include "emlist.h"
 
 #include <stdlib.h>
@@ -8,7 +9,7 @@
 // TODO would a static array backed implementation be useful, too?
 
 LinkedList* emlist_create() {
-    LinkedList* list = (LinkedList*) malloc(sizeof(LinkedList));
+    LinkedList* list = (LinkedList*) pvPortMalloc(sizeof(LinkedList));
     emlist_initialize(list);
     return list;
 }
@@ -16,7 +17,7 @@ LinkedList* emlist_create() {
 void emlist_destroy(LinkedList* list) {
     if(list != NULL) {
         emlist_deinitialize(list);
-        free(list);
+        vPortFree(list);
     }
 }
 
@@ -42,7 +43,7 @@ bool emlist_contains(LinkedList* list, void* value) {
 }
 
 bool emlist_insert(LinkedList* list, void* value) {
-    LinkedListElement* element = (LinkedListElement*) malloc(
+    LinkedListElement* element = (LinkedListElement*) pvPortMalloc(
             sizeof(LinkedListElement));
     if(element != NULL) {
         element->value = value;
@@ -76,7 +77,7 @@ bool emlist_remove(LinkedList* list, void* value) {
             } else {
                 prev->next = next->next;
             }
-            free(next);
+            vPortFree(next);
             return true;
         }
         prev = next;
@@ -90,7 +91,7 @@ void* emlist_pop(LinkedList* list) {
         list->head = list->head->next;
     }
     void* value = element->value;
-    free(element);
+    vPortFree(element);
     return value;
 }
 
