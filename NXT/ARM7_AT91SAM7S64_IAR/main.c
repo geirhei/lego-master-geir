@@ -2,7 +2,7 @@
 // File:			main.c
 // Author:			Erlend Ese, NTNU Spring 2016
 //                  Modified for use with NXT by Kristian Lien, Spring 2017
-//                  Updated with the Arduino's positioning algorithm by Geir Eikeland, Fall 2017
+//                  Modified by Geir Eikeland, Fall 2017
 //                  Credit is given where credit is due.
 // Purpose:
 // NXT Robot with FreeRTOS implementation in the collaborating robots
@@ -185,7 +185,10 @@ void vMainCommunicationTask( void *pvParameters ) {
 				case TYPE_FINISH:
 					taskENTER_CRITICAL();
 					gHandshook = FALSE;
-					taskEXIT_CRITICAL();   
+					taskEXIT_CRITICAL();
+					// Stop controller - pass the current position
+					xQueuePeek(globalPoseQ, &Target, 0);
+					xQueueOverwrite(poseControllerQ, &Target);
 					break;
 			}
 
@@ -236,7 +239,7 @@ void vMainSensorTowerTask( void *pvParameters ) {
                     	idleCounter = 1;
 					case moveForward:
 					case moveBackward:
-						servoResolution = 2;
+						servoResolution = 1;
                     	//servoStep /= servoResolution;
                     	idleCounter = 0;
                     	break;
