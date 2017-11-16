@@ -48,6 +48,7 @@
 #include "arq.h"
 #include "simple_protocol.h"
 #include "network.h"
+#include "emlist.h"
 
 /* Semaphore handles */
 SemaphoreHandle_t xCommandReadyBSem;
@@ -58,6 +59,7 @@ QueueHandle_t poseControllerQ = 0;
 QueueHandle_t scanStatusQ = 0;
 QueueHandle_t globalWheelTicksQ = 0;
 QueueHandle_t globalPoseQ = 0;
+QueueHandle_t measurementQ = 0;
 
 /* Task handles */
 TaskHandle_t xPoseCtrlTask = NULL;
@@ -73,6 +75,9 @@ void vMainSensorTowerTask( void *pvParameters );
 void vMainPoseControllerTask( void *pvParameters );
 void vARQTask( void *pvParameters );
 void vMainPoseEstimatorTask( void *pvParameters );
+void vMainMappingTask( void *pvParameters );
+void vMainNavigationTask( void *pvParameters );
+
 void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName );
 
 /// Struct for storing wheel ticks
@@ -100,6 +105,15 @@ struct sPolar {
 struct sCartesian {
 	float x;
 	float y;
+};
+
+// Struct for storing measurement data from IR-sensors
+struct sMeasurement {
+	uint8_t forward;
+	uint8_t left;
+	uint8_t rear;
+	uint8_t right;
+	uint8_t servoStep;
 };
 
 
@@ -265,6 +279,17 @@ void vMainSensorTowerTask( void *pvParameters ) {
 		  	uint8_t leftSensor = distance_get_cm(1);
 		  	uint8_t rearSensor = distance_get_cm(2);
 		  	uint8_t rightSensor = distance_get_cm(3);
+
+		  	// Add measurements to struct for sending to queue
+		  	struct sMeasurement Measurement = {
+			  	.forward = forwardSensor,
+			  	.left = leftSensor,
+			  	.rear = rearSensor,
+			  	.right = rightSensor,
+			  	.servoStep = servoStep
+			  };
+
+		  	xQueueSendToBack(measurementQ, &Measurement, 0);
 
 		  	// Get latest pose estimate, dont't remove from queue
 		  	if (xQueuePeek(globalPoseQ, &GlobalPose, 0)) {
@@ -685,6 +710,41 @@ void vMainPoseEstimatorTask( void *pvParameters ) {
     } // While(1) end
 }
 
+/* Mapping task */
+void vMainMappingTask( void *pvParameters )
+{
+	// init:
+	// observationHistory[]
+	// pointBuffer[]
+	// lineBuffer[]
+	// lines[]
+	while (1)
+	{
+		// receive new measurements
+		// 
+		vTaskDelay(1000 / portTICK_PERIOD_MS);
+	}
+}
+
+// For testing memory allocation
+void vMainNavigationTask( void *pvParameters )
+{
+	while(1)
+	{
+		LinkedList *frontierLocations = emlist_create();
+		for (uint8_t i = 0; i < 1000; i++) {
+			uint32_t a = 1;
+			uint32_t *ptr = &a;
+			emlist_insert(frontierLocations, ptr);
+		}
+		while(!emlist_is_empty(frontierLocations)) {
+			emlist_pop(frontierLocations);
+		}
+		emlist_destroy(frontierLocations);
+		vTaskDelay(1000 / portTICK_PERIOD_MS);
+	}
+}
+
 
 //#define COMPASS_CALIBRATE
 
@@ -910,6 +970,7 @@ int main(void){
   scanStatusQ = xQueueCreate(1, sizeof(uint8_t)); // For robot status
   globalWheelTicksQ = xQueueCreate(1, sizeof(struct sWheelTicks));
   globalPoseQ = xQueueCreate(1, sizeof(struct sPose)); // For storing and passing the global pose estimate
+  measurementQ = xQueueCreate(1, sizeof(struct sMeasurement));
 
   xCommandReadyBSem = xSemaphoreCreateBinary();
 
@@ -918,6 +979,8 @@ int main(void){
 #ifndef COMPASS_CALIBRATE
   xTaskCreate(vMainPoseControllerTask, "PoseCon", 125, NULL, 1, &xPoseCtrlTask);// Dependant on estimator, sends instructions to movement task //2
   xTaskCreate(vMainPoseEstimatorTask, "PoseEst", 125, NULL, 5, NULL); // Independent task,
+  //xTaskCreate(vMainMappingTask, "Mapping", 500, NULL, 5, NULL);
+  //xTaskCreate(vMainNavigationTask, "Navigation", 500, NULL, 5, NULL);
   ret = xTaskCreate(vMainSensorTowerTask,"Tower", 125, NULL, 2, NULL); // Independent task, but use pose updates from estimator //1
 #endif
   if(ret != pdPASS) {
