@@ -72,3 +72,5 @@ dkms.conf
 *.dep
 NXT/ARM7_AT91SAM7S64_IAR/Flash_Debug/
 NXT/ARM7_AT91SAM7S64_IAR/settings/
+*.ewd
+*.ewp
