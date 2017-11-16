@@ -29,6 +29,7 @@
 #define SENSOR2_HEADING_DEG      90
 #define SENSOR3_HEADING_DEG      180
 #define SENSOR4_HEADING_DEG      270
+#define NUMBER_OF_SENSORS		 4
 
 #define WHEEL_FACTOR_MM 0.469   /* Calculated, measured   */
 

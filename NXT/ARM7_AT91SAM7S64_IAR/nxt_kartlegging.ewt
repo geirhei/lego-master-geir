@@ -2436,6 +2436,9 @@
             <name>$PROJ_DIR$\..\Includes\motor.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\Includes\navigation.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\Includes\network.c</name>
         </file>
         <file>

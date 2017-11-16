@@ -49,6 +49,7 @@
 #include "simple_protocol.h"
 #include "network.h"
 #include "emlist.h"
+#include "navigation.h"
 
 /* Semaphore handles */
 SemaphoreHandle_t xCommandReadyBSem;
@@ -728,9 +729,36 @@ void vMainMappingTask( void *pvParameters )
 
 // For testing memory allocation
 void vMainNavigationTask( void *pvParameters )
-{
+{	
+	float *distances;
+	distances = (float*)pvPortMalloc(360 * sizeof(float));
+	for (uint8_t i = 0; i < 360; i++) {
+		distances[i] = INFINITY;
+	}
+
+	float headings[4];
+
+	TickType_t xLastWakeTime;
+	const TickType_t xFrequency = 1000 / portTICK_PERIOD_MS;
+	xLastWakeTime = xTaskGetTickCount();
+
 	while(1)
-	{
+	{	
+		vTaskDelayUntil(&xLastWakeTime, xFrequency);
+
+		// Receive a measurement
+		struct sMeasurement Measurement = {0};
+		xQueueReceive(measurementQ, &Measurement, 0);
+
+		// Read the global pose
+		struct sPose Pose = {0};
+		xQueuePeek(globalPoseQ, &Pose, 0);
+
+		float robotHeading = Pose.theta;
+		uint8_t servoStep = Measurement.servoStep;
+		navigation_get_measurement_headings(robotHeading, servoStep, headings);
+
+		/*
 		LinkedList *frontierLocations = emlist_create();
 		for (uint8_t i = 0; i < 1000; i++) {
 			uint32_t a = 1;
@@ -741,7 +769,7 @@ void vMainNavigationTask( void *pvParameters )
 			emlist_pop(frontierLocations);
 		}
 		emlist_destroy(frontierLocations);
-		vTaskDelay(1000 / portTICK_PERIOD_MS);
+		*/
 	}
 }
 
