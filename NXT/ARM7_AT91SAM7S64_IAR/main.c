@@ -28,7 +28,7 @@
 #include "task.h"     /* RTOS task related API prototypes */
 #include "semphr.h"   /* Semaphore related API prototypes */
 #include "queue.h"    /* RTOS queue related API prototypes */
-#include "event_groups.h" /* RTOS event group related APT prototypes */
+//#include "event_groups.h" /* RTOS event group related APT prototypes */
 
 #include <stdlib.h>         // For itoa();
 #include <string.h>         // For stringstuff
@@ -80,6 +80,8 @@ void vMainMappingTask( void *pvParameters );
 void vMainNavigationTask( void *pvParameters );
 
 void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName );
+
+
 
 /// Struct for storing wheel ticks
 struct sWheelTicks {
@@ -250,11 +252,11 @@ void vMainSensorTowerTask( void *pvParameters ) {
 				{
 					case moveStop:
 						//servoStep *= servoResolution;
-                    	servoResolution = 1;
+                    	servoResolution = 2;
                     	idleCounter = 1;
 					case moveForward:
 					case moveBackward:
-						servoResolution = 1;
+						servoResolution = 2;
                     	//servoStep /= servoResolution;
                     	idleCounter = 0;
                     	break;
@@ -649,11 +651,11 @@ void vMainPoseEstimatorTask( void *pvParameters ) {
             //debug("%f", compassHeading);
 
             // Update predicted state:    
-            //float error = (compassHeading - predictedTheta);
-            float error = 0; // testing
+            float error = (compassHeading - predictedTheta);
+            //float error = 0; // testing
             vFunc_Inf2pi(&error);
             
-            //kalmanGain = covariance_filter_predicted / (covariance_filter_predicted + CONST_VARIANCE_COMPASS);
+            kalmanGain = covariance_filter_predicted / (covariance_filter_predicted + CONST_VARIANCE_COMPASS);
             ///* Commented back in due to fixed encoder
             if (fabs(error) > (0.8727*period_in_S)) { // 0.8727 rad/s is top speed while turning
                 // If we have a reading over this, we can safely ignore the compass
@@ -719,11 +721,15 @@ void vMainMappingTask( void *pvParameters )
 	// pointBuffer[]
 	// lineBuffer[]
 	// lines[]
+
+	TickType_t xLastWakeTime;
+	const TickType_t xFrequency = 1000 / portTICK_PERIOD_MS;
+	xLastWakeTime = xTaskGetTickCount();
+
 	while (1)
 	{
-		// receive new measurements
-		// 
-		vTaskDelay(1000 / portTICK_PERIOD_MS);
+		vTaskDelayUntil(&xLastWakeTime, xFrequency);
+
 	}
 }
 
@@ -1040,4 +1046,6 @@ int main(void){
 	led_toggle(LED_RED);
 	led_toggle(LED_YELLOW);
   }
+
+  	
 }

@@ -109,6 +109,9 @@
 #define configUSE_CO_ROUTINES 		0
 #define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
 
+/* Define to trap errors during development. */
+//#define configASSERT(  x  ) if( ( x ) == 0 ) vAssertCalled( __LINE__, __FILE__ )
+
 /* Set the following definitions to 1 to include the API function, or zero
 to exclude the API function. */
 
