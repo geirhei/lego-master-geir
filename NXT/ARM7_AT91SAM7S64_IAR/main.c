@@ -389,7 +389,7 @@ void vMainPoseControllerTask( void *pvParameters ) {
 	float driveThreshold = 0.0174; // [rad]The threshold at which the robot will go from rotation to driving. In degrees.
 	float driveKp = 600; //Proportional gain for theta control during drive
 	float driveKi = 10; //Integral gain for theta during drive
-	float speedDecreaseThreshold = 500; //[mm] Distance from goal where the robot will decrease its speed inverse proportionally
+	float speedDecreaseThreshold = 300; //[mm] Distance from goal where the robot will decrease its speed inverse proportionally
 	
 	/* Current position variables */	
 	float thetahat = 0;
