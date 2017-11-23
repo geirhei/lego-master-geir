@@ -379,7 +379,7 @@ void vMainPoseControllerTask( void *pvParameters ) {
 
     /* Task init */
     struct sCartesian Target = {0};
-	float radiusEpsilon = 15; //[mm]The acceptable radius from goal for completion
+	float radiusEpsilon = 10; //[mm]The acceptable radius from goal for completion
 	uint8_t lastMovement = 0;
 	
 	// Find better values for NXT
