@@ -316,6 +316,8 @@ void vMainSensorTowerTask( void *pvParameters ) {
 		  	//Send updates to server in the correct format (centimeter and degrees, rounded)
 		  	send_update(ROUND(xhat/10), ROUND(yhat/10), ROUND(thetahat*RAD2DEG), servoStep, forwardSensor, leftSensor, rearSensor, rightSensor);
 		  
+		  	#define MANUAL
+		  	#ifdef MANUAL
 		  	// Low level anti collision
 		  	uint8_t objectX;
 		  
@@ -329,7 +331,8 @@ void vMainSensorTowerTask( void *pvParameters ) {
 				xQueuePeek(globalPoseQ, &Target, 100);
 				xQueueOverwrite(poseControllerQ, &Target); // Uses overwrite, robot must stop immediately
 		  	}            
-		  
+		  	#endif
+
 		  	// Iterate in a increasing/decreasing manner and depending on the robots movement
 		  	if ((servoStep <= 90) && (rotationDirection == moveCounterClockwise) && (robotMovement < moveClockwise)) {
 				//servoStep++;
@@ -646,13 +649,12 @@ void vMainPoseEstimatorTask( void *pvParameters ) {
             xCom += xComOff;
             yCom += yComOff;
             // calculate heading
-            float compassHeading;
-            compassHeading = atan2(yCom, xCom) - compassOffset; // returns -pi, pi
+            float compassHeading = atan2(yCom, xCom) - compassOffset; // returns -pi, pi
             //debug("%f", compassHeading);
 
             // Update predicted state:    
-            float error = (compassHeading - predictedTheta);
-            //float error = 0; // testing
+            //float error = (compassHeading - predictedTheta);
+            float error = 0; // Compass data not included
             vFunc_Inf2pi(&error);
             
             kalmanGain = covariance_filter_predicted / (covariance_filter_predicted + CONST_VARIANCE_COMPASS);
