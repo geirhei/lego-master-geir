@@ -814,9 +814,12 @@ void compassTask(void *par ) {
 	  //             vTaskDelay(15/portTICK_PERIOD_MS);
 	  //         }
 	  
-	  uint8_t movement;
-	  movement = moveCounterClockwise;
-	  xQueueSendToBack(movementQ, &movement, 10);
+	  //uint8_t movement;
+	  //movement = moveCounterClockwise;
+	  //xQueueSendToBack(movementQ, &movement, 10);
+	  uint8_t leftDirection = motorBackward;
+	  uint8_t rightDirection = motorForward;
+	  vMotorMovementSwitch(-10, 10, &leftDirection, &rightDirection);
 
 	  float heading = 0;
 	  float gyroHeading = 0;
@@ -844,16 +847,17 @@ void compassTask(void *par ) {
 		vTaskDelayUntil(&xLastWakeTime, xDelay);
 		int16_t leftWheelTicks = 0;
 		int16_t rightWheelTicks = 0;
-		struct sWheelTicks WheelTicks = {0};
 		/*
 		taskENTER_CRITICAL();
 		leftWheelTicks = gLeftWheelTicks;
 		rightWheelTicks = gRightWheelTicks;
 		taskEXIT_CRITICAL();
 		*/
-		xQueueReceive(globalWheelTicksQ, &WheelTicks, 0);
-		leftWheelTicks = WheelTicks.leftWheel;
-		rightWheelTicks = WheelTicks.rightWheel;
+		struct sWheelTicks WheelTicks = {0};
+		if (xQueueReceive(globalWheelTicksQ, &WheelTicks, 0) == pdTRUE) {
+			leftWheelTicks = WheelTicks.leftWheel;
+			rightWheelTicks = WheelTicks.rightWheel;
+		}
 
 		float dLeft = (float)(leftWheelTicks - previous_ticksLeft) * WHEEL_FACTOR_MM; // Distance left wheel has traveled since last sample
 		float dRight =(float)(rightWheelTicks - previous_ticksRight) * WHEEL_FACTOR_MM; // Distance right wheel has traveled since last sample
@@ -879,10 +883,14 @@ void compassTask(void *par ) {
 		if(xCom < xComMin) xComMin = xCom;
 		if(yCom < yComMin) yComMin = yCom;
 	  }
-	  movement = moveClockwise;
-	  xQueueSendToBack(movementQ, &movement, 10);
-	  movement = moveStop;
-	  xQueueSendToBack(movementQ, &movement, 10);
+	  //movement = moveClockwise;
+	  leftDirection = motorForward;
+	  rightDirection = motorBackward;
+	  vMotorMovementSwitch(10, -10, &leftDirection, &rightDirection);
+	  //xQueueSendToBack(movementQ, &movement, 10);
+	  //movement = moveStop;
+	  //xQueueSendToBack(movementQ, &movement, 10);
+	  vMotorMovementSwitch(0, 0, &leftDirection, &rightDirection);
 	  // Printing said values
 	  //         int i = 0;
 	  //         for (i = 0; i < tellar; i++){
