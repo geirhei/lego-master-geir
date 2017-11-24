@@ -582,9 +582,16 @@ void vMainPoseEstimatorTask( void *pvParameters ) {
     float variance_gyro_encoder = (variance_gyro + variance_encoder) * period_in_S; // (Var gyro + var encoder) * timestep
     float covariance_filter_predicted = 0;
     
+    #ifdef COMPASS_ENABLED
     #define CONST_VARIANCE_COMPASS 0.0349f // 2 degrees in rads, as specified in the data sheet
 	#define COMPASS_FACTOR 10000.0f// We are driving inside with a lot of interference, compass needs to converge slowly
+    #endif
     
+    #ifndef COMPASS_ENABLED
+    #define CONST_VARIANCE_COMPASS 0.0f
+    #define COMPASS_FACTOR 0.0f
+    #endif
+
     float gyroWeight = 0.5;//encoderError / (encoderError + gyroError);
     uint8_t robot_is_turning = 0;
     
