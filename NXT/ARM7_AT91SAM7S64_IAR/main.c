@@ -552,6 +552,8 @@ void vMainPoseControllerTask( void *pvParameters ) {
 /* Pose estimator task */
 // New values and constants should be calibrated for the NXT
 void vMainPoseEstimatorTask( void *pvParameters ) {
+	#define COMPASS_ENABLED
+
     int16_t previous_ticksLeft = 0;
     int16_t previous_ticksRight = 0;  
     
@@ -569,8 +571,10 @@ void vMainPoseEstimatorTask( void *pvParameters ) {
     float compassOffset = 0.0;
     
     // Found by using calibration task
-    int16_t xComOff = 11; 
-    int16_t yComOff = -78;
+    //int16_t xComOff = 11; 
+    //int16_t yComOff = -78;
+    int16_t xComOff = -321; 
+    int16_t yComOff = -25;
     
     float variance_gyro = 0.0482f; // [rad] calculated offline, see report
     float variance_encoder = (2.0f * WHEEL_FACTOR_MM) / (WHEELBASE_MM); // approximation, 0.0257 [rad]
@@ -642,6 +646,7 @@ void vMainPoseEstimatorTask( void *pvParameters ) {
             covariance_filter_predicted += variance_gyro_encoder;
             
             /* UPDATE */
+            #ifdef COMPASS_ENABLED
             // Get compass data: ( Request and recheck after 6 ms?)
             int16_t xCom, yCom, zCom;
             compass_get(&xCom, &yCom, &zCom);
@@ -653,10 +658,14 @@ void vMainPoseEstimatorTask( void *pvParameters ) {
             //debug("%f", compassHeading);
 
             // Update predicted state:    
-            //float error = (compassHeading - predictedTheta);
-            float error = 0; // Compass data not included
+            float error = (compassHeading - predictedTheta);
+            //float error = 0; // Compass data not included
             vFunc_Inf2pi(&error);
-            
+            #endif
+            #ifndef COMPASS_ENABLED
+            float error = 0.0;
+            #endif
+
             kalmanGain = covariance_filter_predicted / (covariance_filter_predicted + CONST_VARIANCE_COMPASS);
             ///* Commented back in due to fixed encoder
             if (fabs(error) > (0.8727*period_in_S)) { // 0.8727 rad/s is top speed while turning
@@ -819,7 +828,7 @@ void compassTask(void *par ) {
 	  //xQueueSendToBack(movementQ, &movement, 10);
 	  uint8_t leftDirection = motorBackward;
 	  uint8_t rightDirection = motorForward;
-	  vMotorMovementSwitch(-10, 10, &leftDirection, &rightDirection);
+	  vMotorMovementSwitch(-25, 25, &leftDirection, &rightDirection);
 
 	  float heading = 0;
 	  float gyroHeading = 0;
@@ -886,11 +895,11 @@ void compassTask(void *par ) {
 	  //movement = moveClockwise;
 	  leftDirection = motorForward;
 	  rightDirection = motorBackward;
-	  vMotorMovementSwitch(10, -10, &leftDirection, &rightDirection);
+	  vMotorMovementSwitch(25, -25, &leftDirection, &rightDirection);
 	  //xQueueSendToBack(movementQ, &movement, 10);
 	  //movement = moveStop;
 	  //xQueueSendToBack(movementQ, &movement, 10);
-	  vMotorMovementSwitch(0, 0, &leftDirection, &rightDirection);
+	  //vMotorMovementSwitch(0, 0, &leftDirection, &rightDirection);
 	  // Printing said values
 	  //         int i = 0;
 	  //         for (i = 0; i < tellar; i++){
