@@ -552,7 +552,7 @@ void vMainPoseControllerTask( void *pvParameters ) {
 /* Pose estimator task */
 // New values and constants should be calibrated for the NXT
 void vMainPoseEstimatorTask( void *pvParameters ) {
-	#define COMPASS_ENABLED
+	//#define COMPASS_ENABLED
 
     int16_t previous_ticksLeft = 0;
     int16_t previous_ticksRight = 0;  
@@ -586,7 +586,7 @@ void vMainPoseEstimatorTask( void *pvParameters ) {
     #define CONST_VARIANCE_COMPASS 0.0349f // 2 degrees in rads, as specified in the data sheet
 	#define COMPASS_FACTOR 10000.0f// We are driving inside with a lot of interference, compass needs to converge slowly
     #endif
-    
+
     #ifndef COMPASS_ENABLED
     #define CONST_VARIANCE_COMPASS 0.0f
     #define COMPASS_FACTOR 0.0f
@@ -712,21 +712,23 @@ void vMainPoseEstimatorTask( void *pvParameters ) {
             for (i = 0; i<=samples; i++) {
                 gyro += gyro_get_dps_z();
             }
-            
-            int16_t xCom, yCom, zCom;
-            compass_get(&xCom, &yCom, &zCom);
-            xCom += xComOff;
-            yCom += yComOff;
-            
+            gyroOffset = gyro / (float)i;
+
             // Initialize pose to 0 and reset offset variables (isn't this done at start of task?)
             /*
             predictedX = 0;
             predictedY = 0;
             predictedTheta = 0;
             */
-
-            compassOffset = atan2(yCom, xCom);    
-            gyroOffset = gyro / (float)i;               
+            
+            #ifdef COMPASS_ENABLED
+            int16_t xCom, yCom, zCom;
+            compass_get(&xCom, &yCom, &zCom);
+            xCom += xComOff;
+            yCom += yComOff;
+            compassOffset = atan2(yCom, xCom);
+            #endif
+            
         }
     } // While(1) end
 }
