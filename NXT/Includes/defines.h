@@ -64,8 +64,8 @@
 
 /************************************************************************/
 /* Event group defines */
-#define HANDSHOOK_BIT	(1 << 0)
-#define PAUSED_BIT		(1 << 1)
+//#define HANDSHOOK_BIT	(1 << 0)
+//define PAUSED_BIT		(1 << 1)
 
 
 #endif /* DEFINES_H_ */
