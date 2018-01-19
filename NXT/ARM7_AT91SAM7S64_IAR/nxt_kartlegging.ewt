@@ -2433,6 +2433,9 @@
             <name>$PROJ_DIR$\..\Includes\led.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\Includes\mapping.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\Includes\motor.c</name>
         </file>
         <file>

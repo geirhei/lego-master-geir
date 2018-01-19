@@ -67,5 +67,10 @@
 //#define HANDSHOOK_BIT	(1 << 0)
 //define PAUSED_BIT		(1 << 1)
 
+/************************************************************************/
+/* Mapping defines */
+#define PB_SIZE 		50
+#define LB_SIZE			50
+#define L_SIZE          50
 
 #endif /* DEFINES_H_ */

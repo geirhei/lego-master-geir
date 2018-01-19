@@ -50,6 +50,7 @@
 #include "network.h"
 #include "emlist.h"
 #include "navigation.h"
+#include "mapping.h"
 
 /* Semaphore handles */
 SemaphoreHandle_t xCommandReadyBSem;
@@ -64,6 +65,7 @@ QueueHandle_t measurementQ = 0;
 
 /* Task handles */
 TaskHandle_t xPoseCtrlTask = NULL;
+TaskHandle_t xMappingTask = NULL;
 
 // Flag to indicate connection status.
 volatile uint8_t gHandshook = FALSE;
@@ -345,9 +347,11 @@ void vMainSensorTowerTask( void *pvParameters ) {
 		  
 		  	if ((servoStep >= 90) && (rotationDirection == moveCounterClockwise)) {
 				rotationDirection = moveClockwise;
+				// Notify mapping task
 		  	}
 		  	else if ((servoStep <= 0) && (rotationDirection == moveClockwise)) {
 				rotationDirection = moveCounterClockwise;
+				// Notify mapping task
 		  	}
 
 		}
@@ -737,10 +741,16 @@ void vMainPoseEstimatorTask( void *pvParameters ) {
 void vMainMappingTask( void *pvParameters )
 {
 	// init:
-	// observationHistory[]
-	// pointBuffer[]
-	// lineBuffer[]
-	// lines[]
+	point_buffer_t *pointBuffers;
+	line_buffer_t *lineBuffers;
+	line_t *lines;
+	pointBuffers = pvPortMalloc(NUMBER_OF_SENSORS * sizeof(point_buffer_t));
+	lineBuffers = pvPortMalloc(NUMBER_OF_SENSORS * sizeof(line_buffer_t));
+	lines = pvPortMalloc(L_SIZE * sizeof(line_t));
+	for (uint8_t i = 0; i < NUMBER_OF_SENSORS; i++) {
+		pointBuffers[i].buffer = pvPortMalloc(PB_SIZE * sizeof(point_t));
+		lineBuffers[i].buffer = pvPortMalloc(LB_SIZE * sizeof(line_t));
+	}
 
 	TickType_t xLastWakeTime;
 	const TickType_t xFrequency = 1000 / portTICK_PERIOD_MS;
@@ -1041,9 +1051,9 @@ int main(void){
 #ifndef COMPASS_CALIBRATE
   xTaskCreate(vMainPoseControllerTask, "PoseCon", 125, NULL, 1, &xPoseCtrlTask);// Dependant on estimator, sends instructions to movement task //2
   xTaskCreate(vMainPoseEstimatorTask, "PoseEst", 125, NULL, 5, NULL); // Independent task,
-  //xTaskCreate(vMainMappingTask, "Mapping", 500, NULL, 5, NULL);
+  xTaskCreate(vMainMappingTask, "Mapping", 500, NULL, 5, NULL);
   //xTaskCreate(vMainNavigationTask, "Navigation", 500, NULL, 5, NULL);
-  ret = xTaskCreate(vMainSensorTowerTask,"Tower", 125, NULL, 2, NULL); // Independent task, but use pose updates from estimator //1
+  ret = xTaskCreate(vMainSensorTowerTask,"Tower", 125, NULL, 2, &xMappingTask); // Independent task, but use pose updates from estimator //1
 #endif
   if(ret != pdPASS) {
 	display_goto_xy(0,2);
