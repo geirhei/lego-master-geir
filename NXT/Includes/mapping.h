@@ -25,3 +25,14 @@ typedef struct {
 	line_t* buffer;
 	uint8_t len;
 } line_buffer_t;
+
+/**
+ * Definition for type storing the IR data from a measurement
+ */
+typedef struct {
+	uint8_t forward;
+	uint8_t left;
+	uint8_t rear;
+	uint8_t right;
+	uint8_t servoStep;
+} measurement_t;

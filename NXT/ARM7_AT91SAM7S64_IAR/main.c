@@ -92,11 +92,11 @@ struct sWheelTicks {
 };
 
 // Struct for storing robot pose
-struct sPose {
+typedef struct {
 	float theta;
 	float x;
 	float y;
-};
+} pose_t;
 
 /// Struct for storing polar coordinates
 /*
@@ -110,15 +110,6 @@ struct sPolar {
 struct sCartesian {
 	float x;
 	float y;
-};
-
-// Struct for storing measurement data from IR-sensors
-struct sMeasurement {
-	uint8_t forward;
-	uint8_t left;
-	uint8_t rear;
-	uint8_t right;
-	uint8_t servoStep;
 };
 
 
@@ -231,7 +222,7 @@ void vMainSensorTowerTask( void *pvParameters ) {
 	float xhat = 0;
 	float yhat = 0;
 
-	struct sPose GlobalPose = {0};
+	pose_t GlobalPose = {0};
 	
 	uint8_t rotationDirection = moveCounterClockwise;
 	uint8_t servoStep = 0;
@@ -286,7 +277,7 @@ void vMainSensorTowerTask( void *pvParameters ) {
 		  	uint8_t rightSensor = distance_get_cm(3);
 
 		  	// Add measurements to struct for sending to queue
-		  	struct sMeasurement Measurement = {
+		  	measurement_t Measurement = {
 			  	.forward = forwardSensor,
 			  	.left = leftSensor,
 			  	.rear = rearSensor,
@@ -294,7 +285,7 @@ void vMainSensorTowerTask( void *pvParameters ) {
 			  	.servoStep = servoStep
 			  };
 
-		  	xQueueSendToBack(measurementQ, &Measurement, 0);
+		  	xQueueSendToBack(measurementQ, &Measurement, 10);
 
 		  	// Get latest pose estimate, dont't remove from queue
 		  	if (xQueuePeek(globalPoseQ, &GlobalPose, 0)) {
@@ -347,11 +338,13 @@ void vMainSensorTowerTask( void *pvParameters ) {
 		  
 		  	if ((servoStep >= 90) && (rotationDirection == moveCounterClockwise)) {
 				rotationDirection = moveClockwise;
-				// Notify mapping task
+				// Notify mapping task about tower direction change
+            	xTaskNotifyGive(xMappingTask);
 		  	}
 		  	else if ((servoStep <= 0) && (rotationDirection == moveClockwise)) {
 				rotationDirection = moveCounterClockwise;
-				// Notify mapping task
+				// Notify mapping task about tower direction change
+            	xTaskNotifyGive(xMappingTask);
 		  	}
 
 		}
@@ -402,7 +395,7 @@ void vMainPoseControllerTask( void *pvParameters ) {
 	float thetahat = 0;
 	float xhat = 0;
 	float yhat = 0;
-	struct sPose GlobalPose = {0};
+	pose_t GlobalPose = {0};
 	
 	/* Goal variables*/
 	float distance = 0;
@@ -569,7 +562,7 @@ void vMainPoseEstimatorTask( void *pvParameters ) {
     float predictedTheta = 0.0; // Start-heading i 90 degrees ?
     float predictedX = 0.0;
     float predictedY = 0.0;
-    struct sPose PredictedPose = {0};
+    pose_t PredictedPose = {0};
     
     float gyroOffset = 0.0;
     float compassOffset = 0.0;
@@ -741,15 +734,15 @@ void vMainPoseEstimatorTask( void *pvParameters ) {
 void vMainMappingTask( void *pvParameters )
 {
 	// init:
-	point_buffer_t *pointBuffers;
-	line_buffer_t *lineBuffers;
-	line_t *lines;
-	pointBuffers = pvPortMalloc(NUMBER_OF_SENSORS * sizeof(point_buffer_t));
-	lineBuffers = pvPortMalloc(NUMBER_OF_SENSORS * sizeof(line_buffer_t));
-	lines = pvPortMalloc(L_SIZE * sizeof(line_t));
+	point_buffer_t *PointBuffers;
+	line_buffer_t *LineBuffers;
+	line_t *Lines;
+	PointBuffers = pvPortMalloc(NUMBER_OF_SENSORS * sizeof(point_buffer_t));
+	LineBuffers = pvPortMalloc(NUMBER_OF_SENSORS * sizeof(line_buffer_t));
+	Lines = pvPortMalloc(L_SIZE * sizeof(line_t));
 	for (uint8_t i = 0; i < NUMBER_OF_SENSORS; i++) {
-		pointBuffers[i].buffer = pvPortMalloc(PB_SIZE * sizeof(point_t));
-		lineBuffers[i].buffer = pvPortMalloc(LB_SIZE * sizeof(line_t));
+		PointBuffers[i].buffer = pvPortMalloc(PB_SIZE * sizeof(point_t));
+		LineBuffers[i].buffer = pvPortMalloc(LB_SIZE * sizeof(line_t));
 	}
 
 	TickType_t xLastWakeTime;
@@ -759,6 +752,21 @@ void vMainMappingTask( void *pvParameters )
 	while (1)
 	{
 		vTaskDelayUntil(&xLastWakeTime, xFrequency);
+		if (gHandshook)
+		{
+			measurement_t Measurement = {0};
+			if (xQueueReceive(measurementQ, &Measurement, 100) == pdTRUE) {
+				pose_t Pose = {0};
+				xQueuePeek(globalPoseQ, &Pose, 0);
+			}
+
+			// Wait for synchronization by direct notification from the sensor tower task.
+			ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+
+			
+		} else {
+
+		}
 
 	}
 }
@@ -767,7 +775,7 @@ void vMainMappingTask( void *pvParameters )
 void vMainNavigationTask( void *pvParameters )
 {	
 	float *distances;
-	distances = (float*)pvPortMalloc(360 * sizeof(float));
+	distances = pvPortMalloc(360 * sizeof(float));
 	for (uint8_t i = 0; i < 360; i++) {
 		distances[i] = INFINITY;
 	}
@@ -783,11 +791,11 @@ void vMainNavigationTask( void *pvParameters )
 		vTaskDelayUntil(&xLastWakeTime, xFrequency);
 
 		// Receive a measurement
-		struct sMeasurement Measurement = {0};
+		measurement_t Measurement = {0};
 		xQueueReceive(measurementQ, &Measurement, 0);
 
 		// Read the global pose
-		struct sPose Pose = {0};
+		pose_t Pose = {0};
 		xQueuePeek(globalPoseQ, &Pose, 0);
 
 		float robotHeading = Pose.theta;
@@ -1041,8 +1049,8 @@ int main(void){
   poseControllerQ = xQueueCreate(1, sizeof(struct sCartesian)); // For setpoints to controller
   scanStatusQ = xQueueCreate(1, sizeof(uint8_t)); // For robot status
   globalWheelTicksQ = xQueueCreate(1, sizeof(struct sWheelTicks));
-  globalPoseQ = xQueueCreate(1, sizeof(struct sPose)); // For storing and passing the global pose estimate
-  measurementQ = xQueueCreate(1, sizeof(struct sMeasurement));
+  globalPoseQ = xQueueCreate(1, sizeof(pose_t)); // For storing and passing the global pose estimate
+  measurementQ = xQueueCreate(1, sizeof(measurement_t));
 
   xCommandReadyBSem = xSemaphoreCreateBinary();
 
