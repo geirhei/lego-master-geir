@@ -10,6 +10,8 @@
 
 #include <stdint.h>
 
+#include "types.h"
+
 /* Take any angle and put it inside -pi,pi */
 void vFunc_Inf2pi(float *angle_in_radians);
 
@@ -30,5 +32,7 @@ char* vFunc_ftoa(double num, char* dest, int afterPoint);
 
 void itoa(int n, char s[]);
 void reverse(char s[]);
+
+point_t vFunc_polar2Cart(float theta, float r);
 
 #endif /* FUNCTIONS_H_ */

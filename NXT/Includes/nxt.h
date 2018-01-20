@@ -8,7 +8,7 @@
 #ifndef _NXT_H_
 #define _NXT_H
 
-extern struct sWheelTicks;
+#include "types.h"
 
 void nxt_init(void);
 

@@ -2462,6 +2462,9 @@
         <file>
             <name>$PROJ_DIR$\..\Includes\trcStreamingRecorder.c</name>
         </file>
+        <file>
+            <name>$PROJ_DIR$\..\Includes\types.h</name>
+        </file>
     </group>
     <group>
         <name>Scheduler Source</name>

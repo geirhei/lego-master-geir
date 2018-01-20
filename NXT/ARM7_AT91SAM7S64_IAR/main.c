@@ -39,6 +39,7 @@
 #include "hs.h"
 #include "motor.h"
 #include "server_communication.h"
+#include "types.h"
 #include "defines.h"
 #include "functions.h"
 #include "nxt.h"
@@ -83,36 +84,6 @@ void vMainNavigationTask( void *pvParameters );
 
 void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName );
 
-
-
-/// Struct for storing wheel ticks
-struct sWheelTicks {
-	int16_t rightWheel;
-	int16_t leftWheel;
-};
-
-// Struct for storing robot pose
-typedef struct {
-	float theta;
-	float x;
-	float y;
-} pose_t;
-
-/// Struct for storing polar coordinates
-/*
-struct sPolar {
-  int16_t heading;
-  int16_t distance;
-};
-*/
-
-/// Struct for storing cartesian coordinates
-struct sCartesian {
-	float x;
-	float y;
-};
-
-
 #ifdef DEBUG
 	#warning DEBUG IS ACTIVE
 #endif
@@ -129,7 +100,7 @@ struct sCartesian {
 void vMainCommunicationTask( void *pvParameters ) {
 	// Setup for the communication task
 	//struct sPolar Setpoint = {0}; // Struct for setpoints from server
-	struct sCartesian Target = {0}; // Structs for target coordinates from server
+	cartesian_t Target = {0}; // Structs for target coordinates from server
 	message_t command_in; // Buffer for recieved messages
 
 	server_communication_init();
@@ -278,10 +249,7 @@ void vMainSensorTowerTask( void *pvParameters ) {
 
 		  	// Add measurements to struct for sending to queue
 		  	measurement_t Measurement = {
-			  	.forward = forwardSensor,
-			  	.left = leftSensor,
-			  	.rear = rearSensor,
-			  	.right = rightSensor,
+			  	.data = { forwardSensor, leftSensor, rearSensor, rightSensor },
 			  	.servoStep = servoStep
 			  };
 
@@ -320,7 +288,7 @@ void vMainSensorTowerTask( void *pvParameters ) {
 		  
 		  	if ((objectX > 0) && (objectX < 20)) {
 				// Stop controller
-				struct sCartesian Target = {0};
+				cartesian_t Target = {0};
 				xQueuePeek(globalPoseQ, &Target, 100);
 				xQueueOverwrite(poseControllerQ, &Target); // Uses overwrite, robot must stop immediately
 		  	}            
@@ -375,7 +343,7 @@ void vMainPoseControllerTask( void *pvParameters ) {
     #endif
 
     /* Task init */
-    struct sCartesian Target = {0};
+    cartesian_t Target = {0};
 	float radiusEpsilon = 5; //[mm]The acceptable radius from goal for completion
 	uint8_t lastMovement = 0;
 	
@@ -410,7 +378,7 @@ void vMainPoseControllerTask( void *pvParameters ) {
 	
 	int16_t leftWheelTicks = 0;
 	int16_t rightWheelTicks = 0;
-	struct sWheelTicks WheelTicks = {0};
+	wheel_ticks_t WheelTicks = {0};
 	
 	uint8_t leftEncoderVal = 0;
 	uint8_t rightEncoderVal = 0;
@@ -602,7 +570,7 @@ void vMainPoseEstimatorTask( void *pvParameters ) {
         if (gHandshook) { // Check if we are ready    
             int16_t leftWheelTicks = 0;
             int16_t rightWheelTicks = 0;
-            struct sWheelTicks WheelTicks = {0};
+            wheel_ticks_t WheelTicks = {0};
 
             // Attempt to receive global tick data, move on after 15ms
             if (xQueueReceive(globalWheelTicksQ, &WheelTicks, 15 / portTICK_PERIOD_MS)) {
@@ -758,6 +726,7 @@ void vMainMappingTask( void *pvParameters )
 			if (xQueueReceive(measurementQ, &Measurement, 100) == pdTRUE) {
 				pose_t Pose = {0};
 				xQueuePeek(globalPoseQ, &Pose, 0);
+
 			}
 
 			// Wait for synchronization by direct notification from the sensor tower task.
@@ -772,6 +741,7 @@ void vMainMappingTask( void *pvParameters )
 }
 
 // For testing memory allocation
+/*
 void vMainNavigationTask( void *pvParameters )
 {	
 	float *distances;
@@ -814,8 +784,10 @@ void vMainNavigationTask( void *pvParameters )
 		}
 		emlist_destroy(frontierLocations);
 		*/
+/*
 	}
 }
+*/
 
 
 //#define COMPASS_CALIBRATE
@@ -865,7 +837,7 @@ void compassTask(void *par ) {
 	  gLeftWheelTicks = 0;
 	  gRightWheelTicks = 0;
 	  */
-	  struct sWheelTicks WheelTicks = {0};
+	  wheel_ticks_t WheelTicks = {0};
 	  xQueueOverwrite(globalWheelTicksQ, &WheelTicks);
 
 	  float previous_ticksLeft = 0;
@@ -889,7 +861,7 @@ void compassTask(void *par ) {
 		rightWheelTicks = gRightWheelTicks;
 		taskEXIT_CRITICAL();
 		*/
-		struct sWheelTicks WheelTicks = {0};
+		wheel_ticks_t WheelTicks = {0};
 		if (xQueueReceive(globalWheelTicksQ, &WheelTicks, 0) == pdTRUE) {
 			leftWheelTicks = WheelTicks.leftWheel;
 			rightWheelTicks = WheelTicks.rightWheel;
@@ -1046,9 +1018,9 @@ int main(void){
   
   /* Initialize RTOS utilities  */
   movementQ = xQueueCreate(2, sizeof(uint8_t)); // For sending movements to vMainMovementTask (used in compass task only)
-  poseControllerQ = xQueueCreate(1, sizeof(struct sCartesian)); // For setpoints to controller
+  poseControllerQ = xQueueCreate(1, sizeof(cartesian_t)); // For setpoints to controller
   scanStatusQ = xQueueCreate(1, sizeof(uint8_t)); // For robot status
-  globalWheelTicksQ = xQueueCreate(1, sizeof(struct sWheelTicks));
+  globalWheelTicksQ = xQueueCreate(1, sizeof(wheel_ticks_t));
   globalPoseQ = xQueueCreate(1, sizeof(pose_t)); // For storing and passing the global pose estimate
   measurementQ = xQueueCreate(1, sizeof(measurement_t));
 

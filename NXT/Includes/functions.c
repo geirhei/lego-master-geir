@@ -8,6 +8,7 @@
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
+
 #include "functions.h"
 
 #define M_PI 3.14159265358979323846
@@ -158,3 +159,9 @@ void reverse(char s[])
     }
 }
 
+point_t vFunc_polar2Cart(float theta, float r) {
+    point_t newPoint;
+    newPoint.x = r * cos(theta);
+    newPoint.y = r * sin(theta);
+    return newPoint;
+}

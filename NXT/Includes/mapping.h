@@ -1,38 +1,14 @@
+#ifndef MAPPING_H_
+#define MAPPING_H_
+
+#include "FreeRTOS.h"
 #include <stdint.h>
+#include <math.h>
 
-/**
- * Definition for type representing the coordinates of a measurement
- */
-typedef struct {
-	float x;
-	float y;
-} point_t;
+#include "types.h"
+#include "defines.h"
+#include "functions.h"
 
-/**
- * Definition for type representing a line segment
- */
-typedef struct {
-	point_t p;
-	point_t q;
-} line_t;
+void vMappingUpdatePointBuffers(point_buffer_t *Buffers, measurement_t *Measurement, pose_t *Pose);
 
-typedef struct {
-	point_t* buffer;
-	uint8_t len;
-} point_buffer_t;
-
-typedef struct {
-	line_t* buffer;
-	uint8_t len;
-} line_buffer_t;
-
-/**
- * Definition for type storing the IR data from a measurement
- */
-typedef struct {
-	uint8_t forward;
-	uint8_t left;
-	uint8_t rear;
-	uint8_t right;
-	uint8_t servoStep;
-} measurement_t;
+#endif
