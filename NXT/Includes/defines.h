@@ -57,7 +57,7 @@
 
 /************************************************************************/
 /* Macros                                                               */
-#define M_PI 3.14159
+#define M_PI 3.14159265358979323846
 #define DEG2RAD M_PI / 180.0
 #define RAD2DEG 180.0 / M_PI
 #define ROUND(x) ((x)>=0?(long)((x)+0.5):(long)((x)-0.5))
@@ -69,9 +69,10 @@
 
 /************************************************************************/
 /* Mapping defines */
-#define PB_SIZE 			50
-#define LB_SIZE				50
-#define L_SIZE          	50
-#define MAX_IR_DISTANCE		40
+#define PB_SIZE 				50
+#define LB_SIZE					50
+#define L_SIZE          		50
+#define MAX_IR_DISTANCE			40
+#define COLLINEAR_TOLERANCE		100
 
 #endif /* DEFINES_H_ */

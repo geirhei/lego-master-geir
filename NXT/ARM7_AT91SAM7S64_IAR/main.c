@@ -55,6 +55,7 @@
 
 /* Semaphore handles */
 SemaphoreHandle_t xCommandReadyBSem;
+SemaphoreHandle_t xBeginMergeBSem;
 
 /* Queues */
 QueueHandle_t movementQ = 0;
@@ -307,12 +308,14 @@ void vMainSensorTowerTask( void *pvParameters ) {
 		  	if ((servoStep >= 90) && (rotationDirection == moveCounterClockwise)) {
 				rotationDirection = moveClockwise;
 				// Notify mapping task about tower direction change
-            	xTaskNotifyGive(xMappingTask);
+            	//xTaskNotifyGive(xMappingTask);
+				xSemaphoreGive(xBeginMergeBSem);
 		  	}
 		  	else if ((servoStep <= 0) && (rotationDirection == moveClockwise)) {
 				rotationDirection = moveCounterClockwise;
 				// Notify mapping task about tower direction change
-            	xTaskNotifyGive(xMappingTask);
+            	//xTaskNotifyGive(xMappingTask);
+            	xSemaphoreGive(xBeginMergeBSem);
 		  	}
 
 		}
@@ -727,10 +730,17 @@ void vMainMappingTask( void *pvParameters )
 				pose_t Pose = {0};
 				xQueuePeek(globalPoseQ, &Pose, 0);
 
+				// Add new IR-measurements to end of PB
+				vMappingUpdatePointBuffers(PointBuffers, &Measurement, &Pose);
 			}
 
-			// Wait for synchronization by direct notification from the sensor tower task.
-			ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+			// Check semaphore for synchronization from sensor tower
+			if (xSemaphoreTake(xBeginMergeBSem, 10) == pdTRUE) {
+				for (uint8_t j = 0; j < NUMBER_OF_SENSORS; j++) {
+					vMappingLineCreate(&PointBuffers[j], &LineBuffers[j]);
+					// merge
+				}
+			}
 
 			
 		} else {
@@ -1025,6 +1035,7 @@ int main(void){
   measurementQ = xQueueCreate(1, sizeof(measurement_t));
 
   xCommandReadyBSem = xSemaphoreCreateBinary();
+  xBeginMergeBSem = xSemaphoreCreateBinary();
 
   BaseType_t ret;
   xTaskCreate(vMainCommunicationTask, "Comm", 250, NULL, 3, NULL);  // Dependant on IO, sends instructions to other tasks

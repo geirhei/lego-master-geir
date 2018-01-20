@@ -24,8 +24,8 @@ typedef struct {
  * Definition for type representing a line segment
  */
 typedef struct {
-	point_t p;
-	point_t q;
+	point_t P;
+	point_t Q;
 } line_t;
 
 /**

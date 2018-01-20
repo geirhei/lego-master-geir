@@ -11,8 +11,6 @@
 
 #include "functions.h"
 
-#define M_PI 3.14159265358979323846
-
 /* Take any angle and put it inside -pi,pi */
 void vFunc_Inf2pi(float *angle_in_radians){
     do{
@@ -164,4 +162,42 @@ point_t vFunc_polar2Cart(float theta, float r) {
     newPoint.x = r * cos(theta);
     newPoint.y = r * sin(theta);
     return newPoint;
+}
+
+int8_t vFunc_areCollinear(point_t *a, point_t *b, point_t *c) {
+    return abs( (a->y - b->y) * (a->x - c->x) - (a->y - c->y) * (a->x - b->x) ) <= COLLINEAR_TOLERANCE;
+}
+
+float vFunc_getSlope(line_t *Line) {
+    return (Line->Q.y - Line->P.y) / (Line->Q.x - Line->P.x);
+}
+
+float vFunc_distanceBetween(point_t *Pos1, point_t *Pos2) {
+    return sqrt( pow(Pos1->x - Pos2->x, 2) + pow(Pos1->y - Pos2->y, 2) );
+}
+
+
+int8_t vFunc_isMergeable(line_t *Line1, line_t *Line2) {
+    const float MU = 1.0; // slope
+    const float DELTA = 10.0; // cm
+
+    float m1 = vFunc_getSlope(Line1);
+    float m2 = vFunc_getSlope(Line2);
+
+    // Test slope
+    if (abs(m1 - m2) > MU) {
+        // Slope test failed
+        return -1;
+    }
+
+    // Test distance between endpoints
+    float d1 = vFunc_distanceBetween(&Line1->P, &Line2->P);
+    float d2 = vFunc_distanceBetween(&Line1->P, &Line2->Q);
+    float d3 = vFunc_distanceBetween(&Line1->Q, &Line2->P);
+    float d4 = vFunc_distanceBetween(&Line1->Q, &Line2->Q);
+
+    if ( (d1 <= DELTA) || (d2 <= DELTA) || (d3 <= DELTA) || (d4 <= DELTA) ) {
+        return 1;
+    }
+    return -1;
 }
