@@ -2451,6 +2451,9 @@
             <name>$PROJ_DIR$\..\Includes\pose_controller.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\Includes\pose_estimator.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\Includes\sensor_tower.c</name>
         </file>
         <file>
