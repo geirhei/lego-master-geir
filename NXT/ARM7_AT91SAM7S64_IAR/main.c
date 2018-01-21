@@ -80,7 +80,7 @@ void vMainSensorTowerTask( void *pvParameters );
 void vMainPoseControllerTask( void *pvParameters );
 void vARQTask( void *pvParameters );
 void vMainPoseEstimatorTask( void *pvParameters );
-extern void vMainMappingTask( void *pvParameters );
+void vMainMappingTask( void *pvParameters );
 void vMainNavigationTask( void *pvParameters );
 
 void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName );
