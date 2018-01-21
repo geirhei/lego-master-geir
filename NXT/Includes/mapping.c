@@ -1,5 +1,54 @@
 #include "mapping.h"
 
+/* Mapping task */
+void vMainMappingTask( void *pvParameters )
+{
+	// init:
+	point_buffer_t *PointBuffers;
+	line_buffer_t *LineBuffers;
+	line_t *Lines;
+	PointBuffers = pvPortMalloc(NUMBER_OF_SENSORS * sizeof(point_buffer_t));
+	LineBuffers = pvPortMalloc(NUMBER_OF_SENSORS * sizeof(line_buffer_t));
+	Lines = pvPortMalloc(L_SIZE * sizeof(line_t));
+	for (uint8_t i = 0; i < NUMBER_OF_SENSORS; i++) {
+		PointBuffers[i].buffer = pvPortMalloc(PB_SIZE * sizeof(point_t));
+		LineBuffers[i].buffer = pvPortMalloc(LB_SIZE * sizeof(line_t));
+	}
+
+	TickType_t xLastWakeTime;
+	const TickType_t xFrequency = 1000 / portTICK_PERIOD_MS;
+	xLastWakeTime = xTaskGetTickCount();
+
+	while (1)
+	{
+		vTaskDelayUntil(&xLastWakeTime, xFrequency);
+		if (gHandshook)
+		{
+			measurement_t Measurement = {0};
+			if (xQueueReceive(measurementQ, &Measurement, 100) == pdTRUE) {
+				pose_t Pose = {0};
+				xQueuePeek(globalPoseQ, &Pose, 0);
+
+				// Add new IR-measurements to end of PB
+				vMappingUpdatePointBuffers(PointBuffers, &Measurement, &Pose);
+			}
+
+			// Check semaphore for synchronization from sensor tower
+			if (xSemaphoreTake(xBeginMergeBSem, 10) == pdTRUE) {
+				for (uint8_t j = 0; j < NUMBER_OF_SENSORS; j++) {
+					vMappingLineCreate(&PointBuffers[j], &LineBuffers[j]);
+					// merge
+				}
+			}
+
+			
+		} else {
+
+		}
+
+	}
+}
+
 void vMappingUpdatePointBuffers(point_buffer_t *Buffers, measurement_t *Measurement, pose_t *Pose) {
 	float towerAngle = Measurement->servoStep * DEG2RAD; //[0,pi/2]
 	float theta = towerAngle + Pose->theta;
@@ -67,5 +116,5 @@ void vMappingLineCreate(point_buffer_t *PointBuffer, line_buffer_t *LineBuffer) 
 }
 
 void vMappingLineMerge(point_buffer_t *PointBuffer, line_buffer_t *LineRepo) {
-	
+
 }
