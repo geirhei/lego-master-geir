@@ -1023,6 +1023,10 @@ int main(void){
   // Set red LED on to indicate INIT is ongoing
   led_set(LED_RED);
 
+  // assert test
+  //uint8_t a = 0;
+  //configASSERT(a == 1);
+
   /* Init and start tracing */
   //vTraceEnable(TRC_START);
   
@@ -1036,6 +1040,17 @@ int main(void){
 
   xCommandReadyBSem = xSemaphoreCreateBinary();
   xBeginMergeBSem = xSemaphoreCreateBinary();
+
+  // For debugging
+  vQueueAddToRegistry(movementQ, "Movement queue");
+  vQueueAddToRegistry(poseControllerQ, "Pose controller queue");
+  vQueueAddToRegistry(scanStatusQ, "Scan status queue");
+  vQueueAddToRegistry(globalWheelTicksQ, "Global wheel ticks queue");
+  vQueueAddToRegistry(globalPoseQ, "Global pose queue");
+  vQueueAddToRegistry(measurementQ, "Measurement queue");
+
+  vQueueAddToRegistry(xCommandReadyBSem, "Command ready semaphore");
+  vQueueAddToRegistry(xBeginMergeBSem, "Begin merge semaphore");
 
   BaseType_t ret;
   xTaskCreate(vMainCommunicationTask, "Comm", 250, NULL, 3, NULL);  // Dependant on IO, sends instructions to other tasks
