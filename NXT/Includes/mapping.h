@@ -21,6 +21,8 @@ extern SemaphoreHandle_t xBeginMergeBSem;
 extern QueueHandle_t measurementQ;
 extern QueueHandle_t globalPoseQ;
 
+extern TaskHandle_t xPoseCtrlTask;
+
 void vMappingUpdatePointBuffers(point_buffer_t *Buffers, measurement_t *Measurement, pose_t *Pose);
 
 void vMappingLineCreate(point_buffer_t *PointBuffer, line_buffer_t *LineBuffer);
