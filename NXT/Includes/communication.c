@@ -92,10 +92,15 @@ void vMainCommunicationTask( void *pvParameters ) {
 					xQueueOverwrite(poseControllerQ, &Target);
 					break;
 			}
-
 		}
-		message_t OutgoingMsg = { 0 };
-		if (xQueueReceive(sendingQ, &OutgoingMsg, 0) == pdTRUE) {
+		
+	}
+}
+
+void vSenderTask( void *pvParameters ) {
+	message_t OutgoingMsg = { 0 };
+	while (1) {
+		if (xQueueReceive(sendingQ, &OutgoingMsg, portMAX_DELAY) == pdTRUE) {
 			switch (OutgoingMsg.type) {
 				case TYPE_UPDATE:
 

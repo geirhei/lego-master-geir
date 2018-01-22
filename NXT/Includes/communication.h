@@ -24,4 +24,6 @@ extern QueueHandle_t sendingQ;
  */
 void vMainCommunicationTask( void *pvParameters );
 
+void vSenderTask( void *pvParameters );
+
 #endif
