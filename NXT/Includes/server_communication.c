@@ -22,7 +22,8 @@ uint8_t use_arq[12] = {
   [TYPE_UPDATE] = 0, 
   [TYPE_IDLE] = 1, 
   [TYPE_PING_RESPONSE] = 0, 
-  [TYPE_DEBUG] = 0 
+  [TYPE_LINE] = 1,
+  [TYPE_DEBUG] = 0
 };
 
 void server_communication_init(void) {
@@ -108,9 +109,18 @@ void send_ping_response(void) {
   else simple_p_send(SERVER_ADDRESS, &status, 1);
 }
 
-void send_line(line_t *line) {
+void send_line(int16_t x_p, int16_t y_p, int16_t x_q, int16_t y_q) {
   if(!connected) return;
-
+  message_t msg;
+  msg.type = TYPE_LINE;
+  msg.message.line.x_p = x_p;
+  msg.message.line.y_p = y_p;
+  msg.message.line.x_q = x_q;
+  msg.message.line.y_q = y_q;
+  uint8_t data[sizeof(line_message_t)+1];
+  memcpy(data, (uint8_t*) &msg, sizeof(data));
+  if(use_arq[TYPE_LINE]) arq_send(server_connection, data, sizeof(data));
+  else simple_p_send(SERVER_ADDRESS, data, sizeof(data));
 }
 
 void server_receiver(uint8_t *data, uint16_t len) {

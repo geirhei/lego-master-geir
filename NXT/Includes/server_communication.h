@@ -85,6 +85,7 @@ union Message {
   update_message_t update;
   handshake_message_t handshake;
   order_message_t order;
+  line_message_t line;
   //priority_order_message_t priority_order;
 };
 
@@ -99,7 +100,10 @@ uint8_t send_handshake(void);
 void send_update(int16_t x_cm, int16_t y_cm, int16_t heading_deg, int16_t towerAngle_deg, uint8_t S1_cm, uint8_t S2_cm, uint8_t S3_cm, uint8_t S4_cm);
 void send_idle(void);
 void send_ping_response(void);
-void send_line(line_t *line);
+
+/* Send the coordinates of the start and endpoints of a line. [cm] */
+void send_line(int16_t x_p, int16_t y_p, int16_t x_q, int16_t y_q);
+
 void server_receiver(uint8_t *data, uint16_t len);
 void debug(const char *fmt, ...);
 
