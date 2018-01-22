@@ -17,26 +17,13 @@ extern message_t message_in;
 extern SemaphoreHandle_t xCommandReadyBSem;
 extern uint8_t gHandshook;
 
-uint8_t use_arq[11] = { 
+uint8_t use_arq[12] = { 
   [TYPE_HANDSHAKE] = 1,
   [TYPE_UPDATE] = 0, 
   [TYPE_IDLE] = 1, 
   [TYPE_PING_RESPONSE] = 0, 
   [TYPE_DEBUG] = 0 
 };
-
-#define TYPE_HANDSHAKE      0
-#define TYPE_UPDATE         1
-#define TYPE_ORDER          2
-//#define TPYE_PRIORITY_ORDER 3
-#define TYPE_IDLE           3
-#define TYPE_PAUSE          4
-#define TYPE_UNPAUSE        5
-#define TYPE_CONFIRM        6
-#define TYPE_FINISH         7
-#define TYPE_PING           8
-#define TYPE_PING_RESPONSE  9
-#define TYPE_DEBUG          10
 
 void server_communication_init(void) {
   if(connected) return;
@@ -119,6 +106,11 @@ void send_ping_response(void) {
   uint8_t status = TYPE_PING_RESPONSE;
   if(use_arq[TYPE_PING_RESPONSE]) arq_send(server_connection, &status, 1);
   else simple_p_send(SERVER_ADDRESS, &status, 1);
+}
+
+void send_line(line_t *line) {
+  if(!connected) return;
+
 }
 
 void server_receiver(uint8_t *data, uint16_t len) {
