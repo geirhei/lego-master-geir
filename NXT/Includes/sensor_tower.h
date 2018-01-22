@@ -24,6 +24,8 @@ extern QueueHandle_t measurementQ;
 
 extern SemaphoreHandle_t xBeginMergeBSem;
 
+extern TaskHandle_t xMappingTask;
+
 void vMainSensorTowerTask( void *pvParameters );
 
 #endif

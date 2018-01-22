@@ -5,18 +5,21 @@
  * Functions used by the navigation task
  */
 
-#ifndef _NAVIGATION_H_
-#define _NAVIGATION_H_
+#ifndef NAVIGATION_H_
+#define NAVIGATION_H_
+
+/* Kernel includes */
+#include "FreeRTOS.h"
+#include "queue.h"
+#include "semphr.h"
+#include "task.h"
 
 #include <stdint.h>
 
-/**
- * @brief      Calculates the headings of the measurements relative to the global world.
- *
- * @param[in]  robotHeading  The robot heading
- * @param[in]  servoStep     The number of increments the IR-tower has turned clockwise at the time of measurement
- * @param      headings      The array to fill with the calculated heading values
- */
+#include "types.h"
+
+//void vMainNavigationTask( void *pvParameters );
+
 void navigation_get_measurement_headings(float robotHeading, uint8_t servoStep, float *headings);
 
 #endif

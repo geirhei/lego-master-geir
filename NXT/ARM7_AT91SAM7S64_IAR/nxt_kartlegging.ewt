@@ -2412,7 +2412,13 @@
             <name>$PROJ_DIR$\..\Includes\buffer.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\Includes\calibration.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\Includes\cobs.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Includes\communication.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\Includes\crc.c</name>
