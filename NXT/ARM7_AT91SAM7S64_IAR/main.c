@@ -148,7 +148,6 @@ int main(void) {
   BaseType_t ret;
   xTaskCreate(vMainCommunicationTask, "Comm", 250, NULL, 3, NULL);  // Dependant on IO, sends instructions to other tasks
 #ifndef COMPASS_CALIBRATE
-  #include "calibration.h"
   xTaskCreate(vMainPoseControllerTask, "PoseCon", 125, NULL, 1, &xPoseCtrlTask);// Dependant on estimator, sends instructions to movement task //2
   xTaskCreate(vMainPoseEstimatorTask, "PoseEst", 125, NULL, 5, NULL); // Independent task,
   //xTaskCreate(vMainMappingTask, "Mapping", 500, NULL, 5, NULL);
@@ -162,6 +161,7 @@ int main(void) {
   }
   
 #ifdef COMPASS_CALIBRATE
+  #include "calibration.h"
   display_goto_xy(0,1);
   display_string("\n \t WARNING \t !\n");
   display_string("COMPASS CALIBRATION!\n");

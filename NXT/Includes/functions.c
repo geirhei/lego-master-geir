@@ -91,10 +91,10 @@ char* vFunc_inc(char* s, char* e)
 }
 
 /* C program for implementation of ftoa() */
-char* vFunc_ftoa(double num, char* dest, int afterPoint){
+char* vFunc_ftoa(float num, char* dest, int afterPoint){
     char* p = dest;
     int integer = (int)num;
-    double decimal = num - integer;
+    float decimal = num - integer;
     
     //parse sign
     if(num < 0){

@@ -29,7 +29,7 @@ void vFunc_reverse(char* p, char* q);
 char* vFunc_inc(char* s, char* e);
 
 // C program for implementation of ftoa()
-char* vFunc_ftoa(double num, char* dest, int afterPoint);
+char* vFunc_ftoa(float num, char* dest, int afterPoint);
 
 void itoa(int n, char s[]);
 void reverse(char s[]);
