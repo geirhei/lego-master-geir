@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+#include "types.h"
+
 /* Servos */
 #define servoRight  	0   /* NXT_PORT_A */
 #define servoLeft    	1   /* NXT_PORT_B */

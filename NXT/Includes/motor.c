@@ -11,17 +11,7 @@
 
 #define TICKS_PER_DEGREE 7.1
 
-//extern int16_t gLeftWheelTicks;
-//extern int16_t gRightWheelTicks;
 extern QueueHandle_t globalWheelTicksQ;
-
-/// Struct for storing wheel ticks
-
-struct sWheelTicks {
-	int16_t rightWheel;
-	int16_t leftWheel;
-};
-
 
 void vMotor_init(void) {
   nxt_motor_set_speed(servoLeft, 0, 1);
@@ -87,7 +77,7 @@ void vMotorSetAngle(uint8_t motor, int16_t angle) {
 }
 
 void vMotorCountUpdate(void) {
-  struct sWheelTicks WheelTicks;
+  wheel_ticks_t WheelTicks;
   WheelTicks.rightWheel = nxt_motor_get_count(servoRight);
   WheelTicks.leftWheel = nxt_motor_get_count(servoLeft);
   // Pass the motor count values to the global queue containing wheel ticks
