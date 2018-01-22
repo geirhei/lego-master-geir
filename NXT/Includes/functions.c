@@ -5,11 +5,12 @@
 //
 /************************************************************************/
 
+#include "functions.h"
+
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
 
-#include "functions.h"
 
 /* Take any angle and put it inside -pi,pi */
 void vFunc_Inf2pi(float *angle_in_radians){

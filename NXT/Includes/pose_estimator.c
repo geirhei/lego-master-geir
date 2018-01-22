@@ -1,5 +1,24 @@
 #include "pose_estimator.h"
 
+/* Kernel includes */
+#include "FreeRTOS.h"
+#include "queue.h"
+#include "semphr.h"
+#include "task.h"
+
+#include <math.h>
+
+#include "defines.h"
+#include "types.h"
+#include "functions.h"
+#include "io.h"
+
+extern volatile uint8_t gHandshook;
+
+extern QueueHandle_t globalPoseQ;
+extern QueueHandle_t globalWheelTicksQ;
+extern TaskHandle_t xPoseCtrlTask;
+
 void vMainPoseEstimatorTask( void *pvParameters ) {
 	//#define COMPASS_ENABLED
 

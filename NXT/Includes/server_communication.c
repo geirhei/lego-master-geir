@@ -1,13 +1,5 @@
-#include <string.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include "arq.h"
-#include "defines.h"
-#include "functions.h"
 #include "server_communication.h"
-#include "FreeRTOS.h"
-#include "semphr.h"
-#include "simple_protocol.h"
+
 
 #define SERVER_ADDRESS  0
 

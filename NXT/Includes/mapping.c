@@ -1,5 +1,26 @@
 #include "mapping.h"
 
+/* Kernel includes */
+#include "FreeRTOS.h"
+#include "queue.h"
+#include "semphr.h"
+#include "task.h"
+
+#include <stdint.h>
+#include <math.h>
+
+#include "types.h"
+#include "defines.h"
+#include "functions.h"
+#include "server_communication.h"
+
+extern volatile uint8_t gHandshook;
+
+extern QueueHandle_t measurementQ;
+extern QueueHandle_t globalPoseQ;
+extern SemaphoreHandle_t xBeginMergeBSem;
+extern TaskHandle_t xMappingTask;
+
 /* Mapping task */
 void vMainMappingTask( void *pvParameters )
 {

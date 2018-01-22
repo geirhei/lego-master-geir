@@ -38,7 +38,7 @@
 #include "display.h"
 //#include "hs.h"
 //#include "motor.h"
-#include "server_communication.h"
+//#include "server_communication.h"
 #include "types.h"
 #include "defines.h"
 //#include "functions.h"
@@ -76,7 +76,6 @@ TaskHandle_t xMappingTask = NULL;
 // Flag to indicate connection status.
 volatile uint8_t gHandshook = FALSE;
 volatile uint8_t gPaused = FALSE;
-volatile message_t message_in;
 
 void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName );
 

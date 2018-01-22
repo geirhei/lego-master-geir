@@ -1,7 +1,7 @@
 #ifndef _ARQ_H_
 #define _ARG_H_
 
-#include "stdint.h"
+#include <stdint.h>
 
 typedef uint8_t arq_connection;
 

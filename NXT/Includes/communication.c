@@ -1,5 +1,21 @@
 #include "communication.h"
 
+#include "types.h"
+#include "led.h"
+#include "server_communication.h"
+#include "arq.h"
+#include "display.h"
+
+extern volatile uint8_t gHandshook;
+extern volatile uint8_t gPaused;
+volatile message_t message_in;
+
+extern QueueHandle_t globalPoseQ;
+extern QueueHandle_t poseControllerQ;
+extern SemaphoreHandle_t xCommandReadyBSem;
+
+QueueHandle_t sendingQ = 0;
+
 void vMainCommunicationTask( void *pvParameters ) {
 	// Setup for the communication task
 	//struct sPolar Setpoint = {0}; // Struct for setpoints from server
@@ -7,6 +23,7 @@ void vMainCommunicationTask( void *pvParameters ) {
 	message_t command_in; // Buffer for recieved messages
 
 	server_communication_init();
+	sendingQ = xQueueCreate(10, sizeof(message_t));
 
 	uint8_t success = 0;
 	while (!success) {
@@ -76,6 +93,18 @@ void vMainCommunicationTask( void *pvParameters ) {
 					break;
 			}
 
+		}
+		message_t OutgoingMsg = { 0 };
+		if (xQueueReceive(sendingQ, &OutgoingMsg, 0) == pdTRUE) {
+			switch (OutgoingMsg.type) {
+				case TYPE_UPDATE:
+
+					break;
+				case TYPE_HANDSHAKE:
+					break;
+				case TYPE_LINE:
+					break;
+			}
 		}
 	}
 }

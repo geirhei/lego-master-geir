@@ -1,14 +1,31 @@
 #include "sensor_tower.h"
 
+/* Kernel includes */
+#include "FreeRTOS.h"
+#include "queue.h"
+#include "semphr.h"
+#include "task.h"
+
+#include "types.h"
+#include "defines.h"
+#include "functions.h"
+#include "motor.h"
+#include "io.h"
+#include "server_communication.h"
+
+extern volatile uint8_t gHandshook;
+extern volatile uint8_t gPaused;
+
+extern QueueHandle_t scanStatusQ;
+extern QueueHandle_t globalPoseQ;
+extern QueueHandle_t poseControllerQ;
+extern QueueHandle_t measurementQ;
+extern SemaphoreHandle_t xBeginMergeBSem;
+extern TaskHandle_t xMappingTask;
+
 /**
- * @brief      Task responsible for control of the sensor tower. Tower rotation
- *             depends on movement status received from the pose controller.
- *
- *             Receives from scanStatusQ
- *             
- *             Sends to poseControllerQ (anti collision)
- *
- * @param      pvParameters  The pv parameters
+ * Task responsible for control of the sensor tower. Tower rotation depends on
+ * movement status received from the pose controller.
  */
 void vMainSensorTowerTask( void *pvParameters ) {
 	/* Task init */

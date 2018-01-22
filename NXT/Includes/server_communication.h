@@ -8,8 +8,17 @@
 #ifndef INCLUDES_SERVER_COMMUNICATION_H_
 #define INCLUDES_SERVER_COMMUNICATION_H_
 
+/* Kernel includes */
+#include "FreeRTOS.h"
+#include "semphr.h"
+
+#include <string.h>
+#include <stdarg.h>
+#include <stdio.h>
+
+#include "simple_protocol.h"
+#include "arq.h"
 #include "defines.h"
-#include "types.h"
 
 #define TYPE_HANDSHAKE      0
 #define TYPE_UPDATE         1
