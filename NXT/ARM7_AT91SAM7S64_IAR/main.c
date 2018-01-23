@@ -68,6 +68,7 @@ QueueHandle_t scanStatusQ = 0;
 QueueHandle_t globalWheelTicksQ = 0;
 QueueHandle_t globalPoseQ = 0;
 QueueHandle_t measurementQ = 0;
+QueueHandle_t sendingQ = 0;
 
 /* Task handles */
 TaskHandle_t xPoseCtrlTask = NULL;
@@ -129,6 +130,7 @@ int main(void) {
   globalWheelTicksQ = xQueueCreate(1, sizeof(wheel_ticks_t));
   globalPoseQ = xQueueCreate(1, sizeof(pose_t)); // For storing and passing the global pose estimate
   measurementQ = xQueueCreate(1, sizeof(measurement_t));
+  sendingQ = xQueueCreate(10, sizeof(message_t)); // For passing messages to the sending task
 
   xCommandReadyBSem = xSemaphoreCreateBinary();
   xBeginMergeBSem = xSemaphoreCreateBinary();
@@ -149,7 +151,7 @@ int main(void) {
 #ifndef COMPASS_CALIBRATE
   xTaskCreate(vMainPoseControllerTask, "PoseCon", 125, NULL, 1, &xPoseCtrlTask);// Dependant on estimator, sends instructions to movement task //2
   xTaskCreate(vMainPoseEstimatorTask, "PoseEst", 125, NULL, 5, NULL); // Independent task,
-  xTaskCreate(vMainMappingTask, "Mapping", 250, NULL, 5, NULL);
+  //xTaskCreate(vMainMappingTask, "Mapping", 250, NULL, 5, NULL);
   //xTaskCreate(vMainNavigationTask, "Navigation", 500, NULL, 5, NULL);
   ret = xTaskCreate(vMainSensorTowerTask,"Tower", 125, NULL, 2, &xMappingTask); // Independent task, but use pose updates from estimator //1
 #endif

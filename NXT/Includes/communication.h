@@ -11,8 +11,6 @@
 
 extern volatile message_t message_in;
 
-extern QueueHandle_t sendingQ;
-
 /**
  * @brief      Task responsible for processing messages received from the
  *             server. Sets global status variables and relays setpoints to the

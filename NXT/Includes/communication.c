@@ -12,9 +12,8 @@ volatile message_t message_in;
 
 extern QueueHandle_t globalPoseQ;
 extern QueueHandle_t poseControllerQ;
+extern QueueHandle_t sendingQ;
 extern SemaphoreHandle_t xCommandReadyBSem;
-
-QueueHandle_t sendingQ = 0;
 
 void vMainCommunicationTask( void *pvParameters ) {
 	// Setup for the communication task
@@ -23,7 +22,6 @@ void vMainCommunicationTask( void *pvParameters ) {
 	message_t command_in; // Buffer for recieved messages
 
 	server_communication_init();
-	sendingQ = xQueueCreate(10, sizeof(message_t));
 	xTaskCreate(vSenderTask, "Sender", 125, NULL, 3, NULL);
 
 	uint8_t success = 0;

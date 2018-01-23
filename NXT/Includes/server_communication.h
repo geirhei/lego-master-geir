@@ -19,6 +19,7 @@
 #include "simple_protocol.h"
 #include "arq.h"
 #include "defines.h"
+#include "types.h"
 
 #define TYPE_HANDSHAKE      0
 #define TYPE_UPDATE         1
@@ -117,7 +118,7 @@ void send_idle(void);
 void send_ping_response(void);
 
 /* Send the coordinates of the start and endpoints of a line. [cm] */
-void send_line(int16_t x_p, int16_t y_p, int16_t x_q, int16_t y_q);
+//void send_line(line_t *Line);
 
 void server_receiver(uint8_t *data, uint16_t len);
 void debug(const char *fmt, ...);

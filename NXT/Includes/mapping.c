@@ -18,8 +18,11 @@ extern volatile uint8_t gHandshook;
 
 extern QueueHandle_t measurementQ;
 extern QueueHandle_t globalPoseQ;
+extern QueueHandle_t sendingQ;
 extern SemaphoreHandle_t xBeginMergeBSem;
 extern TaskHandle_t xMappingTask;
+
+static message_t vMappingGetLineMessage(line_t *Line);
 
 /* Mapping task */
 void vMainMappingTask( void *pvParameters )
@@ -43,6 +46,13 @@ void vMainMappingTask( void *pvParameters )
 	while (1)
 	{
 		vTaskDelayUntil(&xLastWakeTime, xFrequency);
+
+		//test
+		line_t testLine = { {-10, 0}, {10, 0} };
+		message_t LineMsg = vMappingGetLineMessage(&testLine);
+		xQueueSendToBack(sendingQ, &LineMsg, 100 / portTICK_PERIOD_MS);
+		//end
+
 		if (gHandshook)
 		{
 			measurement_t Measurement = {0};
@@ -138,4 +148,18 @@ void vMappingLineCreate(point_buffer_t *PointBuffer, line_buffer_t *LineBuffer) 
 
 void vMappingLineMerge(point_buffer_t *PointBuffer, line_buffer_t *LineRepo) {
 
+}
+
+/**
+ * Creates and returns a message for sending to the server from the input
+ * Line structure.
+ */
+static message_t vMappingGetLineMessage(line_t *Line) {
+	message_t msg;
+	msg.type = TYPE_LINE;
+	msg.message.line.x_p = Line->P.x;
+	msg.message.line.y_p = Line->P.y;
+	msg.message.line.x_q = Line->Q.x;
+	msg.message.line.y_q = Line->Q.y;
+	return msg;
 }
