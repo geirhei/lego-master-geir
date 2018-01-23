@@ -34,6 +34,12 @@
 #define TYPE_LINE           10
 #define TYPE_DEBUG          11
 
+#define SERVER_ADDRESS       0
+
+extern arq_connection server_connection;
+extern uint8_t use_arq[];
+extern uint8_t connected;
+
 typedef struct {
   uint8_t name_length;
   uint8_t name[ROBOT_NAME_LENGTH];

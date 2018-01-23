@@ -24,6 +24,7 @@ void vMainCommunicationTask( void *pvParameters ) {
 
 	server_communication_init();
 	sendingQ = xQueueCreate(10, sizeof(message_t));
+	xTaskCreate(vSenderTask, "Sender", 125, NULL, 3, NULL);
 
 	uint8_t success = 0;
 	while (!success) {
@@ -97,17 +98,24 @@ void vMainCommunicationTask( void *pvParameters ) {
 	}
 }
 
+
 void vSenderTask( void *pvParameters ) {
-	message_t OutgoingMsg = { 0 };
+	
 	while (1) {
-		if (xQueueReceive(sendingQ, &OutgoingMsg, portMAX_DELAY) == pdTRUE) {
-			switch (OutgoingMsg.type) {
+		message_t Msg = { 0 };
+		if (xQueueReceive(sendingQ, &Msg, portMAX_DELAY) == pdTRUE) {
+			switch (Msg.type) {
 				case TYPE_UPDATE:
 
 					break;
 				case TYPE_HANDSHAKE:
 					break;
 				case TYPE_LINE:
+					if (!connected) return;
+					uint8_t data[sizeof(line_message_t)+1];
+					memcpy(data, (uint8_t*) &Msg, sizeof(data));
+					if(use_arq[TYPE_LINE]) arq_send(server_connection, data, sizeof(data));
+					else simple_p_send(SERVER_ADDRESS, data, sizeof(data));
 					break;
 			}
 		}

@@ -1,7 +1,7 @@
 #include "server_communication.h"
 
 
-#define SERVER_ADDRESS  0
+//#define SERVER_ADDRESS  0
 
 arq_connection server_connection;
 uint8_t connected = 0;
