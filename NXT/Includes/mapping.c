@@ -46,15 +46,16 @@ void vMainMappingTask( void *pvParameters )
 	while (1)
 	{
 		vTaskDelayUntil(&xLastWakeTime, xFrequency);
-
-		//test
-		line_t testLine = { {-10, 0}, {10, 0} };
-		message_t LineMsg = vMappingGetLineMessage(&testLine);
-		xQueueSendToBack(sendingQ, &LineMsg, 100 / portTICK_PERIOD_MS);
-		//end
-
+		
 		if (gHandshook)
 		{
+			//test
+			line_t testLine = { {-10, 0}, {10, 0} };
+			message_t LineMsg = vMappingGetLineMessage(&testLine);
+			xQueueSendToBack(sendingQ, &LineMsg, 100 / portTICK_PERIOD_MS);
+			//end
+
+			/*
 			measurement_t Measurement = {0};
 			if (xQueueReceive(measurementQ, &Measurement, 100) == pdTRUE) {
 				pose_t Pose = {0};
@@ -72,11 +73,12 @@ void vMainMappingTask( void *pvParameters )
 				}
 			}
 
-			
-		} else {
-
+			*/
+		} 
+		else {
+			// do nothing
 		}
-
+		
 	}
 }
 
@@ -157,9 +159,9 @@ void vMappingLineMerge(point_buffer_t *PointBuffer, line_buffer_t *LineRepo) {
 static message_t vMappingGetLineMessage(line_t *Line) {
 	message_t msg;
 	msg.type = TYPE_LINE;
-	msg.message.line.x_p = Line->P.x;
-	msg.message.line.y_p = Line->P.y;
-	msg.message.line.x_q = Line->Q.x;
-	msg.message.line.y_q = Line->Q.y;
+	msg.message.line.x_p = ROUND(Line->P.x);
+	msg.message.line.y_p = ROUND(Line->P.y);
+	msg.message.line.x_q = ROUND(Line->Q.x);
+	msg.message.line.y_q = ROUND(Line->Q.y);
 	return msg;
 }

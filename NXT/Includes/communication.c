@@ -22,7 +22,6 @@ void vMainCommunicationTask( void *pvParameters ) {
 	message_t command_in; // Buffer for recieved messages
 
 	server_communication_init();
-	xTaskCreate(vSenderTask, "Sender", 125, NULL, 3, NULL);
 
 	uint8_t success = 0;
 	while (!success) {
@@ -100,8 +99,9 @@ void vMainCommunicationTask( void *pvParameters ) {
 void vSenderTask( void *pvParameters ) {
 	
 	while (1) {
-		message_t Msg = { 0 };
+		message_t Msg;
 		if (xQueueReceive(sendingQ, &Msg, portMAX_DELAY) == pdTRUE) {
+			if (!connected) continue;
 			switch (Msg.type) {
 				case TYPE_UPDATE:
 
@@ -109,7 +109,6 @@ void vSenderTask( void *pvParameters ) {
 				case TYPE_HANDSHAKE:
 					break;
 				case TYPE_LINE:
-					if (!connected) return;
 					uint8_t data[sizeof(line_message_t)+1];
 					memcpy(data, (uint8_t*) &Msg, sizeof(data));
 					if(use_arq[TYPE_LINE]) arq_send(server_connection, data, sizeof(data));
