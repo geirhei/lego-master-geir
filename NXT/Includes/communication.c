@@ -54,9 +54,11 @@ void vMainCommunicationTask( void *pvParameters ) {
 					display_string("Connected");
 					display_update();
 					break;
-				case TYPE_PING:
-					send_ping_response();
+				case TYPE_PING: {
+					message_t msg = { .type = TYPE_PING_RESPONSE };
+					xQueueSendToBack(sendingQ, &msg, 0);
 					break;
+				}
 				case TYPE_ORDER:
 					// Coordinates received in cm, convert to mm for internal use in the robot.
 					Target.x = (float) command_in.message.order.x * 10;
@@ -103,6 +105,13 @@ void vSenderTask( void *pvParameters ) {
 		if (xQueueReceive(sendingQ, &Msg, portMAX_DELAY) == pdTRUE) {
 			if (!connected) continue;
 			switch (Msg.type) {
+				case TYPE_PING_RESPONSE: {
+					uint8_t status = TYPE_PING_RESPONSE;
+					if(use_arq[TYPE_PING_RESPONSE]) arq_send(server_connection, &status, 1);
+					else simple_p_send(SERVER_ADDRESS, &status, 1);
+					break;
+				}
+
 				case TYPE_UPDATE:
 					break;
 
@@ -116,11 +125,12 @@ void vSenderTask( void *pvParameters ) {
 					else simple_p_send(SERVER_ADDRESS, data, sizeof(data));
 					break;
 
-				case TYPE_IDLE:
+				case TYPE_IDLE: {
 					uint8_t status = TYPE_IDLE;
 					if(use_arq[TYPE_IDLE]) arq_send(server_connection, &status, 1);
 					else simple_p_send(SERVER_ADDRESS, &status, 1);
 					break;
+				}
 			}
 		}
 	}

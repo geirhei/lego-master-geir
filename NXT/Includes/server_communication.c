@@ -97,12 +97,14 @@ void debug(const char *fmt, ...) {
 	}
 }
 
+/*
 void send_ping_response(void) {
   if(!connected) return;
   uint8_t status = TYPE_PING_RESPONSE;
   if(use_arq[TYPE_PING_RESPONSE]) arq_send(server_connection, &status, 1);
   else simple_p_send(SERVER_ADDRESS, &status, 1);
 }
+*/
 
 /*
 void send_line(line_t *Line) {
