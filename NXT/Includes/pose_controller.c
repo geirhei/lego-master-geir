@@ -187,8 +187,7 @@ void vMainPoseControllerTask( void *pvParameters ) {
 			} else {
 				if (idleSent == FALSE) {
 					message_t msg = { .type = TYPE_IDLE };
-					xQueueSendToBack(sendingQ, &msg, 0);
-					//send_idle();
+					xQueueSendToBack(sendingQ, &msg, 10 / portTICK_PERIOD_MS);
 					idleSent = TRUE;
 				}
 				// Set speed of both motors to 0

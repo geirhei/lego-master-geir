@@ -105,7 +105,8 @@ void vMainSensorTowerTask( void *pvParameters ) {
 		  
 		  	if ((idleCounter > 10) && (robotMovement == moveStop)) {
 				// If the robot stands idle for 1 second, send 'status:idle' in case the server missed it.
-				send_idle();
+				message_t msg = { .type = TYPE_IDLE };
+				xQueueSendToBack(sendingQ, &msg, 10 / portTICK_PERIOD_MS);
 				idleCounter = 1;
 		  	}
 		  	else if ((idleCounter >= 1) && (robotMovement == moveStop)) {

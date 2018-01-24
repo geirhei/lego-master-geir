@@ -75,12 +75,14 @@ void send_update(int16_t x_cm, int16_t y_cm, int16_t heading_deg, int16_t towerA
   else simple_p_send(SERVER_ADDRESS, data, sizeof(data));
 }
 
+/*
 void send_idle(void) {
   if(!connected) return;
   uint8_t status = TYPE_IDLE;
   if(use_arq[TYPE_IDLE]) arq_send(server_connection, &status, 1);
   else simple_p_send(SERVER_ADDRESS, &status, 1);
 }
+*/
 
 void debug(const char *fmt, ...) {
 	uint8_t buf[100];

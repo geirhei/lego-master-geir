@@ -117,7 +117,7 @@ void server_communication_init(void);
 uint8_t server_connect(void);
 uint8_t send_handshake(void);
 void send_update(int16_t x_cm, int16_t y_cm, int16_t heading_deg, int16_t towerAngle_deg, uint8_t S1_cm, uint8_t S2_cm, uint8_t S3_cm, uint8_t S4_cm);
-void send_idle(void);
+//void send_idle(void);
 void send_ping_response(void);
 
 /* Send the coordinates of the start and endpoints of a line. [cm] */
