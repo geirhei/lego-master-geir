@@ -12,7 +12,7 @@
 #include "types.h"
 #include "defines.h"
 #include "functions.h"
-#include "server_communication.h"
+#include "communication.h"
 
 extern volatile uint8_t gHandshook;
 
@@ -50,12 +50,7 @@ void vMainMappingTask( void *pvParameters )
 		if (gHandshook)
 		{
 			//test
-			//line_t testLine = { {-10, 0}, {10, 0} };
-			line_t testLine;
-			testLine.P.x = -10;
-			testLine.P.y = 0;
-			testLine.Q.x = 10;
-			testLine.Q.y = 0;
+			line_t testLine = { {-10, 0}, {10, 0} };
 			message_t LineMsg = vMappingGetLineMessage(&testLine);
 			xQueueSendToBack(sendingQ, &LineMsg, 100 / portTICK_PERIOD_MS);
 			//end

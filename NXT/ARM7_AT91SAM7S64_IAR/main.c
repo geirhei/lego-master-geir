@@ -38,7 +38,6 @@
 #include "display.h"
 //#include "hs.h"
 //#include "motor.h"
-//#include "server_communication.h"
 #include "types.h"
 #include "defines.h"
 //#include "functions.h"

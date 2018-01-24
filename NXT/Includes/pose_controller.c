@@ -11,7 +11,7 @@
 #include "types.h"
 #include "functions.h"
 #include "motor.h"
-#include "server_communication.h"
+#include "communication.h"
 
 extern volatile uint8_t gHandshook;
 
