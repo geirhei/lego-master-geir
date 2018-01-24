@@ -50,7 +50,12 @@ void vMainMappingTask( void *pvParameters )
 		if (gHandshook)
 		{
 			//test
-			line_t testLine = { {-10, 0}, {10, 0} };
+			//line_t testLine = { {-10, 0}, {10, 0} };
+			line_t testLine;
+			testLine.P.x = -10;
+			testLine.P.y = 0;
+			testLine.Q.x = 10;
+			testLine.Q.y = 0;
 			message_t LineMsg = vMappingGetLineMessage(&testLine);
 			xQueueSendToBack(sendingQ, &LineMsg, 100 / portTICK_PERIOD_MS);
 			//end
@@ -159,9 +164,9 @@ void vMappingLineMerge(point_buffer_t *PointBuffer, line_buffer_t *LineRepo) {
 static message_t vMappingGetLineMessage(line_t *Line) {
 	message_t msg;
 	msg.type = TYPE_LINE;
-	msg.message.line.x_p = ROUND(Line->P.x);
-	msg.message.line.y_p = ROUND(Line->P.y);
-	msg.message.line.x_q = ROUND(Line->Q.x);
-	msg.message.line.y_q = ROUND(Line->Q.y);
+	msg.message.line.x_p = (int16_t) ROUND(Line->P.x);
+	msg.message.line.y_p = (int16_t) ROUND(Line->P.y);
+	msg.message.line.x_q = (int16_t) ROUND(Line->Q.x);
+	msg.message.line.y_q = (int16_t) ROUND(Line->Q.y);
 	return msg;
 }

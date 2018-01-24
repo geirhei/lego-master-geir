@@ -15,7 +15,7 @@ uint8_t use_arq[12] = {
   [TYPE_UPDATE] = 0, 
   [TYPE_IDLE] = 1, 
   [TYPE_PING_RESPONSE] = 0, 
-  [TYPE_LINE] = 1,
+  [TYPE_LINE] = 0,
   [TYPE_DEBUG] = 0
 };
 
