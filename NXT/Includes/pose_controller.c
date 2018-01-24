@@ -19,6 +19,7 @@ extern QueueHandle_t globalPoseQ;
 extern QueueHandle_t globalWheelTicksQ;
 extern QueueHandle_t poseControllerQ;
 extern QueueHandle_t scanStatusQ;
+extern QueueHandle_t sendingQ;
 extern TaskHandle_t xPoseCtrlTask;
 
 void vMainPoseControllerTask( void *pvParameters ) {
@@ -185,7 +186,9 @@ void vMainPoseControllerTask( void *pvParameters ) {
 		
 			} else {
 				if (idleSent == FALSE) {
-					send_idle();
+					message_t msg = { .type = TYPE_IDLE };
+					xQueueSendToBack(sendingQ, &msg, 0);
+					//send_idle();
 					idleSent = TRUE;
 				}
 				// Set speed of both motors to 0

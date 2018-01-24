@@ -90,6 +90,8 @@ typedef struct {
   int16_t y_q;
 } __attribute__((packed)) line_message_t;
 
+//typedef uint8_t idle_message_t;
+
 /*
 typedef struct {
   int16_t heading;
@@ -102,6 +104,7 @@ union Message {
   handshake_message_t handshake;
   order_message_t order;
   line_message_t line;
+  //idle_message_t idle;
   //priority_order_message_t priority_order;
 };
 

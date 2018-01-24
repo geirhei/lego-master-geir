@@ -104,15 +104,22 @@ void vSenderTask( void *pvParameters ) {
 			if (!connected) continue;
 			switch (Msg.type) {
 				case TYPE_UPDATE:
-
 					break;
+
 				case TYPE_HANDSHAKE:
 					break;
+
 				case TYPE_LINE:
 					uint8_t data[sizeof(line_message_t)+1];
 					memcpy(data, (uint8_t*) &Msg, sizeof(data));
 					if(use_arq[TYPE_LINE]) arq_send(server_connection, data, sizeof(data));
 					else simple_p_send(SERVER_ADDRESS, data, sizeof(data));
+					break;
+
+				case TYPE_IDLE:
+					uint8_t status = TYPE_IDLE;
+					if(use_arq[TYPE_IDLE]) arq_send(server_connection, &status, 1);
+					else simple_p_send(SERVER_ADDRESS, &status, 1);
 					break;
 			}
 		}

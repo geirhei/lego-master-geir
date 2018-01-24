@@ -20,6 +20,7 @@ extern QueueHandle_t scanStatusQ;
 extern QueueHandle_t globalPoseQ;
 extern QueueHandle_t poseControllerQ;
 extern QueueHandle_t measurementQ;
+extern QueueHandle_t sendingQ;
 extern SemaphoreHandle_t xBeginMergeBSem;
 extern TaskHandle_t xMappingTask;
 
