@@ -126,6 +126,7 @@ int main(void) {
   globalPoseQ = xQueueCreate(1, sizeof(pose_t)); // For storing and passing the global pose estimate
   measurementQ = xQueueCreate(1, sizeof(measurement_t));
   sendingQ = xQueueCreate(10, sizeof(message_t)); // For passing messages to the sending task
+//  actuationQ = xQueueCreate(2, sizeof)
 
   xCommandReadyBSem = xSemaphoreCreateBinary();
   xBeginMergeBSem = xSemaphoreCreateBinary();

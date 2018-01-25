@@ -50,7 +50,7 @@ void vMainMappingTask( void *pvParameters )
 	LineRepo->len = 0;
 
 	TickType_t xLastWakeTime;
-	const TickType_t xFrequency = 1000 / portTICK_PERIOD_MS;
+	const TickType_t xFrequency = 50 / portTICK_PERIOD_MS;
 	xLastWakeTime = xTaskGetTickCount();
 
 	while (1)
@@ -78,10 +78,11 @@ void vMainMappingTask( void *pvParameters )
 				for (uint8_t j = 0; j < NUMBER_OF_SENSORS; j++) {
 					vMappingLineCreate(PointBuffers[j], LineBuffers[j]);
 					//debug("%u\n", LineBuffers[j]->len);
-					//message_t LineMsg = vMappingGetLineMessage(&LineBuffers[0]->buffer[0]);
-					//xQueueSendToBack(sendingQ, &LineMsg, 100 / portTICK_PERIOD_MS);
+					message_t LineMsg = vMappingGetLineMessage(&LineBuffers[0]->buffer[0]);
+					xQueueSendToBack(sendingQ, &LineMsg, 100 / portTICK_PERIOD_MS);
 
-					vMappingLineMerge(LineBuffers[j], LineRepo);
+					LineBuffers[j]->len = 0;
+					//vMappingLineMerge(LineBuffers[j], LineRepo);
 					
 					//line_t testLine = { {-10, 0}, {10, 0} };
 				}
@@ -109,7 +110,7 @@ void vMappingUpdatePointBuffers(point_buffer_t **Buffers, measurement_t *Measure
 
 	for (uint8_t i = 0; i < NUMBER_OF_SENSORS; i++) {
 		if (i > 0) {
-			theta += M_PI/2;
+			theta += 0.5 * M_PI;
 		}
 		vFunc_wrapTo2Pi(&theta); //[0,2pi)
 		float r = Measurement->data[i];
@@ -129,6 +130,7 @@ void vMappingUpdatePointBuffers(point_buffer_t **Buffers, measurement_t *Measure
 
 void vMappingLineCreate(point_buffer_t *PointBuffer, line_buffer_t *LineBuffer) {
 	if (PointBuffer->len < 3) {
+		PointBuffer->len = 0;
 		return;
 	}
 
