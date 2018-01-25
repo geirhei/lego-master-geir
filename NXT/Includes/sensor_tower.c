@@ -22,7 +22,7 @@ extern QueueHandle_t poseControllerQ;
 extern QueueHandle_t measurementQ;
 extern QueueHandle_t sendingQ;
 extern SemaphoreHandle_t xBeginMergeBSem;
-extern TaskHandle_t xMappingTask;
+//extern TaskHandle_t xMappingTask;
 
 /**
  * Task responsible for control of the sensor tower. Tower rotation depends on
@@ -52,7 +52,7 @@ void vMainSensorTowerTask( void *pvParameters ) {
 			xLastWakeTime = xTaskGetTickCount();
 			// Set scanning resolution depending on which movement the robot is executing.
 			// Note that the iterations are skipped while robot is rotating (see further downbelow)
-			if (xQueueReceive(scanStatusQ, &robotMovement, 150 / portTICK_PERIOD_MS) == pdTRUE) {
+			if (xQueuePeek(scanStatusQ, &robotMovement, 150 / portTICK_PERIOD_MS) == pdTRUE) {
 				switch (robotMovement)
 				{
 					case moveStop:
@@ -97,7 +97,7 @@ void vMainSensorTowerTask( void *pvParameters ) {
 		  	xQueueSendToBack(measurementQ, &Measurement, 10);
 
 		  	// Get latest pose estimate, dont't remove from queue
-		  	if (xQueuePeek(globalPoseQ, &GlobalPose, 0)) {
+		  	if (xQueuePeek(globalPoseQ, &GlobalPose, 0) == pdTRUE) {
 		  		thetahat = GlobalPose.theta;
 		  		xhat = GlobalPose.x;
 		  		yhat = GlobalPose.y;

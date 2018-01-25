@@ -17,8 +17,6 @@ extern SemaphoreHandle_t xCommandReadyBSem;
 
 void vMainCommunicationTask( void *pvParameters ) {
 	// Setup for the communication task
-	//struct sPolar Setpoint = {0}; // Struct for setpoints from server
-	cartesian_t Target = {0}; // Structs for target coordinates from server
 	message_t command_in; // Buffer for recieved messages
 
 	server_communication_init();
@@ -32,7 +30,9 @@ void vMainCommunicationTask( void *pvParameters ) {
 
 	xTaskCreate(vARQTask, "ARQ", 250, NULL, 3, NULL);
 	led_clear(LED_GREEN);
-	send_handshake();
+	message_t msg = { .type = TYPE_HANDSHAKE };
+	xQueueSendToBack(sendingQ, &msg, 0);
+	//send_handshake();
 
 	while(1) {
 		if (xSemaphoreTake(xCommandReadyBSem, portMAX_DELAY) == pdTRUE) {
@@ -43,6 +43,8 @@ void vMainCommunicationTask( void *pvParameters ) {
 			taskEXIT_CRITICAL();
 			xTaskResumeAll();      // Enable context switching
 			  
+			cartesian_t Target; // Stores coordinates receives from server
+
 			switch (command_in.type)
 			{
 				case TYPE_CONFIRM:
@@ -101,10 +103,10 @@ void vMainCommunicationTask( void *pvParameters ) {
 void vSenderTask( void *pvParameters ) {
 	
 	while (1) {
-		message_t Msg;
-		if (xQueueReceive(sendingQ, &Msg, portMAX_DELAY) == pdTRUE) {
+		message_t msg;
+		if (xQueueReceive(sendingQ, &msg, portMAX_DELAY) == pdTRUE) {
 			if (!connected) continue;
-			switch (Msg.type) {
+			switch (msg.type) {
 				case TYPE_PING_RESPONSE: {
 					uint8_t status = TYPE_PING_RESPONSE;
 					if(use_arq[TYPE_PING_RESPONSE]) arq_send(server_connection, &status, 1);
@@ -115,12 +117,34 @@ void vSenderTask( void *pvParameters ) {
 				case TYPE_UPDATE:
 					break;
 
-				case TYPE_HANDSHAKE:
+				case TYPE_HANDSHAKE: {
+					msg.message.handshake.name_length = ROBOT_NAME_LENGTH;
+					strcpy((char*)msg.message.handshake.name, ROBOT_NAME);
+					msg.message.handshake.width = ROBOT_TOTAL_WIDTH_MM;
+					msg.message.handshake.length = ROBOT_TOTAL_LENGTH_MM;
+					msg.message.handshake.axel_offset = ROBOT_AXEL_OFFSET_MM;
+					msg.message.handshake.tower_offset_x = SENSOR_TOWER_OFFSET_X_MM;
+					msg.message.handshake.tower_offset_y = SENSOR_TOWER_OFFSET_Y_MM;
+					msg.message.handshake.sensor_offset1 = SENSOR_OFFSET_RADIUS_MM;
+					msg.message.handshake.sensor_offset2 = SENSOR_OFFSET_RADIUS_MM;
+					msg.message.handshake.sensor_offset3 = SENSOR_OFFSET_RADIUS_MM;
+					msg.message.handshake.sensor_offset4 = SENSOR_OFFSET_RADIUS_MM;
+					msg.message.handshake.sensor_heading1 = SENSOR1_HEADING_DEG;
+					msg.message.handshake.sensor_heading2 = SENSOR2_HEADING_DEG;
+					msg.message.handshake.sensor_heading3 = SENSOR3_HEADING_DEG;
+					msg.message.handshake.sensor_heading4 = SENSOR4_HEADING_DEG;
+					msg.message.handshake.deadline = ROBOT_DEADLINE_MS;
+
+					uint8_t data[sizeof(handshake_message_t)+1];
+					memcpy(data, (uint8_t*) &msg, sizeof(data));
+					if(use_arq[TYPE_HANDSHAKE]) arq_send(server_connection, data, sizeof(data));
+					else simple_p_send(server_connection, data, sizeof(data));
 					break;
+				}
 
 				case TYPE_LINE:
 					uint8_t data[sizeof(line_message_t)+1];
-					memcpy(data, (uint8_t*) &Msg, sizeof(data));
+					memcpy(data, (uint8_t*) &msg, sizeof(data));
 					if(use_arq[TYPE_LINE]) arq_send(server_connection, data, sizeof(data));
 					else simple_p_send(SERVER_ADDRESS, data, sizeof(data));
 					break;

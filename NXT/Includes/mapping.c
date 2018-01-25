@@ -28,16 +28,22 @@ static message_t vMappingGetLineMessage(line_t *Line);
 void vMainMappingTask( void *pvParameters )
 {
 	// init:
-	point_buffer_t *PointBuffers;
-	line_buffer_t *LineBuffers;
-	line_t *Lines;
-	PointBuffers = pvPortMalloc(NUMBER_OF_SENSORS * sizeof(point_buffer_t));
-	LineBuffers = pvPortMalloc(NUMBER_OF_SENSORS * sizeof(line_buffer_t));
-	Lines = pvPortMalloc(L_SIZE * sizeof(line_t));
+	point_buffer_t **PointBuffers;
+	line_buffer_t **LineBuffers;
+	line_buffer_t *Lines;
+	
+	PointBuffers = pvPortMalloc(NUMBER_OF_SENSORS * sizeof(point_buffer_t*));
+	LineBuffers = pvPortMalloc(NUMBER_OF_SENSORS * sizeof(line_buffer_t*));
+	
 	for (uint8_t i = 0; i < NUMBER_OF_SENSORS; i++) {
-		PointBuffers[i].buffer = pvPortMalloc(PB_SIZE * sizeof(point_t));
-		LineBuffers[i].buffer = pvPortMalloc(LB_SIZE * sizeof(line_t));
+		PointBuffers[i]->buffer = pvPortMalloc(PB_SIZE * sizeof(point_t));
+		PointBuffers[i]->len = 0;
+		LineBuffers[i]->buffer = pvPortMalloc(LB_SIZE * sizeof(line_t));
+		LineBuffers[i]->len = 0;
 	}
+	Lines = pvPortMalloc(sizeof(line_buffer_t));
+	Lines->buffer = pvPortMalloc(L_SIZE * sizeof(line_t));
+	Lines->len = 0;
 
 	TickType_t xLastWakeTime;
 	const TickType_t xFrequency = 1000 / portTICK_PERIOD_MS;
@@ -49,31 +55,38 @@ void vMainMappingTask( void *pvParameters )
 		
 		if (gHandshook)
 		{
-			//test
-			line_t testLine = { {-10, 0}, {10, 0} };
-			message_t LineMsg = vMappingGetLineMessage(&testLine);
-			xQueueSendToBack(sendingQ, &LineMsg, 100 / portTICK_PERIOD_MS);
-			//end
-
-			/*
-			measurement_t Measurement = {0};
-			if (xQueueReceive(measurementQ, &Measurement, 100) == pdTRUE) {
-				pose_t Pose = {0};
+			// Wait up to 200ms for a measurement. This is the period of the
+			// sensor tower sampling.
+			measurement_t Measurement;
+			if (xQueueReceive(measurementQ, &Measurement, 200 / portTICK_PERIOD_MS) == pdTRUE) {
+				pose_t Pose;
 				xQueuePeek(globalPoseQ, &Pose, 0);
 
 				// Add new IR-measurements to end of PB
 				vMappingUpdatePointBuffers(PointBuffers, &Measurement, &Pose);
 			}
 
-			// Check semaphore for synchronization from sensor tower
-			if (xSemaphoreTake(xBeginMergeBSem, 10) == pdTRUE) {
+			// Check semaphore for synchronization from sensor tower.
+			// Do not wait.
+			if (xSemaphoreTake(xBeginMergeBSem, 0) == pdTRUE) {
 				for (uint8_t j = 0; j < NUMBER_OF_SENSORS; j++) {
-					vMappingLineCreate(&PointBuffers[j], &LineBuffers[j]);
+					vMappingLineCreate(PointBuffers[j], LineBuffers[j]);
 					// merge
+					/*
+					line_t testLine = { {-10, 0}, {10, 0} };
+					message_t LineMsg = vMappingGetLineMessage(&testLine);
+					xQueueSendToBack(sendingQ, &LineMsg, 100 / portTICK_PERIOD_MS);
+					*/
 				}
+				
+				for (uint8_t k = 0; k < LineBuffers[0]->len; k++) {
+					//message_t LineMsg = vMappingGetLineMessage(&LineBuffers[0]->buffer[k]);
+					//xQueueSendToBack(sendingQ, &LineMsg, 0);
+				}
+				
 			}
 
-			*/
+			
 		} 
 		else {
 			// do nothing
@@ -82,7 +95,7 @@ void vMainMappingTask( void *pvParameters )
 	}
 }
 
-void vMappingUpdatePointBuffers(point_buffer_t *Buffers, measurement_t *Measurement, pose_t *Pose) {
+void vMappingUpdatePointBuffers(point_buffer_t **Buffers, measurement_t *Measurement, pose_t *Pose) {
 	float towerAngle = Measurement->servoStep * DEG2RAD; //[0,pi/2]
 	float theta = towerAngle + Pose->theta;
 	vFunc_wrapTo2Pi(&theta); //[0,2pi)
@@ -101,9 +114,9 @@ void vMappingUpdatePointBuffers(point_buffer_t *Buffers, measurement_t *Measurem
 		// Get the coordinates relative to the global coordinate system
 		Pos.x += Pose->x;
 		Pos.y += Pose->y;
-		uint8_t currentLength = Buffers[i].len;
-		Buffers[i].buffer[currentLength] = Pos;
-		Buffers[i].len++;
+		uint8_t currentLength = Buffers[i]->len;
+		Buffers[i]->buffer[currentLength] = Pos;
+		Buffers[i]->len++;
 	}
 }
 

@@ -151,7 +151,7 @@ int main(void) {
 #ifndef COMPASS_CALIBRATE
   xTaskCreate(vMainPoseControllerTask, "PoseCon", 125, NULL, 1, &xPoseCtrlTask);// Dependant on estimator, sends instructions to movement task //2
   xTaskCreate(vMainPoseEstimatorTask, "PoseEst", 125, NULL, 5, NULL); // Independent task,
-  xTaskCreate(vMainMappingTask, "Mapping", 250, NULL, 5, NULL);
+  //xTaskCreate(vMainMappingTask, "Mapping", 250, NULL, 5, NULL);
   //xTaskCreate(vMainNavigationTask, "Navigation", 500, NULL, 5, NULL);
   ret = xTaskCreate(vMainSensorTowerTask,"Tower", 125, NULL, 2, &xMappingTask); // Independent task, but use pose updates from estimator //1
 #endif

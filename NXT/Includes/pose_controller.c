@@ -100,7 +100,7 @@ void vMainPoseControllerTask( void *pvParameters ) {
 			}
 			
 			// Check if a new update is received
-			if (xQueueReceive(poseControllerQ, &Target, 0)) { // Receive theta and radius set points from com task
+			if (xQueueReceive(poseControllerQ, &Target, 0) == pdTRUE) { // Receive theta and radius set points from com task
 				xTargt = Target.x;
 				yTargt = Target.y;
 			}
@@ -186,6 +186,7 @@ void vMainPoseControllerTask( void *pvParameters ) {
 		
 			} else {
 				if (idleSent == FALSE) {
+					// Create idle-message and send to queue
 					message_t msg = { .type = TYPE_IDLE };
 					xQueueSendToBack(sendingQ, &msg, 10 / portTICK_PERIOD_MS);
 					idleSent = TRUE;
@@ -195,7 +196,8 @@ void vMainPoseControllerTask( void *pvParameters ) {
 				lastMovement = moveStop;
 			}
 
-			xQueueSendToBack(scanStatusQ, &lastMovement, 0); // Send the current movement to the sensor tower task
+			// Send the current movement to the sensor tower task
+			xQueueOverwrite(scanStatusQ, &lastMovement);
 			
 		}
 	}
