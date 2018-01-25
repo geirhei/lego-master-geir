@@ -78,8 +78,9 @@ void vMainMappingTask( void *pvParameters )
 				for (uint8_t j = 0; j < NUMBER_OF_SENSORS; j++) {
 					vMappingLineCreate(PointBuffers[j], LineBuffers[j]);
 					//debug("%u\n", LineBuffers[j]->len);
-					message_t LineMsg = vMappingGetLineMessage(&LineBuffers[0]->buffer[0]);
-					xQueueSendToBack(sendingQ, &LineMsg, 100 / portTICK_PERIOD_MS);
+					//message_t LineMsg = vMappingGetLineMessage(&LineBuffers[0]->buffer[0]);
+					line_t testLine = LineBuffers[0]->buffer[0];
+					//xQueueSendToBack(sendingQ, &LineMsg, 100 / portTICK_PERIOD_MS);
 
 					LineBuffers[j]->len = 0;
 					//vMappingLineMerge(LineBuffers[j], LineRepo);
