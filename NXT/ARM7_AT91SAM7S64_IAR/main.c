@@ -63,6 +63,7 @@ QueueHandle_t globalWheelTicksQ = 0;
 QueueHandle_t globalPoseQ = 0;
 QueueHandle_t measurementQ = 0;
 QueueHandle_t sendingQ = 0;
+QueueHandle_t actuationQ = 0;
 
 /* Task handles */
 TaskHandle_t xPoseCtrlTask = NULL;
