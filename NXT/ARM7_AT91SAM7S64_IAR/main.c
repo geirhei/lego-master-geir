@@ -36,19 +36,14 @@
 //#include <math.h>
 
 #include "display.h"
-//#include "hs.h"
-//#include "motor.h"
 #include "types.h"
 #include "defines.h"
-//#include "functions.h"
 #include "nxt.h"
-//#include "nxt_motors.h"
 #include "led.h"
 #include "io.h"
 #include "arq.h"
 #include "simple_protocol.h"
 #include "network.h"
-//#include "emlist.h"
 #include "communication.h"
 #include "sensor_tower.h"
 #include "pose_estimator.h"
@@ -98,7 +93,7 @@ void vApplicationStackOverflowHook(xTaskHandle *pxTask, signed char *pcTaskName)
   led_set(LED_RED);
 
   #ifdef DEBUG
-  	debug("s", "Stack overflow!\n");
+	debug("s", "Stack overflow!\n");
   #endif
   
   while(1){
@@ -147,12 +142,12 @@ int main(void) {
 
   BaseType_t ret;
   xTaskCreate(vMainCommunicationTask, "Comm", 250, NULL, 3, NULL);  // Dependant on IO, sends instructions to other tasks
-  xTaskCreate(vSenderTask, "Sender", 125, NULL, 1, NULL);
+  xTaskCreate(vSenderTask, "Sender", 125, NULL, 3, NULL);
 #ifndef COMPASS_CALIBRATE
-  xTaskCreate(vMainPoseControllerTask, "PoseCon", 125, NULL, 1, &xPoseCtrlTask);// Dependant on estimator, sends instructions to movement task //2
-  xTaskCreate(vMainPoseEstimatorTask, "PoseEst", 125, NULL, 5, NULL); // Independent task,
-  //xTaskCreate(vMainMappingTask, "Mapping", 250, NULL, 5, NULL);
-  //xTaskCreate(vMainNavigationTask, "Navigation", 500, NULL, 5, NULL);
+  xTaskCreate(vMainPoseControllerTask, "PoseCon", 125, NULL, 2, &xPoseCtrlTask);// Dependant on estimator, sends instructions to movement task //2
+  xTaskCreate(vMainPoseEstimatorTask, "PoseEst", 125, NULL, 1, NULL); // Independent task,
+  //xTaskCreate(vMainMappingTask, "Mapping", 250, NULL, 1, NULL);
+  //xTaskCreate(vMainNavigationTask, "Navigation", 500, NULL, 1, NULL);
   ret = xTaskCreate(vMainSensorTowerTask,"Tower", 125, NULL, 2, &xMappingTask); // Independent task, but use pose updates from estimator //1
 #endif
   if(ret != pdPASS) {
@@ -186,5 +181,5 @@ int main(void) {
 	led_toggle(LED_YELLOW);
   }
 
-  	
+	
 }

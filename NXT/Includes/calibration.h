@@ -13,7 +13,8 @@
 #include "display.h"
 #include "io.h"
 #include "led.h"
-#include "server_communication.h"
+//#include "server_communication.h"
+#include "communication.h"
 
 extern volatile uint8_t gHandshook;
 

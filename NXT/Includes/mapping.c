@@ -12,7 +12,7 @@
 #include "types.h"
 #include "defines.h"
 #include "functions.h"
-#include "communication.h"
+//#include "communication.h"
 
 extern volatile uint8_t gHandshook;
 
@@ -63,14 +63,14 @@ void vMainMappingTask( void *pvParameters )
 				xQueuePeek(globalPoseQ, &Pose, 0);
 
 				// Add new IR-measurements to end of PB
-				vMappingUpdatePointBuffers(PointBuffers, &Measurement, &Pose);
+				//vMappingUpdatePointBuffers(PointBuffers, &Measurement, &Pose);
 			}
 
 			// Check semaphore for synchronization from sensor tower.
 			// Do not wait.
 			if (xSemaphoreTake(xBeginMergeBSem, 0) == pdTRUE) {
 				for (uint8_t j = 0; j < NUMBER_OF_SENSORS; j++) {
-					vMappingLineCreate(PointBuffers[j], LineBuffers[j]);
+					//vMappingLineCreate(PointBuffers[j], LineBuffers[j]);
 					// merge
 					/*
 					line_t testLine = { {-10, 0}, {10, 0} };

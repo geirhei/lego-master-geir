@@ -29,6 +29,7 @@ uint8_t server_connect(void) {
   return connected;
 }
 
+/*
 uint8_t send_handshake(void) {
   if(!connected) return 0;
   message_t msg;
@@ -56,6 +57,7 @@ uint8_t send_handshake(void) {
   else simple_p_send(server_connection, data, sizeof(data));
   return 1;
 }
+*/
 
 void send_update(int16_t x_cm, int16_t y_cm, int16_t heading_deg, int16_t towerAngle_deg, uint8_t S1_cm, uint8_t S2_cm, uint8_t S3_cm, uint8_t S4_cm){
   if(!connected) return;

@@ -71,13 +71,6 @@ typedef struct {
   uint8_t sensor4;
 } __attribute__((packed)) update_message_t;
 
-/*
-typedef struct {
-  int16_t orientation;
-  int16_t distance;
-} __attribute__((packed)) order_message_t;
-*/
-
 typedef struct {
   int16_t x;
   int16_t y;
@@ -91,13 +84,6 @@ typedef struct {
 } __attribute__((packed)) line_message_t;
 
 //typedef uint8_t idle_message_t;
-
-/*
-typedef struct {
-  int16_t heading;
-  int16_t distance;
-} __attribute__((packed)) priority_order_message_t;
-*/
 
 union Message {
   update_message_t update;
@@ -115,7 +101,7 @@ typedef struct {
 
 void server_communication_init(void);
 uint8_t server_connect(void);
-uint8_t send_handshake(void);
+//uint8_t send_handshake(void);
 void send_update(int16_t x_cm, int16_t y_cm, int16_t heading_deg, int16_t towerAngle_deg, uint8_t S1_cm, uint8_t S2_cm, uint8_t S3_cm, uint8_t S4_cm);
 //void send_idle(void);
 //void send_ping_response(void);

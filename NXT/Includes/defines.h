@@ -75,4 +75,22 @@
 #define MAX_IR_DISTANCE			40
 #define COLLINEAR_TOLERANCE		100
 
+/************************************************************************/
+/* Communication defines */
+#define TYPE_HANDSHAKE      0
+#define TYPE_UPDATE         1
+#define TYPE_ORDER          2
+//#define TPYE_PRIORITY_ORDER 3
+#define TYPE_IDLE           3
+#define TYPE_PAUSE          4
+#define TYPE_UNPAUSE        5
+#define TYPE_CONFIRM        6
+#define TYPE_FINISH         7
+#define TYPE_PING           8
+#define TYPE_PING_RESPONSE  9
+#define TYPE_LINE           10
+#define TYPE_DEBUG          11
+
+#define SERVER_ADDRESS       0
+
 #endif /* DEFINES_H_ */

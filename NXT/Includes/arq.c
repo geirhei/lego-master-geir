@@ -15,7 +15,8 @@
 #include "semphr.h"
 #include "task.h"
 #include "display.h"
-#include "server_communication.h"
+//#include "server_communication.h"
+#include "communication.h"
 
 #define LOST_CONNECTION_TIMEOUT_MS     1000 
 #define RETRANSMISSION_TIMEOUT_MS      200

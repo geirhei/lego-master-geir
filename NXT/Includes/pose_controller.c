@@ -74,8 +74,8 @@ void vMainPoseControllerTask( void *pvParameters ) {
 	
 	uint8_t idleSent = FALSE;
 
-	uint8_t leftWheelDirection = moveStop;
-	uint8_t rightWheelDirection = moveStop;
+	//uint8_t leftWheelDirection = moveStop;
+	//uint8_t rightWheelDirection = moveStop;
       
 	while(1) {
 		// Checking if server is ready

@@ -2427,9 +2427,6 @@
             <name>$PROJ_DIR$\..\Includes\defines.h</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\Includes\emlist.c</name>
-        </file>
-        <file>
             <name>$PROJ_DIR$\..\Includes\functions.c</name>
         </file>
         <file>
@@ -2461,9 +2458,6 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\Includes\sensor_tower.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Includes\server_communication.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\Includes\simple_protocol.c</name>
