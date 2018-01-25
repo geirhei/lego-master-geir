@@ -20,7 +20,7 @@ extern QueueHandle_t measurementQ;
 extern QueueHandle_t globalPoseQ;
 extern QueueHandle_t sendingQ;
 extern SemaphoreHandle_t xBeginMergeBSem;
-extern TaskHandle_t xMappingTask;
+//extern TaskHandle_t xMappingTask;
 
 static message_t vMappingGetLineMessage(line_t *Line);
 
@@ -29,21 +29,21 @@ void vMainMappingTask( void *pvParameters )
 {
 	// init:
 	point_buffer_t **PointBuffers;
-	line_buffer_t **LineBuffers;
-	line_buffer_t *Lines;
+	//line_buffer_t **LineBuffers;
+	//line_buffer_t *Lines;
 	
 	PointBuffers = pvPortMalloc(NUMBER_OF_SENSORS * sizeof(point_buffer_t*));
-	LineBuffers = pvPortMalloc(NUMBER_OF_SENSORS * sizeof(line_buffer_t*));
+	//LineBuffers = pvPortMalloc(NUMBER_OF_SENSORS * sizeof(line_buffer_t*));
 	
 	for (uint8_t i = 0; i < NUMBER_OF_SENSORS; i++) {
 		PointBuffers[i]->buffer = pvPortMalloc(PB_SIZE * sizeof(point_t));
 		PointBuffers[i]->len = 0;
-		LineBuffers[i]->buffer = pvPortMalloc(LB_SIZE * sizeof(line_t));
-		LineBuffers[i]->len = 0;
+		//LineBuffers[i]->buffer = pvPortMalloc(LB_SIZE * sizeof(line_t));
+		//LineBuffers[i]->len = 0;
 	}
-	Lines = pvPortMalloc(sizeof(line_buffer_t));
-	Lines->buffer = pvPortMalloc(L_SIZE * sizeof(line_t));
-	Lines->len = 0;
+	//Lines = pvPortMalloc(sizeof(line_buffer_t));
+	//Lines->buffer = pvPortMalloc(L_SIZE * sizeof(line_t));
+	//Lines->len = 0;
 
 	TickType_t xLastWakeTime;
 	const TickType_t xFrequency = 1000 / portTICK_PERIOD_MS;
@@ -57,6 +57,7 @@ void vMainMappingTask( void *pvParameters )
 		{
 			// Wait up to 200ms for a measurement. This is the period of the
 			// sensor tower sampling.
+			/*
 			measurement_t Measurement;
 			if (xQueueReceive(measurementQ, &Measurement, 200 / portTICK_PERIOD_MS) == pdTRUE) {
 				pose_t Pose;
@@ -65,9 +66,10 @@ void vMainMappingTask( void *pvParameters )
 				// Add new IR-measurements to end of PB
 				//vMappingUpdatePointBuffers(PointBuffers, &Measurement, &Pose);
 			}
-
+			*/
 			// Check semaphore for synchronization from sensor tower.
 			// Do not wait.
+			/*
 			if (xSemaphoreTake(xBeginMergeBSem, 0) == pdTRUE) {
 				for (uint8_t j = 0; j < NUMBER_OF_SENSORS; j++) {
 					//vMappingLineCreate(PointBuffers[j], LineBuffers[j]);
@@ -77,15 +79,15 @@ void vMainMappingTask( void *pvParameters )
 					message_t LineMsg = vMappingGetLineMessage(&testLine);
 					xQueueSendToBack(sendingQ, &LineMsg, 100 / portTICK_PERIOD_MS);
 					*/
-				}
-				
+				//}
+				/*
 				for (uint8_t k = 0; k < LineBuffers[0]->len; k++) {
 					//message_t LineMsg = vMappingGetLineMessage(&LineBuffers[0]->buffer[k]);
 					//xQueueSendToBack(sendingQ, &LineMsg, 0);
 				}
 				
 			}
-
+			*/
 			
 		} 
 		else {

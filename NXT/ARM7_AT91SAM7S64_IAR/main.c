@@ -66,7 +66,7 @@ QueueHandle_t sendingQ = 0;
 
 /* Task handles */
 TaskHandle_t xPoseCtrlTask = NULL;
-TaskHandle_t xMappingTask = NULL;
+//TaskHandle_t xMappingTask = NULL;
 
 // Flag to indicate connection status.
 volatile uint8_t gHandshook = FALSE;
@@ -148,7 +148,7 @@ int main(void) {
   xTaskCreate(vMainPoseEstimatorTask, "PoseEst", 125, NULL, 1, NULL); // Independent task,
   //xTaskCreate(vMainMappingTask, "Mapping", 250, NULL, 1, NULL);
   //xTaskCreate(vMainNavigationTask, "Navigation", 500, NULL, 1, NULL);
-  ret = xTaskCreate(vMainSensorTowerTask,"Tower", 125, NULL, 2, &xMappingTask); // Independent task, but use pose updates from estimator //1
+  ret = xTaskCreate(vMainSensorTowerTask,"Tower", 125, NULL, 2, NULL); // Independent task, but use pose updates from estimator //1
 #endif
   if(ret != pdPASS) {
 	display_goto_xy(0,2);
