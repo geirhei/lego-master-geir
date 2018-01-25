@@ -12,7 +12,7 @@
 #include "types.h"
 #include "defines.h"
 #include "functions.h"
-//#include "communication.h"
+#include "communication.h"
 
 extern volatile uint8_t gHandshook;
 
@@ -29,22 +29,25 @@ void vMainMappingTask( void *pvParameters )
 {
 	// init:
 	point_buffer_t **PointBuffers;
-	//line_buffer_t **LineBuffers;
-	//line_buffer_t *Lines;
+	line_buffer_t **LineBuffers;
+	line_buffer_t *LineRepo;
 	
 	PointBuffers = pvPortMalloc(NUMBER_OF_SENSORS * sizeof(point_buffer_t*));
-	//LineBuffers = pvPortMalloc(NUMBER_OF_SENSORS * sizeof(line_buffer_t*));
+	LineBuffers = pvPortMalloc(NUMBER_OF_SENSORS * sizeof(line_buffer_t*));
 	
 	for (uint8_t i = 0; i < NUMBER_OF_SENSORS; i++) {
 		PointBuffers[i] = pvPortMalloc(sizeof(point_buffer_t));
 		PointBuffers[i]->buffer = pvPortMalloc(PB_SIZE * sizeof(point_t));
 		PointBuffers[i]->len = 0;
-		//LineBuffers[i]->buffer = pvPortMalloc(LB_SIZE * sizeof(line_t));
-		//LineBuffers[i]->len = 0;
+
+		LineBuffers[i] = pvPortMalloc(sizeof(line_buffer_t));
+		LineBuffers[i]->buffer = pvPortMalloc(LB_SIZE * sizeof(line_t));
+		LineBuffers[i]->len = 0;
 	}
-	//Lines = pvPortMalloc(sizeof(line_buffer_t));
-	//Lines->buffer = pvPortMalloc(L_SIZE * sizeof(line_t));
-	//Lines->len = 0;
+
+	LineRepo = pvPortMalloc(sizeof(line_buffer_t));
+	LineRepo->buffer = pvPortMalloc(L_SIZE * sizeof(line_t));
+	LineRepo->len = 0;
 
 	TickType_t xLastWakeTime;
 	const TickType_t xFrequency = 1000 / portTICK_PERIOD_MS;
@@ -54,18 +57,18 @@ void vMainMappingTask( void *pvParameters )
 	{
 		vTaskDelayUntil(&xLastWakeTime, xFrequency);
 		
-		if (gHandshook)
+		if (1)
+		//if (gHandshook)
 		{
 			// Wait up to 200ms for a measurement. This is the period of the
 			// sensor tower sampling.
-			
 			measurement_t Measurement;
 			if (xQueueReceive(measurementQ, &Measurement, 200 / portTICK_PERIOD_MS) == pdTRUE) {
 				pose_t Pose;
 				xQueuePeek(globalPoseQ, &Pose, 0);
 
 				// Add new IR-measurements to end of PB
-				//vMappingUpdatePointBuffers(PointBuffers, &Measurement, &Pose);
+				vMappingUpdatePointBuffers(PointBuffers, &Measurement, &Pose);
 			}
 			
 			// Check semaphore for synchronization from sensor tower.
@@ -73,16 +76,16 @@ void vMainMappingTask( void *pvParameters )
 			
 			if (xSemaphoreTake(xBeginMergeBSem, 0) == pdTRUE) {
 				for (uint8_t j = 0; j < NUMBER_OF_SENSORS; j++) {
-					//PointBuffers[j]->len = 0;
-					//vMappingLineCreate(PointBuffers[j], LineBuffers[j]);
-					// merge
-					/*
-					line_t testLine = { {-10, 0}, {10, 0} };
-					message_t LineMsg = vMappingGetLineMessage(&testLine);
-					xQueueSendToBack(sendingQ, &LineMsg, 100 / portTICK_PERIOD_MS);
-					*/
+					vMappingLineCreate(PointBuffers[j], LineBuffers[j]);
+					//debug("%u\n", LineBuffers[j]->len);
+					//message_t LineMsg = vMappingGetLineMessage(&LineBuffers[0]->buffer[0]);
+					//xQueueSendToBack(sendingQ, &LineMsg, 100 / portTICK_PERIOD_MS);
+
+					vMappingLineMerge(LineBuffers[j], LineRepo);
+					
+					//line_t testLine = { {-10, 0}, {10, 0} };
 				}
-				
+				LineRepo->len = 0;
 				//for (uint8_t k = 0; k < LineBuffers[0]->len; k++) {
 					//message_t LineMsg = vMappingGetLineMessage(&LineBuffers[0]->buffer[k]);
 					//xQueueSendToBack(sendingQ, &LineMsg, 0);
@@ -165,8 +168,11 @@ void vMappingLineCreate(point_buffer_t *PointBuffer, line_buffer_t *LineBuffer) 
 	PointBuffer->len = 0;
 }
 
-void vMappingLineMerge(point_buffer_t *PointBuffer, line_buffer_t *LineRepo) {
+void vMappingLineMerge(line_buffer_t *LineBuffer, line_buffer_t *LineRepo) {
 
+
+
+	LineBuffer->len = 0;
 }
 
 /**

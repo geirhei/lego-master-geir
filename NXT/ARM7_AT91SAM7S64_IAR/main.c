@@ -149,6 +149,7 @@ int main(void) {
   xTaskCreate(vMainMappingTask, "Mapping", 200, NULL, 1, NULL);
   //xTaskCreate(vMainNavigationTask, "Navigation", 500, NULL, 1, NULL);
   ret = xTaskCreate(vMainSensorTowerTask,"Tower", 100, NULL, 2, NULL); // Independent task, but use pose updates from estimator //1
+  //ret = pdPASS;
 #endif
   if(ret != pdPASS) {
 	display_goto_xy(0,2);

@@ -9,6 +9,6 @@ void vMappingUpdatePointBuffers(point_buffer_t **Buffers, measurement_t *Measure
 
 void vMappingLineCreate(point_buffer_t *PointBuffer, line_buffer_t *LineBuffer);
 
-void vMappingLineMerge(point_buffer_t *PointBuffer, line_buffer_t *LineRepo);
+void vMappingLineMerge(line_buffer_t *LineBuffer, line_buffer_t *LineRepo);
 
 #endif

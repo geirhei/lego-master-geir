@@ -24,7 +24,7 @@ extern TaskHandle_t xPoseCtrlTask;
 
 void vMainPoseControllerTask( void *pvParameters ) {
     #ifdef DEBUG
-        printf("PoseController OK\n");
+        //debug("PoseController OK\n");
         uint8_t tellar = 0;
     #endif
 
