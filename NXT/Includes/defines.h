@@ -69,7 +69,7 @@
 
 /************************************************************************/
 /* Mapping defines */
-#define PB_SIZE 				10
+#define PB_SIZE 				50
 #define LB_SIZE					10
 #define L_SIZE          		10
 #define MAX_IR_DISTANCE			40
