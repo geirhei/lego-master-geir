@@ -37,7 +37,8 @@ void vMainMappingTask( void *pvParameters )
 	
 	for (uint8_t i = 0; i < NUMBER_OF_SENSORS; i++) {
 		PointBuffers[i] = pvPortMalloc(sizeof(point_buffer_t));
-		//PointBuffers[i]->len = 0;
+		PointBuffers[i]->buffer = pvPortMalloc(PB_SIZE * sizeof(point_t));
+		PointBuffers[i]->len = 0;
 		//LineBuffers[i]->buffer = pvPortMalloc(LB_SIZE * sizeof(line_t));
 		//LineBuffers[i]->len = 0;
 	}
@@ -58,14 +59,14 @@ void vMainMappingTask( void *pvParameters )
 			// Wait up to 200ms for a measurement. This is the period of the
 			// sensor tower sampling.
 			
-			//measurement_t Measurement;
-			//if (xQueueReceive(measurementQ, &Measurement, 200 / portTICK_PERIOD_MS) == pdTRUE) {
-				//pose_t Pose;
-				//xQueuePeek(globalPoseQ, &Pose, 0);
+			measurement_t Measurement;
+			if (xQueueReceive(measurementQ, &Measurement, 200 / portTICK_PERIOD_MS) == pdTRUE) {
+				pose_t Pose;
+				xQueuePeek(globalPoseQ, &Pose, 0);
 
 				// Add new IR-measurements to end of PB
 				//vMappingUpdatePointBuffers(PointBuffers, &Measurement, &Pose);
-			//}
+			}
 			
 			// Check semaphore for synchronization from sensor tower.
 			// Do not wait.
