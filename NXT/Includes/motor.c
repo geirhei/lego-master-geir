@@ -1,10 +1,15 @@
 #include "motor.h"
-#include "defines.h"
-#include "math.h"
-#include "nxt_motors.h"
-#include "display.h"
+
+/* Kernel includes */
 #include "FreeRTOS.h"
 #include "queue.h"
+
+#include <math.h>
+
+#include "defines.h"
+#include "nxt_motors.h"
+#include "display.h"
+
 
 #define SPEED 50
 #define TOWER_SPEED 20
