@@ -58,21 +58,21 @@ void vMainMappingTask( void *pvParameters )
 			// Wait up to 200ms for a measurement. This is the period of the
 			// sensor tower sampling.
 			
-			measurement_t Measurement;
-			if (xQueueReceive(measurementQ, &Measurement, 200 / portTICK_PERIOD_MS) == pdTRUE) {
-				pose_t Pose;
-				xQueuePeek(globalPoseQ, &Pose, 0);
+			//measurement_t Measurement;
+			//if (xQueueReceive(measurementQ, &Measurement, 200 / portTICK_PERIOD_MS) == pdTRUE) {
+				//pose_t Pose;
+				//xQueuePeek(globalPoseQ, &Pose, 0);
 
 				// Add new IR-measurements to end of PB
-				vMappingUpdatePointBuffers(PointBuffers, &Measurement, &Pose);
-			}
+				//vMappingUpdatePointBuffers(PointBuffers, &Measurement, &Pose);
+			//}
 			
 			// Check semaphore for synchronization from sensor tower.
 			// Do not wait.
 			
 			if (xSemaphoreTake(xBeginMergeBSem, 0) == pdTRUE) {
 				for (uint8_t j = 0; j < NUMBER_OF_SENSORS; j++) {
-					PointBuffers[j]->len = 0;
+					//PointBuffers[j]->len = 0;
 					//vMappingLineCreate(PointBuffers[j], LineBuffers[j]);
 					// merge
 					/*

@@ -141,14 +141,14 @@ int main(void) {
   vQueueAddToRegistry(xBeginMergeBSem, "Begin merge semaphore");
 
   BaseType_t ret;
-  xTaskCreate(vMainCommunicationTask, "Comm", 250, NULL, 3, NULL);  // Dependant on IO, sends instructions to other tasks
-  xTaskCreate(vSenderTask, "Sender", 125, NULL, 3, NULL);
+  xTaskCreate(vMainCommunicationTask, "Comm", 150, NULL, 3, NULL);  // Dependant on IO, sends instructions to other tasks
+  xTaskCreate(vSenderTask, "Sender", 100, NULL, 3, NULL);
 #ifndef COMPASS_CALIBRATE
-  xTaskCreate(vMainPoseControllerTask, "PoseCon", 125, NULL, 2, &xPoseCtrlTask);// Dependant on estimator, sends instructions to movement task //2
-  xTaskCreate(vMainPoseEstimatorTask, "PoseEst", 125, NULL, 1, NULL); // Independent task,
-  //xTaskCreate(vMainMappingTask, "Mapping", 250, NULL, 1, NULL);
+  xTaskCreate(vMainPoseControllerTask, "PoseCon", 150, NULL, 2, &xPoseCtrlTask);// Dependant on estimator, sends instructions to movement task //2
+  xTaskCreate(vMainPoseEstimatorTask, "PoseEst", 100, NULL, 1, NULL); // Independent task,
+  //xTaskCreate(vMainMappingTask, "Mapping", 50, NULL, 1, NULL);
   //xTaskCreate(vMainNavigationTask, "Navigation", 500, NULL, 1, NULL);
-  ret = xTaskCreate(vMainSensorTowerTask,"Tower", 125, NULL, 2, NULL); // Independent task, but use pose updates from estimator //1
+  ret = xTaskCreate(vMainSensorTowerTask,"Tower", 100, NULL, 2, NULL); // Independent task, but use pose updates from estimator //1
 #endif
   if(ret != pdPASS) {
 	display_goto_xy(0,2);
