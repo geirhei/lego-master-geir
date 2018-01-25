@@ -36,8 +36,8 @@ void vMainMappingTask( void *pvParameters )
 	//LineBuffers = pvPortMalloc(NUMBER_OF_SENSORS * sizeof(line_buffer_t*));
 	
 	for (uint8_t i = 0; i < NUMBER_OF_SENSORS; i++) {
-		PointBuffers[i]->buffer = pvPortMalloc(PB_SIZE * sizeof(point_t));
-		PointBuffers[i]->len = 0;
+		PointBuffers[i] = pvPortMalloc(sizeof(point_buffer_t));
+		//PointBuffers[i]->len = 0;
 		//LineBuffers[i]->buffer = pvPortMalloc(LB_SIZE * sizeof(line_t));
 		//LineBuffers[i]->len = 0;
 	}
