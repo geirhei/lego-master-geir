@@ -20,10 +20,6 @@ extern QueueHandle_t globalWheelTicksQ;
 extern TaskHandle_t xPoseCtrlTask;
 
 void vMainPoseEstimatorTask( void *pvParameters ) {
-	//#define COMPASS_ENABLED
-
-    int16_t previous_ticksLeft = 0;
-    int16_t previous_ticksRight = 0;  
     
     const TickType_t xDelay = PERIOD_ESTIMATOR_MS;
     float period_in_S = PERIOD_ESTIMATOR_MS / 1000.0f;
@@ -62,6 +58,9 @@ void vMainPoseEstimatorTask( void *pvParameters ) {
 
     float gyroWeight = 0.5;//encoderError / (encoderError + gyroError);
     uint8_t robot_is_turning = 0;
+
+    wheel_ticks_t WheelTicks = { 0, 0 };
+    wheel_ticks_t PreviousWheelTicks = WheelTicks;
     
     // Initialise the xLastWakeTime variable with the current time.
     TickType_t xLastWakeTime;
@@ -71,24 +70,27 @@ void vMainPoseEstimatorTask( void *pvParameters ) {
         // Loop
         vTaskDelayUntil(&xLastWakeTime, xDelay / portTICK_PERIOD_MS );
         if (gHandshook) { // Check if we are ready    
-            int16_t leftWheelTicks = 0;
-            int16_t rightWheelTicks = 0;
-            wheel_ticks_t WheelTicks = {0};
+            
+            // Set initial pose change values to zero                
+            float dRobot = 0;
+            float dTheta = 0;
 
-            // Attempt to receive global tick data, move on after 15ms
-            if (xQueueReceive(globalWheelTicksQ, &WheelTicks, 15 / portTICK_PERIOD_MS)) {
-            	leftWheelTicks = WheelTicks.leftWheel;
-            	rightWheelTicks = WheelTicks.rightWheel;
+            // Read wheel ticks from queue written to by motor driver
+            // This part is executed only if there is a new tick-value in the queue
+            if (xQueueReceive(globalWheelTicksQ, &WheelTicks, 0) == pdTRUE) {
+
+                // Distance wheels have travelled since last sample
+                float dLeft = (float) (WheelTicks.left - PreviousWheelTicks.left) * WHEEL_FACTOR_MM; 
+                float dRight = (float) (WheelTicks.right - PreviousWheelTicks.right) * WHEEL_FACTOR_MM;
+            
+                PreviousWheelTicks.left = WheelTicks.left;
+                PreviousWheelTicks.right = WheelTicks.right;
+                       
+                dRobot = (dLeft + dRight) / 2;
+                // Get angle from encoders, dervied from arch of circles formula
+                dTheta = (dRight - dLeft) / WHEELBASE_MM;
             }
             
-            float dLeft = (float)(leftWheelTicks - previous_ticksLeft) * WHEEL_FACTOR_MM; // Distance left wheel has traveled since last sample
-            float dRight = (float)(rightWheelTicks - previous_ticksRight) * WHEEL_FACTOR_MM; // Distance right wheel has traveled since last sample
-            
-            previous_ticksLeft = leftWheelTicks;
-            previous_ticksRight = rightWheelTicks;
-					   
-            float dRobot = (dLeft + dRight) / 2;  
-            float dTheta = (dRight - dLeft) / WHEELBASE_MM; // Get angle from encoders, dervied from arch of circles formula
             
             /* PREDICT */
             // Get gyro data:

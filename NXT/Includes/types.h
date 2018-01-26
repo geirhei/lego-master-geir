@@ -58,8 +58,8 @@ typedef struct {
  * Type for storing wheel ticks
  */
 typedef struct {
-	int16_t rightWheel;
-	int16_t leftWheel;
+	int16_t left;
+	int16_t right;
 } wheel_ticks_t;
 
 /**

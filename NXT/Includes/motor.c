@@ -94,8 +94,8 @@ void vMotorSetAngle(uint8_t motor, int16_t angle) {
 
 void vMotorCountUpdate(void) {
   wheel_ticks_t WheelTicks;
-  WheelTicks.rightWheel = nxt_motor_get_count(servoRight);
-  WheelTicks.leftWheel = nxt_motor_get_count(servoLeft);
+  WheelTicks.right = nxt_motor_get_count(servoRight);
+  WheelTicks.left = nxt_motor_get_count(servoLeft);
   // Pass the motor count values to the global queue containing wheel ticks
   xQueueOverwrite(globalWheelTicksQ, &WheelTicks);
 }

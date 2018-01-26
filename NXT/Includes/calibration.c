@@ -65,8 +65,8 @@ void compassTask(void *par ) {
 		*/
 		wheel_ticks_t WheelTicks = {0};
 		if (xQueueReceive(globalWheelTicksQ, &WheelTicks, 0) == pdTRUE) {
-			leftWheelTicks = WheelTicks.leftWheel;
-			rightWheelTicks = WheelTicks.rightWheel;
+			leftWheelTicks = WheelTicks.left;
+			rightWheelTicks = WheelTicks.right;
 		}
 
 		float dLeft = (float)(leftWheelTicks - previous_ticksLeft) * WHEEL_FACTOR_MM; // Distance left wheel has traveled since last sample
