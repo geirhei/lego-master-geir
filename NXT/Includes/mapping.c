@@ -23,6 +23,7 @@ extern SemaphoreHandle_t xBeginMergeBSem;
 //extern TaskHandle_t xMappingTask;
 
 static message_t vMappingGetLineMessage(line_t *Line);
+static void sendLine(line_t *Line);
 
 /* Mapping task */
 void vMainMappingTask( void *pvParameters )
@@ -64,6 +65,7 @@ void vMainMappingTask( void *pvParameters )
 			// sensor tower sampling.
 			measurement_t Measurement;
 			if (xQueueReceive(measurementQ, &Measurement, 200 / portTICK_PERIOD_MS) == pdTRUE) {
+				//configASSERT(Measurement.data[0] > 0);
 				pose_t Pose;
 				xQueuePeek(globalPoseQ, &Pose, 0);
 
@@ -76,18 +78,30 @@ void vMainMappingTask( void *pvParameters )
 			
 			if (xSemaphoreTake(xBeginMergeBSem, 0) == pdTRUE) {
 				for (uint8_t j = 0; j < NUMBER_OF_SENSORS; j++) {
+					//line_t Line = { PointBuffers[j]->buffer[0], PointBuffers[j]->buffer[PointBuffers[j]->len] };
+					//sendLine(&Line);
 					vMappingLineCreate(PointBuffers[j], LineBuffers[j]);
 					//debug("%u\n", LineBuffers[j]->len);
 					//message_t LineMsg = vMappingGetLineMessage(&LineBuffers[0]->buffer[0]);
-					line_t testLine = LineBuffers[0]->buffer[0];
-					//xQueueSendToBack(sendingQ, &LineMsg, 100 / portTICK_PERIOD_MS);
-
-					LineBuffers[j]->len = 0;
+					//line_t testLine = LineBuffers[0]->buffer[0];
+					//sendLine(&testLine);
+					//
 					//vMappingLineMerge(LineBuffers[j], LineRepo);
-					
-					//line_t testLine = { {-10, 0}, {10, 0} };
+					for (uint8_t k = 0; k < LineBuffers[j]->len; k++) {
+						line_t line = LineBuffers[j]->buffer[k];
+						message_t msg;
+						msg.type = TYPE_LINE;
+						msg.message.line.x_p = (int16_t) ROUND(line.P.x);
+						msg.message.line.y_p = (int16_t) ROUND(line.P.y);
+						msg.message.line.x_q = (int16_t) ROUND(line.Q.x);
+						msg.message.line.y_q = (int16_t) ROUND(line.Q.y);
+						xQueueSendToBack(sendingQ, &msg, 0);
+					}
+					LineBuffers[j]->len = 0;
 				}
-				LineRepo->len = 0;
+
+				
+				//LineRepo->len = 0;
 				//for (uint8_t k = 0; k < LineBuffers[0]->len; k++) {
 					//message_t LineMsg = vMappingGetLineMessage(&LineBuffers[0]->buffer[k]);
 					//xQueueSendToBack(sendingQ, &LineMsg, 0);
@@ -114,7 +128,7 @@ void vMappingUpdatePointBuffers(point_buffer_t **Buffers, measurement_t *Measure
 			theta += 0.5 * M_PI;
 		}
 		vFunc_wrapTo2Pi(&theta); //[0,2pi)
-		float r = Measurement->data[i];
+		float r = (float) Measurement->data[i];
 		if (r <= 0 || r > 40) {
 			continue;
 		}
@@ -190,4 +204,8 @@ static message_t vMappingGetLineMessage(line_t *Line) {
 	msg.message.line.x_q = (int16_t) ROUND(Line->Q.x);
 	msg.message.line.y_q = (int16_t) ROUND(Line->Q.y);
 	return msg;
+}
+
+static void sendLine(line_t *Line) {
+	
 }

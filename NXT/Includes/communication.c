@@ -34,7 +34,7 @@ uint8_t use_arq[12] = {
   [TYPE_UPDATE] = 0, 
   [TYPE_IDLE] = 1, 
   [TYPE_PING_RESPONSE] = 0, 
-  [TYPE_LINE] = 0,
+  [TYPE_LINE] = 1,
   [TYPE_DEBUG] = 0
 };
 
@@ -53,9 +53,9 @@ void vMainCommunicationTask( void *pvParameters ) {
 
 	xTaskCreate(vARQTask, "ARQ", 250, NULL, 3, NULL);
 	led_clear(LED_GREEN);
-	message_t msg = { .type = TYPE_HANDSHAKE };
-	xQueueSendToBack(sendingQ, &msg, 0);
-	//send_handshake();
+	//message_t msg = { .type = TYPE_HANDSHAKE };
+	//xQueueSendToBack(sendingQ, &msg, 0);
+	send_handshake();
 
 	while(1) {
 		if (xSemaphoreTake(xCommandReadyBSem, portMAX_DELAY) == pdTRUE) {
@@ -139,7 +139,7 @@ void vSenderTask( void *pvParameters ) {
 
 				case TYPE_UPDATE:
 					break;
-
+					/*
 				case TYPE_HANDSHAKE: {
 					msg.message.handshake.name_length = ROBOT_NAME_LENGTH;
 					strcpy((char*)msg.message.handshake.name, ROBOT_NAME);
@@ -164,13 +164,14 @@ void vSenderTask( void *pvParameters ) {
 					else simple_p_send(server_connection, data, sizeof(data));
 					break;
 				}
-
-				case TYPE_LINE:
+				*/
+				case TYPE_LINE: {
 					uint8_t data[sizeof(line_message_t)+1];
 					memcpy(data, (uint8_t*) &msg, sizeof(data));
 					if(use_arq[TYPE_LINE]) arq_send(server_connection, data, sizeof(data));
 					else simple_p_send(SERVER_ADDRESS, data, sizeof(data));
 					break;
+				}
 
 				case TYPE_IDLE: {
 					uint8_t status = TYPE_IDLE;
@@ -193,7 +194,7 @@ static uint8_t server_connect(void) {
   return connected;
 }
 
-/*
+
 uint8_t send_handshake(void) {
   if(!connected) return 0;
   message_t msg;
@@ -221,7 +222,7 @@ uint8_t send_handshake(void) {
   else simple_p_send(server_connection, data, sizeof(data));
   return 1;
 }
-*/
+
 
 void send_update(int16_t x_cm, int16_t y_cm, int16_t heading_deg, int16_t towerAngle_deg, uint8_t S1_cm, uint8_t S2_cm, uint8_t S3_cm, uint8_t S4_cm){
   if(!connected) return;
