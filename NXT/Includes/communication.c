@@ -109,12 +109,12 @@ void vMainCommunicationTask( void *pvParameters ) {
 					//led_clear(LED_RED);
 					break;
 				case TYPE_FINISH:
-					taskENTER_CRITICAL();
-					gHandshook = FALSE;
-					taskEXIT_CRITICAL();
 					// Stop controller - pass the current position
 					xQueuePeek(globalPoseQ, &Target, 0);
 					xQueueOverwrite(poseControllerQ, &Target);
+					taskENTER_CRITICAL();
+					gHandshook = FALSE;
+					taskEXIT_CRITICAL();
 					break;
 			}
 		}
