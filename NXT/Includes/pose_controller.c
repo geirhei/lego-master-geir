@@ -62,13 +62,6 @@ void vMainPoseControllerTask( void *pvParameters ) {
 	
 	uint8_t doneTurning = TRUE;
 	
-	int16_t leftWheelTicks = 0;
-	int16_t rightWheelTicks = 0;
-	wheel_ticks_t WheelTicks = {0};
-	
-	uint8_t leftEncoderVal = 0;
-	uint8_t rightEncoderVal = 0;
-	
 	uint8_t gLeftWheelDirection = 0;
 	uint8_t gRightWheelDirection = 0;
 	
@@ -81,15 +74,6 @@ void vMainPoseControllerTask( void *pvParameters ) {
 		// Checking if server is ready
 		if (gHandshook) {
 			
-			vMotorEncoderLeftTickFromISR(gLeftWheelDirection, &leftWheelTicks, leftEncoderVal);
-			vMotorEncoderRightTickFromISR(gRightWheelDirection, &rightWheelTicks, rightEncoderVal);
-		
-			WheelTicks.leftWheel = leftWheelTicks;
-			WheelTicks.rightWheel = rightWheelTicks;
-
-			// Send wheel ticks received from ISR to the global wheel tick Q. Wait 0ms - increase this?
-			xQueueOverwrite(globalWheelTicksQ, &WheelTicks);
-
 			// Wait for synchronization by direct notification from the estimator task. Blocks indefinetely?
 			ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
 
@@ -103,7 +87,7 @@ void vMainPoseControllerTask( void *pvParameters ) {
 			if (xQueueReceive(poseControllerQ, &Target, 0) == pdTRUE) { // Receive theta and radius set points from com task
 				xTargt = Target.x;
 				yTargt = Target.y;
-			}
+			} 
 			
 			distance = sqrt((xTargt-xhat)*(xTargt-xhat) + (yTargt-yhat)*(yTargt-yhat));
 			
