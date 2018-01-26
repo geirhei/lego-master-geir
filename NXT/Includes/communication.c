@@ -89,7 +89,7 @@ void vMainCommunicationTask( void *pvParameters ) {
 					Target.x = (float) command_in.message.order.x * 10;
 					Target.y = (float) command_in.message.order.y * 10;
 					/* Relay new coordinates to position controller */
-					xQueueSendToFront(poseControllerQ, &Target, 0);
+					xQueueOverwrite(poseControllerQ, &Target);
 					break;
 				case TYPE_PAUSE:
 					//led_set(LED_YELLOW);
