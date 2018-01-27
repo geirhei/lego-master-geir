@@ -20,15 +20,6 @@ extern volatile uint8_t gHandshook;
 
 extern QueueHandle_t globalWheelTicksQ;
 
-void vMainWheelsTask( void *pvParameters )
-{
-  if (gHandshook)
-  {
-
-  }
-}
-
-
 void vMotor_init(void) {
   nxt_motor_set_speed(servoLeft, 0, 1);
   nxt_motor_set_speed(servoRight, 0, 1);

@@ -58,13 +58,12 @@ void vMainMappingTask( void *pvParameters )
 	{
 		vTaskDelayUntil(&xLastWakeTime, xFrequency);
 		
-		if (1)
-		//if (gHandshook)
+		if (gHandshook)
 		{
 			// Wait up to 200ms for a measurement. This is the period of the
 			// sensor tower sampling.
 			measurement_t Measurement;
-			if (xQueueReceive(measurementQ, &Measurement, 200 / portTICK_PERIOD_MS) == pdTRUE) {
+			if (xQueueReceive(measurementQ, &Measurement, 0) == pdTRUE) {
 				//configASSERT(Measurement.data[0] > 0);
 				pose_t Pose;
 				xQueuePeek(globalPoseQ, &Pose, 0);
@@ -73,10 +72,10 @@ void vMainMappingTask( void *pvParameters )
 				vMappingUpdatePointBuffers(PointBuffers, &Measurement, &Pose);
 			}
 			
-			// Check semaphore for synchronization from sensor tower.
+			// Check for notification from sensor tower task.
 			// Do not wait.
-			
-			if (xSemaphoreTake(xBeginMergeBSem, 0) == pdTRUE) {
+			if (ulTaskNotifyTake(pdTRUE, 0) == 1) {
+				vTaskSuspendAll();
 				for (uint8_t j = 0; j < NUMBER_OF_SENSORS; j++) {
 					//line_t Line = { PointBuffers[j]->buffer[0], PointBuffers[j]->buffer[PointBuffers[j]->len] };
 					//sendLine(&Line);
@@ -97,9 +96,10 @@ void vMainMappingTask( void *pvParameters )
 						msg.message.line.y_q = (int16_t) ROUND(line.Q.y);
 						xQueueSendToBack(sendingQ, &msg, 0);
 					}
+					// Prevent overflow while testing
 					LineBuffers[j]->len = 0;
 				}
-
+				xTaskResumeAll();
 				
 				//LineRepo->len = 0;
 				//for (uint8_t k = 0; k < LineBuffers[0]->len; k++) {
@@ -144,12 +144,13 @@ void vMappingUpdatePointBuffers(point_buffer_t **Buffers, measurement_t *Measure
 }
 
 void vMappingLineCreate(point_buffer_t *PointBuffer, line_buffer_t *LineBuffer) {
+	LineBuffer->len = 0;
+	
 	if (PointBuffer->len < 3) {
 		PointBuffer->len = 0;
 		return;
 	}
-
-	LineBuffer->len = 0;
+	
 	point_t A = PointBuffer->buffer[0];
 	point_t B = PointBuffer->buffer[1];
 

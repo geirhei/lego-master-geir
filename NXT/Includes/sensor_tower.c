@@ -21,7 +21,8 @@ extern QueueHandle_t globalPoseQ;
 extern QueueHandle_t poseControllerQ;
 extern QueueHandle_t measurementQ;
 extern QueueHandle_t sendingQ;
-extern SemaphoreHandle_t xBeginMergeBSem;
+//extern SemaphoreHandle_t xBeginMergeBSem;
+extern TaskHandle_t xMappingTask;
 
 /**
  * Task responsible for control of the sensor tower. Tower rotation depends on
@@ -148,12 +149,14 @@ void vMainSensorTowerTask( void *pvParameters ) {
 		  	if ((servoStep >= 90) && (rotationDirection == moveCounterClockwise)) {
 				rotationDirection = moveClockwise;
 				// Notify mapping task about tower direction change
-				xSemaphoreGive(xBeginMergeBSem);
+				//xSemaphoreGive(xBeginMergeBSem);
+				xTaskNotifyGive(xMappingTask);
 		  	}
 		  	else if ((servoStep <= 0) && (rotationDirection == moveClockwise)) {
 				rotationDirection = moveCounterClockwise;
 				// Notify mapping task about tower direction change
-            	xSemaphoreGive(xBeginMergeBSem);
+            	//xSemaphoreGive(xBeginMergeBSem);
+            	xTaskNotifyGive(xMappingTask);
 		  	}
 
 		}

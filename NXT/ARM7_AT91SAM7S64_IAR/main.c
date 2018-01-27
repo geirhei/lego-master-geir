@@ -53,7 +53,7 @@
 
 /* Semaphore handles */
 SemaphoreHandle_t xCommandReadyBSem;
-SemaphoreHandle_t xBeginMergeBSem;
+//SemaphoreHandle_t xBeginMergeBSem;
 
 /* Queues */
 QueueHandle_t movementQ = 0;
@@ -67,7 +67,7 @@ QueueHandle_t actuationQ = 0;
 
 /* Task handles */
 TaskHandle_t xPoseCtrlTask = NULL;
-//TaskHandle_t xMappingTask = NULL;
+TaskHandle_t xMappingTask = NULL;
 
 // Flag to indicate connection status.
 volatile uint8_t gHandshook = FALSE;
@@ -94,7 +94,8 @@ void vApplicationStackOverflowHook(xTaskHandle *pxTask, signed char *pcTaskName)
   led_set(LED_RED);
 
   #ifdef DEBUG
-	debug("s", "Stack overflow!\n");
+	//debug("s", "Stack overflow!\n");
+  	//#warning STACK OVERFLOW
   #endif
   
   while(1){
@@ -124,12 +125,12 @@ int main(void) {
   scanStatusQ = xQueueCreate(1, sizeof(uint8_t)); // For robot status
   globalWheelTicksQ = xQueueCreate(1, sizeof(wheel_ticks_t));
   globalPoseQ = xQueueCreate(1, sizeof(pose_t)); // For storing and passing the global pose estimate
-  measurementQ = xQueueCreate(1, sizeof(measurement_t));
+  measurementQ = xQueueCreate(3, sizeof(measurement_t));
   sendingQ = xQueueCreate(10, sizeof(message_t)); // For passing messages to the sending task
 //  actuationQ = xQueueCreate(2, sizeof)
 
   xCommandReadyBSem = xSemaphoreCreateBinary();
-  xBeginMergeBSem = xSemaphoreCreateBinary();
+  //xBeginMergeBSem = xSemaphoreCreateBinary();
 
   // For debugging
   vQueueAddToRegistry(movementQ, "Movement queue");
@@ -138,17 +139,20 @@ int main(void) {
   vQueueAddToRegistry(globalWheelTicksQ, "Global wheel ticks queue");
   vQueueAddToRegistry(globalPoseQ, "Global pose queue");
   vQueueAddToRegistry(measurementQ, "Measurement queue");
+  vQueueAddToRegistry(sendingQ, "Sending queue");
 
   vQueueAddToRegistry(xCommandReadyBSem, "Command ready semaphore");
-  vQueueAddToRegistry(xBeginMergeBSem, "Begin merge semaphore");
+  //vQueueAddToRegistry(xBeginMergeBSem, "Begin merge semaphore");
 
   BaseType_t ret;
+  #ifndef DEBUG
   xTaskCreate(vMainCommunicationTask, "Comm", 150, NULL, 3, NULL);  // Dependant on IO, sends instructions to other tasks
   xTaskCreate(vSenderTask, "Sender", 100, NULL, 3, NULL);
+  #endif
 #ifndef COMPASS_CALIBRATE
   xTaskCreate(vMainPoseControllerTask, "PoseCon", 150, NULL, 2, &xPoseCtrlTask);// Dependant on estimator, sends instructions to movement task //2
   xTaskCreate(vMainPoseEstimatorTask, "PoseEst", 150, NULL, 1, NULL); // Independent task,
-  xTaskCreate(vMainMappingTask, "Mapping", 200, NULL, 1, NULL);
+  xTaskCreate(vMainMappingTask, "Mapping", 200, NULL, 2, &xMappingTask);
   //xTaskCreate(vMainNavigationTask, "Navigation", 500, NULL, 1, NULL);
   ret = xTaskCreate(vMainSensorTowerTask,"Tower", 100, NULL, 2, NULL); // Independent task, but use pose updates from estimator //1
   //ret = pdPASS;
