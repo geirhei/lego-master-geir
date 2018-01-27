@@ -30,11 +30,7 @@ extern TaskHandle_t xMappingTask;
  */
 void vMainSensorTowerTask( void *pvParameters ) {
 	/* Task init */
-	float thetahat = 0;
-	float xhat = 0;
-	float yhat = 0;
-
-	pose_t GlobalPose = {0};
+	pose_t Pose = { 0, 0, 0 };
 	
 	uint8_t rotationDirection = moveCounterClockwise;
 	uint8_t servoStep = 0;
@@ -94,15 +90,9 @@ void vMainSensorTowerTask( void *pvParameters ) {
 			  	.servoStep = servoStep
 			  };
 
+			// Send Measurement to mapping task
 		  	xQueueSendToBack(measurementQ, &Measurement, 10);
 
-		  	// Get latest pose estimate, dont't remove from queue
-		  	if (xQueuePeek(globalPoseQ, &GlobalPose, 0) == pdTRUE) {
-		  		thetahat = GlobalPose.theta;
-		  		xhat = GlobalPose.x;
-		  		yhat = GlobalPose.y;
-		  	}
-		  
 		  	if ((idleCounter > 10) && (robotMovement == moveStop)) {
 				// If the robot stands idle for 1 second, send 'status:idle' in case the server missed it.
 				message_t msg = { .type = TYPE_IDLE };
@@ -113,11 +103,14 @@ void vMainSensorTowerTask( void *pvParameters ) {
 				idleCounter++;
 		  	}
 
+		  	// Get the latest pose estimate, dont't remove from queue
+		  	xQueuePeek(globalPoseQ, &Pose, 0);
+
 		  	// Convert to range [0,2pi) for compatibility with server
-		  	vFunc_wrapTo2Pi(&thetahat);
+		  	vFunc_wrapTo2Pi(&Pose.theta);
 		  
 		  	//Send updates to server in the correct format (centimeter and degrees, rounded)
-		  	send_update(ROUND(xhat/10), ROUND(yhat/10), ROUND(thetahat*RAD2DEG), servoStep, forwardSensor, leftSensor, rearSensor, rightSensor);
+		  	send_update(ROUND(Pose.x/10), ROUND(Pose.y/10), ROUND(Pose.theta*RAD2DEG), servoStep, forwardSensor, leftSensor, rearSensor, rightSensor);
 		  
 		  	#define MANUAL
 		  	#ifdef MANUAL
