@@ -69,7 +69,7 @@ void vMainMappingTask( void *pvParameters )
 				xQueuePeek(globalPoseQ, &Pose, 0);
 
 				// Add new IR-measurements to end of PB
-				vMappingUpdatePointBuffers(PointBuffers, &Measurement, &Pose);
+				vMappingUpdatePointBuffers(PointBuffers, &Measurement, Pose);
 			}
 			
 			// Check for notification from sensor tower task.
@@ -118,9 +118,9 @@ void vMainMappingTask( void *pvParameters )
 	}
 }
 
-void vMappingUpdatePointBuffers(point_buffer_t **Buffers, measurement_t *Measurement, pose_t *Pose) {
+void vMappingUpdatePointBuffers(point_buffer_t **Buffers, measurement_t *Measurement, pose_t Pose) {
 	float towerAngle = Measurement->servoStep * DEG2RAD; //[0,pi/2]
-	float theta = towerAngle + Pose->theta;
+	float theta = towerAngle + Pose.theta;
 	vFunc_wrapTo2Pi(&theta); //[0,2pi)
 
 	for (uint8_t i = 0; i < NUMBER_OF_SENSORS; i++) {
@@ -135,8 +135,8 @@ void vMappingUpdatePointBuffers(point_buffer_t **Buffers, measurement_t *Measure
 		point_t Pos;
 		Pos = vFunc_polar2Cart(theta, r);
 		// Get the coordinates relative to the global coordinate system
-		Pos.x += Pose->x;
-		Pos.y += Pose->y;
+		Pos.x += Pose.x;
+		Pos.y += Pose.y;
 		uint8_t currentLength = Buffers[i]->len;
 		Buffers[i]->buffer[currentLength] = Pos;
 		Buffers[i]->len++;
@@ -145,7 +145,7 @@ void vMappingUpdatePointBuffers(point_buffer_t **Buffers, measurement_t *Measure
 
 void vMappingLineCreate(point_buffer_t *PointBuffer, line_buffer_t *LineBuffer) {
 	LineBuffer->len = 0;
-	
+
 	if (PointBuffer->len < 3) {
 		PointBuffer->len = 0;
 		return;
@@ -157,7 +157,7 @@ void vMappingLineCreate(point_buffer_t *PointBuffer, line_buffer_t *LineBuffer) 
 	for (uint8_t i = 2; i < PointBuffer->len; i++) {
 		line_t Line;
 		if (vFunc_areCollinear(&A, &B, &PointBuffer->buffer[i])) {
-			if (i == PointBuffer->len - 1) {
+			if (i == PointBuffer->len-1) {
 				point_t P = { A.x, A.y };
 				point_t Q = { PointBuffer->buffer[i].x, PointBuffer->buffer[i].y };
 				Line.P = P;
@@ -170,7 +170,7 @@ void vMappingLineCreate(point_buffer_t *PointBuffer, line_buffer_t *LineBuffer) 
 			point_t Q = { PointBuffer->buffer[i-1].x, PointBuffer->buffer[i-1].y };
 			Line.P = P;
 			Line.Q = Q;
-			if (i > PointBuffer->len - 3) {
+			if (i > PointBuffer->len-3) {
 				break;
 			} else {
 				A = PointBuffer->buffer[i];
