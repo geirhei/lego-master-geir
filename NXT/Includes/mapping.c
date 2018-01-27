@@ -64,9 +64,10 @@ void vMainMappingTask( void *pvParameters )
 			// sensor tower sampling.
 			measurement_t Measurement;
 			if (xQueueReceive(measurementQ, &Measurement, 0) == pdTRUE) {
-				//configASSERT(Measurement.data[0] > 0);
+				// Read global pose and put it inside [0,2pi)
 				pose_t Pose;
 				xQueuePeek(globalPoseQ, &Pose, 0);
+				vFunc_wrapTo2Pi(&Pose);
 
 				// Add new IR-measurements to end of PB
 				vMappingUpdatePointBuffers(PointBuffers, &Measurement, Pose);
@@ -119,9 +120,8 @@ void vMainMappingTask( void *pvParameters )
 }
 
 void vMappingUpdatePointBuffers(point_buffer_t **Buffers, measurement_t *Measurement, pose_t Pose) {
-	float towerAngle = Measurement->servoStep * DEG2RAD; //[0,pi/2]
+	float towerAngle = (float) Measurement->servoStep * DEG2RAD; //[0,pi/2]
 	float theta = towerAngle + Pose.theta;
-	vFunc_wrapTo2Pi(&theta); //[0,2pi)
 
 	for (uint8_t i = 0; i < NUMBER_OF_SENSORS; i++) {
 		if (i > 0) {
@@ -132,8 +132,7 @@ void vMappingUpdatePointBuffers(point_buffer_t **Buffers, measurement_t *Measure
 		if (r <= 0 || r > 40) {
 			continue;
 		}
-		point_t Pos;
-		Pos = vFunc_polar2Cart(theta, r);
+		point_t Pos = vFunc_polar2Cart(theta, r);
 		// Get the coordinates relative to the global coordinate system
 		Pos.x += Pose.x;
 		Pos.y += Pose.y;
