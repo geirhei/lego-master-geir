@@ -8,7 +8,6 @@ uint8_t connected = 0;
 extern message_t message_in;
 extern SemaphoreHandle_t xCommandReadyBSem;
 extern uint8_t gHandshook;
-//extern QueueHandle_t sendingQ;
 
 uint8_t use_arq[12] = { 
   [TYPE_HANDSHAKE] = 1,

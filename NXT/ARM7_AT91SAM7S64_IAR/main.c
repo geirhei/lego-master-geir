@@ -62,7 +62,6 @@ QueueHandle_t scanStatusQ = 0;
 QueueHandle_t globalWheelTicksQ = 0;
 QueueHandle_t globalPoseQ = 0;
 QueueHandle_t measurementQ = 0;
-QueueHandle_t sendingQ = 0;
 QueueHandle_t actuationQ = 0;
 
 /* Task handles */
@@ -126,7 +125,6 @@ int main(void) {
   globalWheelTicksQ = xQueueCreate(1, sizeof(wheel_ticks_t));
   globalPoseQ = xQueueCreate(1, sizeof(pose_t)); // For storing and passing the global pose estimate
   measurementQ = xQueueCreate(3, sizeof(measurement_t));
-  sendingQ = xQueueCreate(10, sizeof(message_t)); // For passing messages to the sending task
 //  actuationQ = xQueueCreate(2, sizeof)
 
   xCommandReadyBSem = xSemaphoreCreateBinary();
@@ -139,7 +137,6 @@ int main(void) {
   vQueueAddToRegistry(globalWheelTicksQ, "Global wheel ticks queue");
   vQueueAddToRegistry(globalPoseQ, "Global pose queue");
   vQueueAddToRegistry(measurementQ, "Measurement queue");
-  vQueueAddToRegistry(sendingQ, "Sending queue");
 
   vQueueAddToRegistry(xCommandReadyBSem, "Command ready semaphore");
   //vQueueAddToRegistry(xBeginMergeBSem, "Begin merge semaphore");
@@ -147,7 +144,6 @@ int main(void) {
   BaseType_t ret;
   #ifndef DEBUG
   xTaskCreate(vMainCommunicationTask, "Comm", 150, NULL, 3, NULL);  // Dependant on IO, sends instructions to other tasks
-  xTaskCreate(vSenderTask, "Sender", 100, NULL, 3, NULL);
   #endif
 #ifndef COMPASS_CALIBRATE
   xTaskCreate(vMainPoseControllerTask, "PoseCon", 150, NULL, 2, &xPoseCtrlTask);// Dependant on estimator, sends instructions to movement task //2

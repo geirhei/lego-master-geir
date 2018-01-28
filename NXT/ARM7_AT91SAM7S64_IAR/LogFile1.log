@@ -583,3 +583,498 @@ Sat Jan 27, 2018 19:32:34: Target reset
 Sat Jan 27, 2018 19:32:36: Error (col 15): No such field. 
 Sat Jan 27, 2018 19:32:36: Error (col 15): No such field. 
 Sat Jan 27, 2018 19:32:36: Error (col 15): No such field. 
+
+
+ << Logging to file resumes >> 
+
+Sat Jan 27, 2018 20:19:42: Loaded macro file: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\resources\FlashAT91SAM7Sxx.mac
+Sat Jan 27, 2018 20:19:44: JLINK command: ProjectFile = C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\settings\nxt_kartlegging_Flash Bin.jlink, return = 0
+
+Sat Jan 27, 2018 20:19:44: Device "AT91SAM7S256" selected.
+Sat Jan 27, 2018 20:19:44: DLL version: V6.20f, compiled Oct 13 2017 17:18:41
+
+Sat Jan 27, 2018 20:19:44: Firmware: J-Link V9 compiled Dec  1 2017 14:40:21
+
+Sat Jan 27, 2018 20:19:44: JTAG speed is initially set to: 1000 kHz
+Sat Jan 27, 2018 20:19:44: Initial reset was performed
+Sat Jan 27, 2018 20:19:44: TotalIRLen = 4, IRPrint = 0x01
+Sat Jan 27, 2018 20:19:44: JTAG chain detection found 1 devices:
+Sat Jan 27, 2018 20:19:44:  #0 Id: 0x3F0F0F0F, IRLen: 04, ARM7TDMI Core
+Sat Jan 27, 2018 20:19:44: Found 1 JTAG device, Total IRLen = 4:
+
+Sat Jan 27, 2018 20:19:44:  #0 Id: 0x3F0F0F0F, IRLen:  4, IRPrint: 0x1 ARM7TDMI Core
+
+Sat Jan 27, 2018 20:19:44: J-Link found 1 JTAG device(s). ARM core Id: 3F0F0F0F ARM7
+
+Sat Jan 27, 2018 20:19:44:  ---------------------------------------- FLASH Download V1.3
+Sat Jan 27, 2018 20:19:44:  ---------------------------------------- 14/November/2005
+Sat Jan 27, 2018 20:19:44:  ---------------------------------------- PLL Enable 
+Sat Jan 27, 2018 20:19:44: -------------------------------Set CPSR  ----------------------------------
+Sat Jan 27, 2018 20:19:44: CPSR     000000D3
+Sat Jan 27, 2018 20:19:44:  ---------------------------------------- PLL Enable 
+Sat Jan 27, 2018 20:19:44: ------------------------------- The Remap is NOT -----------------------------------------
+Sat Jan 27, 2018 20:19:44:  ---------------------------------------- Chip ID   0x270B0941
+Sat Jan 27, 2018 20:19:44:  ---------------------------------------- Extention 0x00000000
+Sat Jan 27, 2018 20:19:44:  ---------------------------------------- Flash Version 0x00000112
+Sat Jan 27, 2018 20:19:44: -------------------------------Set PC ----------------------------------------
+Sat Jan 27, 2018 20:19:44: Adaptive clocking not supported for selected CPU core. Only supported for -S cores.
+Sat Jan 27, 2018 20:19:44: Auto JTAG speed: 8000 kHz
+Sat Jan 27, 2018 20:19:44: 8448 bytes downloaded (105.77 Kbytes/sec)
+Sat Jan 27, 2018 20:19:44: Loaded debugee: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\AT91SAM7S256-EK\internalflash-sam7s256.out
+Sat Jan 27, 2018 20:19:44: Target reset
+Sat Jan 27, 2018 20:19:44: -I- Internal flash loader
+Sat Jan 27, 2018 20:19:44: -I- Unlock arguments: address 0x00100000 of 0x4000 Bytes
+Sat Jan 27, 2018 20:19:44: -I- Write arguments: address 0x00100000,  offset 0x0 of 0x4000 Bytes
+Sat Jan 27, 2018 20:19:44: -I- Unlock arguments: address 0x00104000 of 0x4000 Bytes
+Sat Jan 27, 2018 20:19:44: -I- Write arguments: address 0x00104000,  offset 0x0 of 0x3800 Bytes
+Sat Jan 27, 2018 20:19:45: execUserFlashExit
+Sat Jan 27, 2018 20:19:45: ------------------------------- The Remap is done -----------------------------------------
+Sat Jan 27, 2018 20:19:45: Unloaded macro file: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\resources\FlashAT91SAM7Sxx.mac
+Sat Jan 27, 2018 20:19:45: Downloaded C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\Flash Bin\Exe\rtosdemo.out to flash memory.
+Sat Jan 27, 2018 20:19:45: 30527 bytes downloaded into FLASH (24.46 Kbytes/sec)
+Sat Jan 27, 2018 20:19:45: Loaded debugee: C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\Flash Bin\Exe\rtosdemo.out
+Sat Jan 27, 2018 20:19:45: Software reset was performed
+Sat Jan 27, 2018 20:19:45: Target reset
+Sat Jan 27, 2018 20:19:48: Error (col 15): No such field. 
+Sat Jan 27, 2018 20:19:48: Error (col 15): No such field. 
+Sat Jan 27, 2018 20:19:48: Error (col 15): No such field. 
+
+
+ << Logging to file resumes >> 
+
+Sat Jan 27, 2018 20:58:42: Loaded macro file: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\resources\FlashAT91SAM7Sxx.mac
+Sat Jan 27, 2018 20:58:43: JLINK command: ProjectFile = C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\settings\nxt_kartlegging_Flash Bin.jlink, return = 0
+
+Sat Jan 27, 2018 20:58:43: Device "AT91SAM7S256" selected.
+Sat Jan 27, 2018 20:58:43: DLL version: V6.20f, compiled Oct 13 2017 17:18:41
+
+Sat Jan 27, 2018 20:58:43: Firmware: J-Link V9 compiled Dec  1 2017 14:40:21
+
+Sat Jan 27, 2018 20:58:43: JTAG speed is initially set to: 1000 kHz
+Sat Jan 27, 2018 20:58:43: Initial reset was performed
+Sat Jan 27, 2018 20:58:43: TotalIRLen = 4, IRPrint = 0x01
+Sat Jan 27, 2018 20:58:43: JTAG chain detection found 1 devices:
+Sat Jan 27, 2018 20:58:43:  #0 Id: 0x3F0F0F0F, IRLen: 04, ARM7TDMI Core
+Sat Jan 27, 2018 20:58:43: Found 1 JTAG device, Total IRLen = 4:
+
+Sat Jan 27, 2018 20:58:43:  #0 Id: 0x3F0F0F0F, IRLen:  4, IRPrint: 0x1 ARM7TDMI Core
+
+Sat Jan 27, 2018 20:58:43: J-Link found 1 JTAG device(s). ARM core Id: 3F0F0F0F ARM7
+
+Sat Jan 27, 2018 20:58:43:  ---------------------------------------- FLASH Download V1.3
+Sat Jan 27, 2018 20:58:43:  ---------------------------------------- 14/November/2005
+Sat Jan 27, 2018 20:58:43:  ---------------------------------------- PLL Enable 
+Sat Jan 27, 2018 20:58:43: -------------------------------Set CPSR  ----------------------------------
+Sat Jan 27, 2018 20:58:43: CPSR     000000D3
+Sat Jan 27, 2018 20:58:43:  ---------------------------------------- PLL Enable 
+Sat Jan 27, 2018 20:58:43: ------------------------------- The Remap is NOT -----------------------------------------
+Sat Jan 27, 2018 20:58:43:  ---------------------------------------- Chip ID   0x270B0941
+Sat Jan 27, 2018 20:58:43:  ---------------------------------------- Extention 0x00000000
+Sat Jan 27, 2018 20:58:43:  ---------------------------------------- Flash Version 0x00000112
+Sat Jan 27, 2018 20:58:43: -------------------------------Set PC ----------------------------------------
+Sat Jan 27, 2018 20:58:43: Adaptive clocking not supported for selected CPU core. Only supported for -S cores.
+Sat Jan 27, 2018 20:58:43: Auto JTAG speed: 8000 kHz
+Sat Jan 27, 2018 20:58:43: 8448 bytes downloaded (75.00 Kbytes/sec)
+Sat Jan 27, 2018 20:58:43: Loaded debugee: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\AT91SAM7S256-EK\internalflash-sam7s256.out
+Sat Jan 27, 2018 20:58:43: Target reset
+Sat Jan 27, 2018 20:58:43: -I- Internal flash loader
+Sat Jan 27, 2018 20:58:44: -I- Unlock arguments: address 0x00100000 of 0x4000 Bytes
+Sat Jan 27, 2018 20:58:44: -I- Write arguments: address 0x00100000,  offset 0x0 of 0x4000 Bytes
+Sat Jan 27, 2018 20:58:44: -I- Unlock arguments: address 0x00104000 of 0x4000 Bytes
+Sat Jan 27, 2018 20:58:44: -I- Write arguments: address 0x00104000,  offset 0x0 of 0x3800 Bytes
+Sat Jan 27, 2018 20:58:45: execUserFlashExit
+Sat Jan 27, 2018 20:58:45: ------------------------------- The Remap is done -----------------------------------------
+Sat Jan 27, 2018 20:58:45: Unloaded macro file: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\resources\FlashAT91SAM7Sxx.mac
+Sat Jan 27, 2018 20:58:45: Downloaded C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\Flash Bin\Exe\rtosdemo.out to flash memory.
+Sat Jan 27, 2018 20:58:45: 30559 bytes downloaded into FLASH (22.20 Kbytes/sec)
+Sat Jan 27, 2018 20:58:45: Loaded debugee: C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\Flash Bin\Exe\rtosdemo.out
+Sat Jan 27, 2018 20:58:45: Software reset was performed
+Sat Jan 27, 2018 20:58:45: Target reset
+Sat Jan 27, 2018 20:58:48: Error (col 15): No such field. 
+Sat Jan 27, 2018 20:58:48: Error (col 15): No such field. 
+Sat Jan 27, 2018 20:58:48: Error (col 15): No such field. 
+
+
+ << Logging to file resumes >> 
+
+Sat Jan 27, 2018 21:09:13: Loaded macro file: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\resources\FlashAT91SAM7Sxx.mac
+Sat Jan 27, 2018 21:09:15: JLINK command: ProjectFile = C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\settings\nxt_kartlegging_Flash Bin.jlink, return = 0
+
+Sat Jan 27, 2018 21:09:15: Device "AT91SAM7S256" selected.
+Sat Jan 27, 2018 21:09:15: DLL version: V6.20f, compiled Oct 13 2017 17:18:41
+
+Sat Jan 27, 2018 21:09:15: Firmware: J-Link V9 compiled Dec  1 2017 14:40:21
+
+Sat Jan 27, 2018 21:09:15: JTAG speed is initially set to: 1000 kHz
+Sat Jan 27, 2018 21:09:15: Initial reset was performed
+Sat Jan 27, 2018 21:09:15: TotalIRLen = 4, IRPrint = 0x01
+Sat Jan 27, 2018 21:09:15: JTAG chain detection found 1 devices:
+Sat Jan 27, 2018 21:09:15:  #0 Id: 0x3F0F0F0F, IRLen: 04, ARM7TDMI Core
+Sat Jan 27, 2018 21:09:15: Found 1 JTAG device, Total IRLen = 4:
+
+Sat Jan 27, 2018 21:09:15:  #0 Id: 0x3F0F0F0F, IRLen:  4, IRPrint: 0x1 ARM7TDMI Core
+
+Sat Jan 27, 2018 21:09:15: J-Link found 1 JTAG device(s). ARM core Id: 3F0F0F0F ARM7
+
+Sat Jan 27, 2018 21:09:15:  ---------------------------------------- FLASH Download V1.3
+Sat Jan 27, 2018 21:09:15:  ---------------------------------------- 14/November/2005
+Sat Jan 27, 2018 21:09:15:  ---------------------------------------- PLL Enable 
+Sat Jan 27, 2018 21:09:15: -------------------------------Set CPSR  ----------------------------------
+Sat Jan 27, 2018 21:09:15: CPSR     000000D3
+Sat Jan 27, 2018 21:09:15:  ---------------------------------------- PLL Enable 
+Sat Jan 27, 2018 21:09:15: ------------------------------- The Remap is NOT -----------------------------------------
+Sat Jan 27, 2018 21:09:15:  ---------------------------------------- Chip ID   0x270B0941
+Sat Jan 27, 2018 21:09:15:  ---------------------------------------- Extention 0x00000000
+Sat Jan 27, 2018 21:09:15:  ---------------------------------------- Flash Version 0x00000112
+Sat Jan 27, 2018 21:09:15: -------------------------------Set PC ----------------------------------------
+Sat Jan 27, 2018 21:09:15: Adaptive clocking not supported for selected CPU core. Only supported for -S cores.
+Sat Jan 27, 2018 21:09:15: Auto JTAG speed: 8000 kHz
+Sat Jan 27, 2018 21:09:15: 8448 bytes downloaded (105.77 Kbytes/sec)
+Sat Jan 27, 2018 21:09:15: Loaded debugee: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\AT91SAM7S256-EK\internalflash-sam7s256.out
+Sat Jan 27, 2018 21:09:15: Target reset
+Sat Jan 27, 2018 21:09:15: -I- Internal flash loader
+Sat Jan 27, 2018 21:09:15: -I- Unlock arguments: address 0x00100000 of 0x4000 Bytes
+Sat Jan 27, 2018 21:09:16: -I- Write arguments: address 0x00100000,  offset 0x0 of 0x4000 Bytes
+Sat Jan 27, 2018 21:09:16: -I- Unlock arguments: address 0x00104000 of 0x4000 Bytes
+Sat Jan 27, 2018 21:09:16: -I- Write arguments: address 0x00104000,  offset 0x0 of 0x3800 Bytes
+Sat Jan 27, 2018 21:09:16: execUserFlashExit
+Sat Jan 27, 2018 21:09:16: ------------------------------- The Remap is done -----------------------------------------
+Sat Jan 27, 2018 21:09:16: Unloaded macro file: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\resources\FlashAT91SAM7Sxx.mac
+Sat Jan 27, 2018 21:09:16: Downloaded C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\Flash Bin\Exe\rtosdemo.out to flash memory.
+Sat Jan 27, 2018 21:09:17: 30547 bytes downloaded into FLASH (23.29 Kbytes/sec)
+Sat Jan 27, 2018 21:09:17: Loaded debugee: C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\Flash Bin\Exe\rtosdemo.out
+Sat Jan 27, 2018 21:09:17: Software reset was performed
+Sat Jan 27, 2018 21:09:17: Target reset
+Sat Jan 27, 2018 21:09:19: Error (col 15): No such field. 
+Sat Jan 27, 2018 21:09:19: Error (col 15): No such field. 
+Sat Jan 27, 2018 21:09:19: Error (col 15): No such field. 
+
+
+ << Logging to file resumes >> 
+
+Sun Jan 28, 2018 16:45:11: Loaded macro file: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\resources\FlashAT91SAM7Sxx.mac
+Sun Jan 28, 2018 16:45:14: JLINK command: ProjectFile = C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\settings\nxt_kartlegging_Flash Bin.jlink, return = 0
+
+Sun Jan 28, 2018 16:45:14: Device "AT91SAM7S256" selected.
+Sun Jan 28, 2018 16:45:14: DLL version: V6.20f, compiled Oct 13 2017 17:18:41
+
+Sun Jan 28, 2018 16:45:14: Firmware: J-Link V9 compiled Dec  1 2017 14:40:21
+
+Sun Jan 28, 2018 16:45:14: JTAG speed is initially set to: 1000 kHz
+Sun Jan 28, 2018 16:45:14: Initial reset was performed
+Sun Jan 28, 2018 16:45:15: TotalIRLen = 4, IRPrint = 0x01
+Sun Jan 28, 2018 16:45:15: JTAG chain detection found 1 devices:
+Sun Jan 28, 2018 16:45:15:  #0 Id: 0x3F0F0F0F, IRLen: 04, ARM7TDMI Core
+Sun Jan 28, 2018 16:45:15: Found 1 JTAG device, Total IRLen = 4:
+
+Sun Jan 28, 2018 16:45:15:  #0 Id: 0x3F0F0F0F, IRLen:  4, IRPrint: 0x1 ARM7TDMI Core
+
+Sun Jan 28, 2018 16:45:15: J-Link found 1 JTAG device(s). ARM core Id: 3F0F0F0F ARM7
+
+Sun Jan 28, 2018 16:45:15:  ---------------------------------------- FLASH Download V1.3
+Sun Jan 28, 2018 16:45:15:  ---------------------------------------- 14/November/2005
+Sun Jan 28, 2018 16:45:15:  ---------------------------------------- PLL Enable 
+Sun Jan 28, 2018 16:45:15: -------------------------------Set CPSR  ----------------------------------
+Sun Jan 28, 2018 16:45:15: CPSR     000000D3
+Sun Jan 28, 2018 16:45:15:  ---------------------------------------- PLL Enable 
+Sun Jan 28, 2018 16:45:15: ------------------------------- The Remap is NOT -----------------------------------------
+Sun Jan 28, 2018 16:45:15:  ---------------------------------------- Chip ID   0x270B0941
+Sun Jan 28, 2018 16:45:15:  ---------------------------------------- Extention 0x00000000
+Sun Jan 28, 2018 16:45:15:  ---------------------------------------- Flash Version 0x00000112
+Sun Jan 28, 2018 16:45:15: -------------------------------Set PC ----------------------------------------
+Sun Jan 28, 2018 16:45:15: Adaptive clocking not supported for selected CPU core. Only supported for -S cores.
+Sun Jan 28, 2018 16:45:15: Auto JTAG speed: 8000 kHz
+Sun Jan 28, 2018 16:45:15: 8448 bytes downloaded (105.77 Kbytes/sec)
+Sun Jan 28, 2018 16:45:15: Loaded debugee: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\AT91SAM7S256-EK\internalflash-sam7s256.out
+Sun Jan 28, 2018 16:45:15: Target reset
+Sun Jan 28, 2018 16:45:15: -I- Internal flash loader
+Sun Jan 28, 2018 16:45:15: -I- Unlock arguments: address 0x00100000 of 0x4000 Bytes
+Sun Jan 28, 2018 16:45:15: -I- Write arguments: address 0x00100000,  offset 0x0 of 0x4000 Bytes
+Sun Jan 28, 2018 16:45:15: -I- Unlock arguments: address 0x00104000 of 0x4000 Bytes
+Sun Jan 28, 2018 16:45:15: -I- Write arguments: address 0x00104000,  offset 0x0 of 0x3600 Bytes
+Sun Jan 28, 2018 16:45:16: execUserFlashExit
+Sun Jan 28, 2018 16:45:16: ------------------------------- The Remap is done -----------------------------------------
+Sun Jan 28, 2018 16:45:16: Unloaded macro file: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\resources\FlashAT91SAM7Sxx.mac
+Sun Jan 28, 2018 16:45:16: Downloaded C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\Flash Bin\Exe\rtosdemo.out to flash memory.
+Sun Jan 28, 2018 16:45:16: 30107 bytes downloaded into FLASH (23.22 Kbytes/sec)
+Sun Jan 28, 2018 16:45:16: Loaded debugee: C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\Flash Bin\Exe\rtosdemo.out
+Sun Jan 28, 2018 16:45:16: Software reset was performed
+Sun Jan 28, 2018 16:45:16: Target reset
+Sun Jan 28, 2018 16:45:19: Error (col 15): No such field. 
+Sun Jan 28, 2018 16:45:19: Error (col 15): No such field. 
+Sun Jan 28, 2018 16:45:19: Error (col 15): No such field. 
+
+
+ << Logging to file resumes >> 
+
+Sun Jan 28, 2018 16:47:53: Loaded macro file: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\resources\FlashAT91SAM7Sxx.mac
+Sun Jan 28, 2018 16:47:55: JLINK command: ProjectFile = C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\settings\nxt_kartlegging_Flash Bin.jlink, return = 0
+
+Sun Jan 28, 2018 16:47:55: Device "AT91SAM7S256" selected.
+Sun Jan 28, 2018 16:47:55: DLL version: V6.20f, compiled Oct 13 2017 17:18:41
+
+Sun Jan 28, 2018 16:47:55: Firmware: J-Link V9 compiled Dec  1 2017 14:40:21
+
+Sun Jan 28, 2018 16:47:55: JTAG speed is initially set to: 1000 kHz
+Sun Jan 28, 2018 16:47:55: Initial reset was performed
+Sun Jan 28, 2018 16:47:55: TotalIRLen = 4, IRPrint = 0x01
+Sun Jan 28, 2018 16:47:55: JTAG chain detection found 1 devices:
+Sun Jan 28, 2018 16:47:55:  #0 Id: 0x3F0F0F0F, IRLen: 04, ARM7TDMI Core
+Sun Jan 28, 2018 16:47:55: Found 1 JTAG device, Total IRLen = 4:
+
+Sun Jan 28, 2018 16:47:55:  #0 Id: 0x3F0F0F0F, IRLen:  4, IRPrint: 0x1 ARM7TDMI Core
+
+Sun Jan 28, 2018 16:47:55: J-Link found 1 JTAG device(s). ARM core Id: 3F0F0F0F ARM7
+
+Sun Jan 28, 2018 16:47:55:  ---------------------------------------- FLASH Download V1.3
+Sun Jan 28, 2018 16:47:55:  ---------------------------------------- 14/November/2005
+Sun Jan 28, 2018 16:47:55:  ---------------------------------------- PLL Enable 
+Sun Jan 28, 2018 16:47:55: -------------------------------Set CPSR  ----------------------------------
+Sun Jan 28, 2018 16:47:55: CPSR     000000D3
+Sun Jan 28, 2018 16:47:55:  ---------------------------------------- PLL Enable 
+Sun Jan 28, 2018 16:47:55: ------------------------------- The Remap is NOT -----------------------------------------
+Sun Jan 28, 2018 16:47:55:  ---------------------------------------- Chip ID   0x270B0941
+Sun Jan 28, 2018 16:47:55:  ---------------------------------------- Extention 0x00000000
+Sun Jan 28, 2018 16:47:55:  ---------------------------------------- Flash Version 0x00000112
+Sun Jan 28, 2018 16:47:55: -------------------------------Set PC ----------------------------------------
+Sun Jan 28, 2018 16:47:55: Adaptive clocking not supported for selected CPU core. Only supported for -S cores.
+Sun Jan 28, 2018 16:47:55: Auto JTAG speed: 8000 kHz
+Sun Jan 28, 2018 16:47:55: 8448 bytes downloaded (75.69 Kbytes/sec)
+Sun Jan 28, 2018 16:47:55: Loaded debugee: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\AT91SAM7S256-EK\internalflash-sam7s256.out
+Sun Jan 28, 2018 16:47:55: Target reset
+Sun Jan 28, 2018 16:47:55: -I- Internal flash loader
+Sun Jan 28, 2018 16:47:55: -I- Unlock arguments: address 0x00100000 of 0x4000 Bytes
+Sun Jan 28, 2018 16:47:55: -I- Write arguments: address 0x00100000,  offset 0x0 of 0x4000 Bytes
+Sun Jan 28, 2018 16:47:56: -I- Unlock arguments: address 0x00104000 of 0x4000 Bytes
+Sun Jan 28, 2018 16:47:56: -I- Write arguments: address 0x00104000,  offset 0x0 of 0x3600 Bytes
+Sun Jan 28, 2018 16:47:56: execUserFlashExit
+Sun Jan 28, 2018 16:47:56: ------------------------------- The Remap is done -----------------------------------------
+Sun Jan 28, 2018 16:47:56: Unloaded macro file: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\resources\FlashAT91SAM7Sxx.mac
+Sun Jan 28, 2018 16:47:56: Downloaded C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\Flash Bin\Exe\rtosdemo.out to flash memory.
+Sun Jan 28, 2018 16:47:56: 30107 bytes downloaded into FLASH (23.83 Kbytes/sec)
+Sun Jan 28, 2018 16:47:56: Loaded debugee: C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\Flash Bin\Exe\rtosdemo.out
+Sun Jan 28, 2018 16:47:56: Software reset was performed
+Sun Jan 28, 2018 16:47:56: Target reset
+Sun Jan 28, 2018 16:47:59: Error (col 15): No such field. 
+Sun Jan 28, 2018 16:47:59: Error (col 15): No such field. 
+Sun Jan 28, 2018 16:47:59: Error (col 15): No such field. 
+
+
+ << Logging to file resumes >> 
+
+Sun Jan 28, 2018 16:58:50: Loaded macro file: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\resources\FlashAT91SAM7Sxx.mac
+Sun Jan 28, 2018 16:58:51: JLINK command: ProjectFile = C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\settings\nxt_kartlegging_Flash Bin.jlink, return = 0
+
+Sun Jan 28, 2018 16:58:51: Device "AT91SAM7S256" selected.
+Sun Jan 28, 2018 16:58:51: DLL version: V6.20f, compiled Oct 13 2017 17:18:41
+
+Sun Jan 28, 2018 16:58:51: Firmware: J-Link V9 compiled Dec  1 2017 14:40:21
+
+Sun Jan 28, 2018 16:58:51: JTAG speed is initially set to: 1000 kHz
+Sun Jan 28, 2018 16:58:51: Initial reset was performed
+Sun Jan 28, 2018 16:58:51: TotalIRLen = 4, IRPrint = 0x01
+Sun Jan 28, 2018 16:58:51: JTAG chain detection found 1 devices:
+Sun Jan 28, 2018 16:58:51:  #0 Id: 0x3F0F0F0F, IRLen: 04, ARM7TDMI Core
+Sun Jan 28, 2018 16:58:51: Found 1 JTAG device, Total IRLen = 4:
+
+Sun Jan 28, 2018 16:58:51:  #0 Id: 0x3F0F0F0F, IRLen:  4, IRPrint: 0x1 ARM7TDMI Core
+
+Sun Jan 28, 2018 16:58:51: J-Link found 1 JTAG device(s). ARM core Id: 3F0F0F0F ARM7
+
+Sun Jan 28, 2018 16:58:51:  ---------------------------------------- FLASH Download V1.3
+Sun Jan 28, 2018 16:58:51:  ---------------------------------------- 14/November/2005
+Sun Jan 28, 2018 16:58:51:  ---------------------------------------- PLL Enable 
+Sun Jan 28, 2018 16:58:51: -------------------------------Set CPSR  ----------------------------------
+Sun Jan 28, 2018 16:58:51: CPSR     000000D3
+Sun Jan 28, 2018 16:58:51:  ---------------------------------------- PLL Enable 
+Sun Jan 28, 2018 16:58:51: ------------------------------- The Remap is NOT -----------------------------------------
+Sun Jan 28, 2018 16:58:51:  ---------------------------------------- Chip ID   0x270B0941
+Sun Jan 28, 2018 16:58:51:  ---------------------------------------- Extention 0x00000000
+Sun Jan 28, 2018 16:58:51:  ---------------------------------------- Flash Version 0x00000112
+Sun Jan 28, 2018 16:58:51: -------------------------------Set PC ----------------------------------------
+Sun Jan 28, 2018 16:58:51: Adaptive clocking not supported for selected CPU core. Only supported for -S cores.
+Sun Jan 28, 2018 16:58:51: Auto JTAG speed: 8000 kHz
+Sun Jan 28, 2018 16:58:51: 8448 bytes downloaded (105.77 Kbytes/sec)
+Sun Jan 28, 2018 16:58:51: Loaded debugee: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\AT91SAM7S256-EK\internalflash-sam7s256.out
+Sun Jan 28, 2018 16:58:51: Target reset
+Sun Jan 28, 2018 16:58:51: -I- Internal flash loader
+Sun Jan 28, 2018 16:58:51: -I- Unlock arguments: address 0x00100000 of 0x4000 Bytes
+Sun Jan 28, 2018 16:58:51: -I- Write arguments: address 0x00100000,  offset 0x0 of 0x4000 Bytes
+Sun Jan 28, 2018 16:58:52: -I- Unlock arguments: address 0x00104000 of 0x4000 Bytes
+Sun Jan 28, 2018 16:58:52: -I- Write arguments: address 0x00104000,  offset 0x0 of 0x3600 Bytes
+Sun Jan 28, 2018 16:58:52: execUserFlashExit
+Sun Jan 28, 2018 16:58:52: ------------------------------- The Remap is done -----------------------------------------
+Sun Jan 28, 2018 16:58:52: Unloaded macro file: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\resources\FlashAT91SAM7Sxx.mac
+Sun Jan 28, 2018 16:58:52: Downloaded C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\Flash Bin\Exe\rtosdemo.out to flash memory.
+Sun Jan 28, 2018 16:58:52: 30131 bytes downloaded into FLASH (23.26 Kbytes/sec)
+Sun Jan 28, 2018 16:58:52: Loaded debugee: C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\Flash Bin\Exe\rtosdemo.out
+Sun Jan 28, 2018 16:58:52: Software reset was performed
+Sun Jan 28, 2018 16:58:52: Target reset
+Sun Jan 28, 2018 16:58:55: Error (col 15): No such field. 
+Sun Jan 28, 2018 16:58:55: Error (col 15): No such field. 
+Sun Jan 28, 2018 16:58:55: Error (col 15): No such field. 
+
+
+ << Logging to file resumes >> 
+
+Sun Jan 28, 2018 17:01:11: Loaded macro file: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\resources\FlashAT91SAM7Sxx.mac
+Sun Jan 28, 2018 17:01:12: JLINK command: ProjectFile = C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\settings\nxt_kartlegging_Flash Bin.jlink, return = 0
+
+Sun Jan 28, 2018 17:01:12: Device "AT91SAM7S256" selected.
+Sun Jan 28, 2018 17:01:12: DLL version: V6.20f, compiled Oct 13 2017 17:18:41
+
+Sun Jan 28, 2018 17:01:12: Firmware: J-Link V9 compiled Dec  1 2017 14:40:21
+
+Sun Jan 28, 2018 17:01:12: JTAG speed is initially set to: 1000 kHz
+Sun Jan 28, 2018 17:01:12: Initial reset was performed
+Sun Jan 28, 2018 17:01:12: TotalIRLen = 4, IRPrint = 0x01
+Sun Jan 28, 2018 17:01:12: JTAG chain detection found 1 devices:
+Sun Jan 28, 2018 17:01:12:  #0 Id: 0x3F0F0F0F, IRLen: 04, ARM7TDMI Core
+Sun Jan 28, 2018 17:01:12: Found 1 JTAG device, Total IRLen = 4:
+
+Sun Jan 28, 2018 17:01:12:  #0 Id: 0x3F0F0F0F, IRLen:  4, IRPrint: 0x1 ARM7TDMI Core
+
+Sun Jan 28, 2018 17:01:12: J-Link found 1 JTAG device(s). ARM core Id: 3F0F0F0F ARM7
+
+Sun Jan 28, 2018 17:01:12:  ---------------------------------------- FLASH Download V1.3
+Sun Jan 28, 2018 17:01:12:  ---------------------------------------- 14/November/2005
+Sun Jan 28, 2018 17:01:12:  ---------------------------------------- PLL Enable 
+Sun Jan 28, 2018 17:01:12: -------------------------------Set CPSR  ----------------------------------
+Sun Jan 28, 2018 17:01:12: CPSR     000000D3
+Sun Jan 28, 2018 17:01:12:  ---------------------------------------- PLL Enable 
+Sun Jan 28, 2018 17:01:12: ------------------------------- The Remap is NOT -----------------------------------------
+Sun Jan 28, 2018 17:01:12:  ---------------------------------------- Chip ID   0x270B0941
+Sun Jan 28, 2018 17:01:12:  ---------------------------------------- Extention 0x00000000
+Sun Jan 28, 2018 17:01:12:  ---------------------------------------- Flash Version 0x00000112
+Sun Jan 28, 2018 17:01:12: -------------------------------Set PC ----------------------------------------
+Sun Jan 28, 2018 17:01:12: Adaptive clocking not supported for selected CPU core. Only supported for -S cores.
+Sun Jan 28, 2018 17:01:12: Auto JTAG speed: 8000 kHz
+Sun Jan 28, 2018 17:01:12: 8448 bytes downloaded (105.77 Kbytes/sec)
+Sun Jan 28, 2018 17:01:12: Loaded debugee: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\AT91SAM7S256-EK\internalflash-sam7s256.out
+Sun Jan 28, 2018 17:01:12: Target reset
+Sun Jan 28, 2018 17:01:12: -I- Internal flash loader
+Sun Jan 28, 2018 17:01:12: -I- Unlock arguments: address 0x00100000 of 0x4000 Bytes
+Sun Jan 28, 2018 17:01:12: -I- Write arguments: address 0x00100000,  offset 0x0 of 0x4000 Bytes
+Sun Jan 28, 2018 17:01:13: -I- Unlock arguments: address 0x00104000 of 0x4000 Bytes
+Sun Jan 28, 2018 17:01:13: -I- Write arguments: address 0x00104000,  offset 0x0 of 0x3600 Bytes
+Sun Jan 28, 2018 17:01:13: execUserFlashExit
+Sun Jan 28, 2018 17:01:13: ------------------------------- The Remap is done -----------------------------------------
+Sun Jan 28, 2018 17:01:13: Unloaded macro file: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\resources\FlashAT91SAM7Sxx.mac
+Sun Jan 28, 2018 17:01:13: Downloaded C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\Flash Bin\Exe\rtosdemo.out to flash memory.
+Sun Jan 28, 2018 17:01:13: 30131 bytes downloaded into FLASH (24.14 Kbytes/sec)
+Sun Jan 28, 2018 17:01:13: Loaded debugee: C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\Flash Bin\Exe\rtosdemo.out
+Sun Jan 28, 2018 17:01:13: Software reset was performed
+Sun Jan 28, 2018 17:01:13: Target reset
+Sun Jan 28, 2018 17:01:16: Error (col 15): No such field. 
+Sun Jan 28, 2018 17:01:16: Error (col 15): No such field. 
+Sun Jan 28, 2018 17:01:16: Error (col 15): No such field. 
+
+
+ << Logging to file resumes >> 
+
+Sun Jan 28, 2018 17:02:33: Loaded macro file: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\resources\FlashAT91SAM7Sxx.mac
+Sun Jan 28, 2018 17:02:34: JLINK command: ProjectFile = C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\settings\nxt_kartlegging_Flash Bin.jlink, return = 0
+
+Sun Jan 28, 2018 17:02:34: Device "AT91SAM7S256" selected.
+Sun Jan 28, 2018 17:02:34: DLL version: V6.20f, compiled Oct 13 2017 17:18:41
+
+Sun Jan 28, 2018 17:02:34: Firmware: J-Link V9 compiled Dec  1 2017 14:40:21
+
+Sun Jan 28, 2018 17:02:34: JTAG speed is initially set to: 1000 kHz
+Sun Jan 28, 2018 17:02:34: Initial reset was performed
+Sun Jan 28, 2018 17:02:34: TotalIRLen = 4, IRPrint = 0x01
+Sun Jan 28, 2018 17:02:34: JTAG chain detection found 1 devices:
+Sun Jan 28, 2018 17:02:34:  #0 Id: 0x3F0F0F0F, IRLen: 04, ARM7TDMI Core
+Sun Jan 28, 2018 17:02:34: Found 1 JTAG device, Total IRLen = 4:
+
+Sun Jan 28, 2018 17:02:34:  #0 Id: 0x3F0F0F0F, IRLen:  4, IRPrint: 0x1 ARM7TDMI Core
+
+Sun Jan 28, 2018 17:02:34: J-Link found 1 JTAG device(s). ARM core Id: 3F0F0F0F ARM7
+
+Sun Jan 28, 2018 17:02:34:  ---------------------------------------- FLASH Download V1.3
+Sun Jan 28, 2018 17:02:34:  ---------------------------------------- 14/November/2005
+Sun Jan 28, 2018 17:02:34:  ---------------------------------------- PLL Enable 
+Sun Jan 28, 2018 17:02:34: -------------------------------Set CPSR  ----------------------------------
+Sun Jan 28, 2018 17:02:34: CPSR     000000D3
+Sun Jan 28, 2018 17:02:34:  ---------------------------------------- PLL Enable 
+Sun Jan 28, 2018 17:02:34: ------------------------------- The Remap is NOT -----------------------------------------
+Sun Jan 28, 2018 17:02:34:  ---------------------------------------- Chip ID   0x270B0941
+Sun Jan 28, 2018 17:02:34:  ---------------------------------------- Extention 0x00000000
+Sun Jan 28, 2018 17:02:34:  ---------------------------------------- Flash Version 0x00000112
+Sun Jan 28, 2018 17:02:34: -------------------------------Set PC ----------------------------------------
+Sun Jan 28, 2018 17:02:34: Adaptive clocking not supported for selected CPU core. Only supported for -S cores.
+Sun Jan 28, 2018 17:02:35: Auto JTAG speed: 8000 kHz
+Sun Jan 28, 2018 17:02:35: 8448 bytes downloaded (105.77 Kbytes/sec)
+Sun Jan 28, 2018 17:02:35: Loaded debugee: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\AT91SAM7S256-EK\internalflash-sam7s256.out
+Sun Jan 28, 2018 17:02:35: Target reset
+Sun Jan 28, 2018 17:02:35: -I- Internal flash loader
+Sun Jan 28, 2018 17:02:35: -I- Unlock arguments: address 0x00100000 of 0x4000 Bytes
+Sun Jan 28, 2018 17:02:35: -I- Write arguments: address 0x00100000,  offset 0x0 of 0x4000 Bytes
+Sun Jan 28, 2018 17:02:35: -I- Unlock arguments: address 0x00104000 of 0x4000 Bytes
+Sun Jan 28, 2018 17:02:35: -I- Write arguments: address 0x00104000,  offset 0x0 of 0x3600 Bytes
+Sun Jan 28, 2018 17:02:36: execUserFlashExit
+Sun Jan 28, 2018 17:02:36: ------------------------------- The Remap is done -----------------------------------------
+Sun Jan 28, 2018 17:02:36: Unloaded macro file: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\resources\FlashAT91SAM7Sxx.mac
+Sun Jan 28, 2018 17:02:36: Downloaded C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\Flash Bin\Exe\rtosdemo.out to flash memory.
+Sun Jan 28, 2018 17:02:36: 30131 bytes downloaded into FLASH (23.54 Kbytes/sec)
+Sun Jan 28, 2018 17:02:36: Loaded debugee: C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\Flash Bin\Exe\rtosdemo.out
+Sun Jan 28, 2018 17:02:36: Software reset was performed
+Sun Jan 28, 2018 17:02:36: Target reset
+Sun Jan 28, 2018 17:02:39: Error (col 15): No such field. 
+Sun Jan 28, 2018 17:02:39: Error (col 15): No such field. 
+Sun Jan 28, 2018 17:02:39: Error (col 15): No such field. 
+
+
+ << Logging to file resumes >> 
+
+Sun Jan 28, 2018 17:03:45: Loaded macro file: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\resources\FlashAT91SAM7Sxx.mac
+Sun Jan 28, 2018 17:03:47: JLINK command: ProjectFile = C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\settings\nxt_kartlegging_Flash Bin.jlink, return = 0
+
+Sun Jan 28, 2018 17:03:47: Device "AT91SAM7S256" selected.
+Sun Jan 28, 2018 17:03:47: DLL version: V6.20f, compiled Oct 13 2017 17:18:41
+
+Sun Jan 28, 2018 17:03:47: Firmware: J-Link V9 compiled Dec  1 2017 14:40:21
+
+Sun Jan 28, 2018 17:03:47: JTAG speed is initially set to: 1000 kHz
+Sun Jan 28, 2018 17:03:47: Initial reset was performed
+Sun Jan 28, 2018 17:03:47: TotalIRLen = 4, IRPrint = 0x01
+Sun Jan 28, 2018 17:03:47: JTAG chain detection found 1 devices:
+Sun Jan 28, 2018 17:03:47:  #0 Id: 0x3F0F0F0F, IRLen: 04, ARM7TDMI Core
+Sun Jan 28, 2018 17:03:47: Found 1 JTAG device, Total IRLen = 4:
+
+Sun Jan 28, 2018 17:03:47:  #0 Id: 0x3F0F0F0F, IRLen:  4, IRPrint: 0x1 ARM7TDMI Core
+
+Sun Jan 28, 2018 17:03:47: J-Link found 1 JTAG device(s). ARM core Id: 3F0F0F0F ARM7
+
+Sun Jan 28, 2018 17:03:47:  ---------------------------------------- FLASH Download V1.3
+Sun Jan 28, 2018 17:03:47:  ---------------------------------------- 14/November/2005
+Sun Jan 28, 2018 17:03:47:  ---------------------------------------- PLL Enable 
+Sun Jan 28, 2018 17:03:47: -------------------------------Set CPSR  ----------------------------------
+Sun Jan 28, 2018 17:03:47: CPSR     000000D3
+Sun Jan 28, 2018 17:03:47:  ---------------------------------------- PLL Enable 
+Sun Jan 28, 2018 17:03:47: ------------------------------- The Remap is NOT -----------------------------------------
+Sun Jan 28, 2018 17:03:47:  ---------------------------------------- Chip ID   0x270B0941
+Sun Jan 28, 2018 17:03:47:  ---------------------------------------- Extention 0x00000000
+Sun Jan 28, 2018 17:03:47:  ---------------------------------------- Flash Version 0x00000112
+Sun Jan 28, 2018 17:03:47: -------------------------------Set PC ----------------------------------------
+Sun Jan 28, 2018 17:03:47: Adaptive clocking not supported for selected CPU core. Only supported for -S cores.
+Sun Jan 28, 2018 17:03:47: Auto JTAG speed: 8000 kHz
+Sun Jan 28, 2018 17:03:47: 8448 bytes downloaded (87.77 Kbytes/sec)
+Sun Jan 28, 2018 17:03:47: Loaded debugee: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\AT91SAM7S256-EK\internalflash-sam7s256.out
+Sun Jan 28, 2018 17:03:47: Target reset
+Sun Jan 28, 2018 17:03:47: -I- Internal flash loader
+Sun Jan 28, 2018 17:03:47: -I- Unlock arguments: address 0x00100000 of 0x4000 Bytes
+Sun Jan 28, 2018 17:03:48: -I- Write arguments: address 0x00100000,  offset 0x0 of 0x4000 Bytes
+Sun Jan 28, 2018 17:03:48: -I- Unlock arguments: address 0x00104000 of 0x4000 Bytes
+Sun Jan 28, 2018 17:03:48: -I- Write arguments: address 0x00104000,  offset 0x0 of 0x3500 Bytes
+Sun Jan 28, 2018 17:03:48: execUserFlashExit
+Sun Jan 28, 2018 17:03:48: ------------------------------- The Remap is done -----------------------------------------
+Sun Jan 28, 2018 17:03:48: Unloaded macro file: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\resources\FlashAT91SAM7Sxx.mac
+Sun Jan 28, 2018 17:03:48: Downloaded C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\Flash Bin\Exe\rtosdemo.out to flash memory.
+Sun Jan 28, 2018 17:03:49: 29855 bytes downloaded into FLASH (23.63 Kbytes/sec)
+Sun Jan 28, 2018 17:03:49: Loaded debugee: C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\Flash Bin\Exe\rtosdemo.out
+Sun Jan 28, 2018 17:03:49: Software reset was performed
+Sun Jan 28, 2018 17:03:49: Target reset
+Sun Jan 28, 2018 17:03:51: Error (col 15): No such field. 
+Sun Jan 28, 2018 17:03:51: Error (col 15): No such field. 
+Sun Jan 28, 2018 17:03:51: Error (col 15): No such field. 

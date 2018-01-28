@@ -18,12 +18,10 @@ extern volatile uint8_t gHandshook;
 
 extern QueueHandle_t measurementQ;
 extern QueueHandle_t globalPoseQ;
-extern QueueHandle_t sendingQ;
 extern SemaphoreHandle_t xBeginMergeBSem;
 //extern TaskHandle_t xMappingTask;
 
 static message_t vMappingGetLineMessage(line_t *Line);
-static void sendLine(line_t *Line);
 
 /* Mapping task */
 void vMainMappingTask( void *pvParameters )
@@ -64,13 +62,18 @@ void vMainMappingTask( void *pvParameters )
 			// sensor tower sampling.
 			measurement_t Measurement;
 			if (xQueueReceive(measurementQ, &Measurement, 0) == pdTRUE) {
-				// Read global pose and put it inside [0,2pi)
+				uint8_t sensorValues[] = { Measurement.forward, Measurement.left, Measurement.rear, Measurement.right };
+
 				pose_t Pose;
 				xQueuePeek(globalPoseQ, &Pose, 0);
-				vFunc_wrapTo2Pi(&Pose);
+				// Convert to centimeters
+				Pose.x /= 10;
+				Pose.y /= 10;
+				// Put inside [0,2pi)
+				vFunc_wrapTo2Pi(&Pose.theta);
 
 				// Add new IR-measurements to end of PB
-				vMappingUpdatePointBuffers(PointBuffers, &Measurement, Pose);
+				vMappingUpdatePointBuffers(PointBuffers, sensorValues, Measurement.servoStep, Pose);
 			}
 			
 			// Check for notification from sensor tower task.
@@ -81,33 +84,17 @@ void vMainMappingTask( void *pvParameters )
 					//line_t Line = { PointBuffers[j]->buffer[0], PointBuffers[j]->buffer[PointBuffers[j]->len] };
 					//sendLine(&Line);
 					vMappingLineCreate(PointBuffers[j], LineBuffers[j]);
-					//debug("%u\n", LineBuffers[j]->len);
 					//message_t LineMsg = vMappingGetLineMessage(&LineBuffers[0]->buffer[0]);
 					//line_t testLine = LineBuffers[0]->buffer[0];
-					//sendLine(&testLine);
-					//
 					//vMappingLineMerge(LineBuffers[j], LineRepo);
 					for (uint8_t k = 0; k < LineBuffers[j]->len; k++) {
 						line_t line = LineBuffers[j]->buffer[k];
-						message_t msg;
-						msg.type = TYPE_LINE;
-						msg.message.line.x_p = (int16_t) ROUND(line.P.x);
-						msg.message.line.y_p = (int16_t) ROUND(line.P.y);
-						msg.message.line.x_q = (int16_t) ROUND(line.Q.x);
-						msg.message.line.y_q = (int16_t) ROUND(line.Q.y);
-						xQueueSendToBack(sendingQ, &msg, 0);
+						//send_line(line);
 					}
 					// Prevent overflow while testing
 					LineBuffers[j]->len = 0;
 				}
 				xTaskResumeAll();
-				
-				//LineRepo->len = 0;
-				//for (uint8_t k = 0; k < LineBuffers[0]->len; k++) {
-					//message_t LineMsg = vMappingGetLineMessage(&LineBuffers[0]->buffer[k]);
-					//xQueueSendToBack(sendingQ, &LineMsg, 0);
-				//}
-				
 			}
 			
 			
@@ -119,8 +106,8 @@ void vMainMappingTask( void *pvParameters )
 	}
 }
 
-void vMappingUpdatePointBuffers(point_buffer_t **Buffers, measurement_t *Measurement, pose_t Pose) {
-	float towerAngle = (float) Measurement->servoStep * DEG2RAD; //[0,pi/2]
+static void vMappingUpdatePointBuffers(point_buffer_t **Buffers, uint8_t *sensorValues, uint8_t servoStep, pose_t Pose) {
+	float towerAngle = (float) servoStep * DEG2RAD; //[0,pi/2]
 	float theta = towerAngle + Pose.theta;
 
 	for (uint8_t i = 0; i < NUMBER_OF_SENSORS; i++) {
@@ -128,11 +115,12 @@ void vMappingUpdatePointBuffers(point_buffer_t **Buffers, measurement_t *Measure
 			theta += 0.5 * M_PI;
 		}
 		vFunc_wrapTo2Pi(&theta); //[0,2pi)
-		float r = (float) Measurement->data[i];
+		uint8_t r = sensorValues[i];
+		// Abort if the measurement is outside the valid range
 		if (r <= 0 || r > 40) {
 			continue;
 		}
-		point_t Pos = vFunc_polar2Cart(theta, r);
+		point_t Pos = vFunc_polar2Cart(theta, (float) r);
 		// Get the coordinates relative to the global coordinate system
 		Pos.x += Pose.x;
 		Pos.y += Pose.y;
@@ -142,7 +130,7 @@ void vMappingUpdatePointBuffers(point_buffer_t **Buffers, measurement_t *Measure
 	}
 }
 
-void vMappingLineCreate(point_buffer_t *PointBuffer, line_buffer_t *LineBuffer) {
+static void vMappingLineCreate(point_buffer_t *PointBuffer, line_buffer_t *LineBuffer) {
 	LineBuffer->len = 0;
 
 	if (PointBuffer->len < 3) {
@@ -185,27 +173,9 @@ void vMappingLineCreate(point_buffer_t *PointBuffer, line_buffer_t *LineBuffer) 
 	PointBuffer->len = 0;
 }
 
-void vMappingLineMerge(line_buffer_t *LineBuffer, line_buffer_t *LineRepo) {
+static void vMappingLineMerge(line_buffer_t *LineBuffer, line_buffer_t *LineRepo) {
 
 
 
 	LineBuffer->len = 0;
-}
-
-/**
- * Creates and returns a message for sending to the server from the input
- * Line structure.
- */
-static message_t vMappingGetLineMessage(line_t *Line) {
-	message_t msg;
-	msg.type = TYPE_LINE;
-	msg.message.line.x_p = (int16_t) ROUND(Line->P.x);
-	msg.message.line.y_p = (int16_t) ROUND(Line->P.y);
-	msg.message.line.x_q = (int16_t) ROUND(Line->Q.x);
-	msg.message.line.y_q = (int16_t) ROUND(Line->Q.y);
-	return msg;
-}
-
-static void sendLine(line_t *Line) {
-	
 }

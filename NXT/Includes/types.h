@@ -49,8 +49,18 @@ typedef struct {
 /**
  * Definition for type storing the IR data from a measurement
  */
+/*
 typedef struct {
 	uint8_t data[4];
+	uint8_t servoStep;
+} measurement_t;
+*/
+
+typedef struct {
+	uint8_t forward;
+	uint8_t left;
+	uint8_t rear;
+	uint8_t right;
 	uint8_t servoStep;
 } measurement_t;
 

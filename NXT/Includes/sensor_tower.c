@@ -20,7 +20,6 @@ extern QueueHandle_t scanStatusQ;
 extern QueueHandle_t globalPoseQ;
 extern QueueHandle_t poseControllerQ;
 extern QueueHandle_t measurementQ;
-extern QueueHandle_t sendingQ;
 //extern SemaphoreHandle_t xBeginMergeBSem;
 extern TaskHandle_t xMappingTask;
 
@@ -86,7 +85,10 @@ void vMainSensorTowerTask( void *pvParameters ) {
 
 		  	// Add measurements to struct for sending to queue
 		  	measurement_t Measurement = {
-			  	.data = { forwardSensor, leftSensor, rearSensor, rightSensor },
+			  	.forward = forwardSensor,
+			  	.left = leftSensor,
+			  	.rear = rearSensor,
+			  	.right = rightSensor,
 			  	.servoStep = servoStep
 			  };
 
@@ -95,8 +97,7 @@ void vMainSensorTowerTask( void *pvParameters ) {
 
 		  	if ((idleCounter > 10) && (robotMovement == moveStop)) {
 				// If the robot stands idle for 1 second, send 'status:idle' in case the server missed it.
-				message_t msg = { .type = TYPE_IDLE };
-				xQueueSendToBack(sendingQ, &msg, 10 / portTICK_PERIOD_MS);
+				send_idle();
 				idleCounter = 1;
 		  	}
 		  	else if ((idleCounter >= 1) && (robotMovement == moveStop)) {
