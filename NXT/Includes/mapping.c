@@ -79,7 +79,7 @@ void vMainMappingTask( void *pvParameters )
 			// Check for notification from sensor tower task.
 			// Do not wait.
 			if (ulTaskNotifyTake(pdTRUE, 0) == 1) {
-				vTaskSuspendAll();
+				//vTaskSuspendAll();
 				for (uint8_t j = 0; j < NUMBER_OF_SENSORS; j++) {
 					//line_t Line = { PointBuffers[j]->buffer[0], PointBuffers[j]->buffer[PointBuffers[j]->len] };
 					//sendLine(&Line);
@@ -89,12 +89,12 @@ void vMainMappingTask( void *pvParameters )
 					//vMappingLineMerge(LineBuffers[j], LineRepo);
 					for (uint8_t k = 0; k < LineBuffers[j]->len; k++) {
 						line_t line = LineBuffers[j]->buffer[k];
-						//send_line(line);
+						send_line(line);
 					}
 					// Prevent overflow while testing
 					LineBuffers[j]->len = 0;
 				}
-				xTaskResumeAll();
+				//xTaskResumeAll();
 			}
 			
 			
