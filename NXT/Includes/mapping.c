@@ -19,14 +19,15 @@ extern volatile uint8_t gHandshook;
 extern QueueHandle_t measurementQ;
 extern QueueHandle_t globalPoseQ;
 extern SemaphoreHandle_t xBeginMergeBSem;
-//extern TaskHandle_t xMappingTask;
+extern TaskHandle_t xMappingTask;
 
 static message_t vMappingGetLineMessage(line_t *Line);
 
 /* Mapping task */
 void vMainMappingTask( void *pvParameters )
 {
-	// init:
+	// Initialize the buffers used for mapping operations. Each sensor has its
+	// own buffers that are allocated on the heap.
 	point_buffer_t *PointBuffers;
 	line_buffer_t *LineBuffers;
 	line_buffer_t *LineRepo;
@@ -34,12 +35,11 @@ void vMainMappingTask( void *pvParameters )
 	PointBuffers = pvPortMalloc(NUMBER_OF_SENSORS * sizeof(point_buffer_t));
 	LineBuffers = pvPortMalloc(NUMBER_OF_SENSORS * sizeof(line_buffer_t));
 	
+	// Allocate space for the desired buffer length and set initial length to 0.
 	for (uint8_t i = 0; i < NUMBER_OF_SENSORS; i++) {
-		//PointBuffers[i] = pvPortMalloc(sizeof(point_buffer_t));
 		PointBuffers[i].buffer = pvPortMalloc(PB_SIZE * sizeof(point_t));
 		PointBuffers[i].len = 0;
 
-		//LineBuffers[i] = pvPortMalloc(sizeof(line_buffer_t));
 		LineBuffers[i].buffer = pvPortMalloc(LB_SIZE * sizeof(line_t));
 		LineBuffers[i].len = 0;
 	}
@@ -54,15 +54,16 @@ void vMainMappingTask( void *pvParameters )
 
 	while (1)
 	{
+		// Runs with a fixed frequency
 		vTaskDelayUntil(&xLastWakeTime, xFrequency);
 		
 		if (gHandshook)
 		{
-			// Wait up to 200ms for a measurement. This is the period of the
-			// sensor tower sampling.
+			// Retrieve a measurement sent by the sensor tower.
+			// Do not wait if there is none available
 			measurement_t Measurement;
 			if (xQueueReceive(measurementQ, &Measurement, 0) == pdTRUE) {
-
+				// Read the robots current pose
 				pose_t Pose;
 				xQueuePeek(globalPoseQ, &Pose, 0);
 				// Convert to centimeters
@@ -71,7 +72,7 @@ void vMainMappingTask( void *pvParameters )
 				// Put inside [0,2pi)
 				vFunc_wrapTo2Pi(&Pose.theta);
 
-				// Add new IR-measurements to end of PB
+				// Append new IR measurements to the end of each PB
 				vMappingUpdatePointBuffers(PointBuffers, Measurement, Pose);
 			}
 			
@@ -128,6 +129,11 @@ static void vMappingUpdatePointBuffers(point_buffer_t *Buffers, measurement_t Me
 		uint8_t currentLength = Buffers[i].len;
 		Buffers[i].buffer[currentLength] = Pos;
 		Buffers[i].len++;
+
+		// Notify itself to call LineCreate if one of the buffers are full
+		if (Buffers[i].len >= PB_SIZE) {
+			xTaskNotifyGive(xMappingTask);
+		}
 	}
 }
 
