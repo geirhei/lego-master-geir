@@ -35,6 +35,7 @@ void vMainSensorTowerTask( void *pvParameters ) {
 	uint8_t servoStep = 0;
     uint8_t servoResolution = 1;
 	uint8_t robotMovement = moveStop;
+	uint8_t lastRobotMovement = robotMovement;
 	uint8_t idleCounter = 0;
 	  
 	// Initialise the xLastWakeTime variable with the current time.
@@ -48,6 +49,12 @@ void vMainSensorTowerTask( void *pvParameters ) {
 			// Set scanning resolution depending on which movement the robot is executing.
 			// Note that the iterations are skipped while robot is rotating (see further downbelow)
 			if (xQueuePeek(scanStatusQ, &robotMovement, 150 / portTICK_PERIOD_MS) == pdTRUE) {
+				if (robotMovement != lastRobotMovement) {
+					// Tell mapping task to start line creation.
+					xTaskNotifyGive(xMappingTask);
+					lastRobotMovement = robotMovement;
+				}
+
 				switch (robotMovement)
 				{
 					case moveStop:
@@ -143,13 +150,11 @@ void vMainSensorTowerTask( void *pvParameters ) {
 		  	if ((servoStep >= 90) && (rotationDirection == moveCounterClockwise)) {
 				rotationDirection = moveClockwise;
 				// Notify mapping task about tower direction change
-				//xSemaphoreGive(xBeginMergeBSem);
 				xTaskNotifyGive(xMappingTask);
 		  	}
 		  	else if ((servoStep <= 0) && (rotationDirection == moveClockwise)) {
 				rotationDirection = moveCounterClockwise;
 				// Notify mapping task about tower direction change
-            	//xSemaphoreGive(xBeginMergeBSem);
             	xTaskNotifyGive(xMappingTask);
 		  	}
 

@@ -1148,3 +1148,1009 @@ Sun Jan 28, 2018 17:32:08: Target reset
 Sun Jan 28, 2018 17:32:11: Error (col 15): No such field. 
 Sun Jan 28, 2018 17:32:11: Error (col 15): No such field. 
 Sun Jan 28, 2018 17:32:11: Error (col 15): No such field. 
+
+
+ << Logging to file resumes >> 
+
+Sun Jan 28, 2018 18:37:20: Loaded macro file: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\resources\FlashAT91SAM7Sxx.mac
+Sun Jan 28, 2018 18:37:21: JLINK command: ProjectFile = C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\settings\nxt_kartlegging_Flash Bin.jlink, return = 0
+
+Sun Jan 28, 2018 18:37:21: Device "AT91SAM7S256" selected.
+Sun Jan 28, 2018 18:37:21: DLL version: V6.20f, compiled Oct 13 2017 17:18:41
+
+Sun Jan 28, 2018 18:37:21: Firmware: J-Link V9 compiled Dec  1 2017 14:40:21
+
+Sun Jan 28, 2018 18:37:21: JTAG speed is initially set to: 1000 kHz
+Sun Jan 28, 2018 18:37:21: Initial reset was performed
+Sun Jan 28, 2018 18:37:21: TotalIRLen = 4, IRPrint = 0x01
+Sun Jan 28, 2018 18:37:21: JTAG chain detection found 1 devices:
+Sun Jan 28, 2018 18:37:21:  #0 Id: 0x3F0F0F0F, IRLen: 04, ARM7TDMI Core
+Sun Jan 28, 2018 18:37:21: Found 1 JTAG device, Total IRLen = 4:
+
+Sun Jan 28, 2018 18:37:21:  #0 Id: 0x3F0F0F0F, IRLen:  4, IRPrint: 0x1 ARM7TDMI Core
+
+Sun Jan 28, 2018 18:37:21: J-Link found 1 JTAG device(s). ARM core Id: 3F0F0F0F ARM7
+
+Sun Jan 28, 2018 18:37:21:  ---------------------------------------- FLASH Download V1.3
+Sun Jan 28, 2018 18:37:21:  ---------------------------------------- 14/November/2005
+Sun Jan 28, 2018 18:37:21:  ---------------------------------------- PLL Enable 
+Sun Jan 28, 2018 18:37:21: -------------------------------Set CPSR  ----------------------------------
+Sun Jan 28, 2018 18:37:21: CPSR     000000D3
+Sun Jan 28, 2018 18:37:21:  ---------------------------------------- PLL Enable 
+Sun Jan 28, 2018 18:37:21: ------------------------------- The Remap is NOT -----------------------------------------
+Sun Jan 28, 2018 18:37:21:  ---------------------------------------- Chip ID   0x270B0941
+Sun Jan 28, 2018 18:37:21:  ---------------------------------------- Extention 0x00000000
+Sun Jan 28, 2018 18:37:21:  ---------------------------------------- Flash Version 0x00000112
+Sun Jan 28, 2018 18:37:21: -------------------------------Set PC ----------------------------------------
+Sun Jan 28, 2018 18:37:21: Adaptive clocking not supported for selected CPU core. Only supported for -S cores.
+Sun Jan 28, 2018 18:37:21: Auto JTAG speed: 8000 kHz
+Sun Jan 28, 2018 18:37:21: 8448 bytes downloaded (66.00 Kbytes/sec)
+Sun Jan 28, 2018 18:37:21: Loaded debugee: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\AT91SAM7S256-EK\internalflash-sam7s256.out
+Sun Jan 28, 2018 18:37:21: Target reset
+Sun Jan 28, 2018 18:37:21: -I- Internal flash loader
+Sun Jan 28, 2018 18:37:21: -I- Unlock arguments: address 0x00100000 of 0x4000 Bytes
+Sun Jan 28, 2018 18:37:21: -I- Write arguments: address 0x00100000,  offset 0x0 of 0x4000 Bytes
+Sun Jan 28, 2018 18:37:22: -I- Unlock arguments: address 0x00104000 of 0x4000 Bytes
+Sun Jan 28, 2018 18:37:22: -I- Write arguments: address 0x00104000,  offset 0x0 of 0x3600 Bytes
+Sun Jan 28, 2018 18:37:22: execUserFlashExit
+Sun Jan 28, 2018 18:37:22: ------------------------------- The Remap is done -----------------------------------------
+Sun Jan 28, 2018 18:37:22: Unloaded macro file: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\resources\FlashAT91SAM7Sxx.mac
+Sun Jan 28, 2018 18:37:22: Downloaded C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\Flash Bin\Exe\rtosdemo.out to flash memory.
+Sun Jan 28, 2018 18:37:22: 30159 bytes downloaded into FLASH (21.91 Kbytes/sec)
+Sun Jan 28, 2018 18:37:22: Loaded debugee: C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\Flash Bin\Exe\rtosdemo.out
+Sun Jan 28, 2018 18:37:22: Software reset was performed
+Sun Jan 28, 2018 18:37:22: Target reset
+Sun Jan 28, 2018 18:37:25: Error (col 15): No such field. 
+Sun Jan 28, 2018 18:37:25: Error (col 15): No such field. 
+Sun Jan 28, 2018 18:37:25: Error (col 15): No such field. 
+
+
+ << Logging to file resumes >> 
+
+Sun Jan 28, 2018 18:51:35: Loaded macro file: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\resources\FlashAT91SAM7Sxx.mac
+Sun Jan 28, 2018 18:51:36: JLINK command: ProjectFile = C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\settings\nxt_kartlegging_Flash Bin.jlink, return = 0
+
+Sun Jan 28, 2018 18:51:36: Device "AT91SAM7S256" selected.
+Sun Jan 28, 2018 18:51:36: DLL version: V6.20f, compiled Oct 13 2017 17:18:41
+
+Sun Jan 28, 2018 18:51:36: Firmware: J-Link V9 compiled Dec  1 2017 14:40:21
+
+Sun Jan 28, 2018 18:51:36: JTAG speed is initially set to: 1000 kHz
+Sun Jan 28, 2018 18:51:36: Initial reset was performed
+Sun Jan 28, 2018 18:51:36: TotalIRLen = 4, IRPrint = 0x01
+Sun Jan 28, 2018 18:51:36: JTAG chain detection found 1 devices:
+Sun Jan 28, 2018 18:51:36:  #0 Id: 0x3F0F0F0F, IRLen: 04, ARM7TDMI Core
+Sun Jan 28, 2018 18:51:36: Found 1 JTAG device, Total IRLen = 4:
+
+Sun Jan 28, 2018 18:51:36:  #0 Id: 0x3F0F0F0F, IRLen:  4, IRPrint: 0x1 ARM7TDMI Core
+
+Sun Jan 28, 2018 18:51:36: J-Link found 1 JTAG device(s). ARM core Id: 3F0F0F0F ARM7
+
+Sun Jan 28, 2018 18:51:36:  ---------------------------------------- FLASH Download V1.3
+Sun Jan 28, 2018 18:51:36:  ---------------------------------------- 14/November/2005
+Sun Jan 28, 2018 18:51:36:  ---------------------------------------- PLL Enable 
+Sun Jan 28, 2018 18:51:36: -------------------------------Set CPSR  ----------------------------------
+Sun Jan 28, 2018 18:51:36: CPSR     000000D3
+Sun Jan 28, 2018 18:51:36:  ---------------------------------------- PLL Enable 
+Sun Jan 28, 2018 18:51:36: ------------------------------- The Remap is NOT -----------------------------------------
+Sun Jan 28, 2018 18:51:36:  ---------------------------------------- Chip ID   0x270B0941
+Sun Jan 28, 2018 18:51:36:  ---------------------------------------- Extention 0x00000000
+Sun Jan 28, 2018 18:51:36:  ---------------------------------------- Flash Version 0x00000112
+Sun Jan 28, 2018 18:51:36: -------------------------------Set PC ----------------------------------------
+Sun Jan 28, 2018 18:51:36: Adaptive clocking not supported for selected CPU core. Only supported for -S cores.
+Sun Jan 28, 2018 18:51:36: Auto JTAG speed: 8000 kHz
+Sun Jan 28, 2018 18:51:37: 8448 bytes downloaded (87.77 Kbytes/sec)
+Sun Jan 28, 2018 18:51:37: Loaded debugee: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\AT91SAM7S256-EK\internalflash-sam7s256.out
+Sun Jan 28, 2018 18:51:37: Target reset
+Sun Jan 28, 2018 18:51:37: -I- Internal flash loader
+Sun Jan 28, 2018 18:51:37: -I- Unlock arguments: address 0x00100000 of 0x4000 Bytes
+Sun Jan 28, 2018 18:51:37: -I- Write arguments: address 0x00100000,  offset 0x0 of 0x4000 Bytes
+Sun Jan 28, 2018 18:51:37: -I- Unlock arguments: address 0x00104000 of 0x4000 Bytes
+Sun Jan 28, 2018 18:51:37: -I- Write arguments: address 0x00104000,  offset 0x0 of 0x3600 Bytes
+Sun Jan 28, 2018 18:51:38: execUserFlashExit
+Sun Jan 28, 2018 18:51:38: ------------------------------- The Remap is done -----------------------------------------
+Sun Jan 28, 2018 18:51:38: Unloaded macro file: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\resources\FlashAT91SAM7Sxx.mac
+Sun Jan 28, 2018 18:51:38: Downloaded C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\Flash Bin\Exe\rtosdemo.out to flash memory.
+Sun Jan 28, 2018 18:51:38: 30167 bytes downloaded into FLASH (23.87 Kbytes/sec)
+Sun Jan 28, 2018 18:51:38: Loaded debugee: C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\Flash Bin\Exe\rtosdemo.out
+Sun Jan 28, 2018 18:51:38: Software reset was performed
+Sun Jan 28, 2018 18:51:38: Target reset
+Sun Jan 28, 2018 18:51:41: Error (col 15): No such field. 
+Sun Jan 28, 2018 18:51:41: Error (col 15): No such field. 
+Sun Jan 28, 2018 18:51:41: Error (col 15): No such field. 
+
+
+ << Logging to file resumes >> 
+
+Sun Jan 28, 2018 19:06:22: Loaded macro file: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\resources\FlashAT91SAM7Sxx.mac
+Sun Jan 28, 2018 19:06:24: JLINK command: ProjectFile = C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\settings\nxt_kartlegging_Flash Bin.jlink, return = 0
+
+Sun Jan 28, 2018 19:06:24: Device "AT91SAM7S256" selected.
+Sun Jan 28, 2018 19:06:24: DLL version: V6.20f, compiled Oct 13 2017 17:18:41
+
+Sun Jan 28, 2018 19:06:24: Firmware: J-Link V9 compiled Dec  1 2017 14:40:21
+
+Sun Jan 28, 2018 19:06:24: JTAG speed is initially set to: 1000 kHz
+Sun Jan 28, 2018 19:06:24: Initial reset was performed
+Sun Jan 28, 2018 19:06:24: TotalIRLen = 4, IRPrint = 0x01
+Sun Jan 28, 2018 19:06:24: JTAG chain detection found 1 devices:
+Sun Jan 28, 2018 19:06:24:  #0 Id: 0x3F0F0F0F, IRLen: 04, ARM7TDMI Core
+Sun Jan 28, 2018 19:06:24: Found 1 JTAG device, Total IRLen = 4:
+
+Sun Jan 28, 2018 19:06:24:  #0 Id: 0x3F0F0F0F, IRLen:  4, IRPrint: 0x1 ARM7TDMI Core
+
+Sun Jan 28, 2018 19:06:24: J-Link found 1 JTAG device(s). ARM core Id: 3F0F0F0F ARM7
+
+Sun Jan 28, 2018 19:06:24:  ---------------------------------------- FLASH Download V1.3
+Sun Jan 28, 2018 19:06:24:  ---------------------------------------- 14/November/2005
+Sun Jan 28, 2018 19:06:24:  ---------------------------------------- PLL Enable 
+Sun Jan 28, 2018 19:06:24: -------------------------------Set CPSR  ----------------------------------
+Sun Jan 28, 2018 19:06:24: CPSR     000000D3
+Sun Jan 28, 2018 19:06:24:  ---------------------------------------- PLL Enable 
+Sun Jan 28, 2018 19:06:24: ------------------------------- The Remap is NOT -----------------------------------------
+Sun Jan 28, 2018 19:06:24:  ---------------------------------------- Chip ID   0x270B0941
+Sun Jan 28, 2018 19:06:24:  ---------------------------------------- Extention 0x00000000
+Sun Jan 28, 2018 19:06:24:  ---------------------------------------- Flash Version 0x00000112
+Sun Jan 28, 2018 19:06:24: -------------------------------Set PC ----------------------------------------
+Sun Jan 28, 2018 19:06:24: Adaptive clocking not supported for selected CPU core. Only supported for -S cores.
+Sun Jan 28, 2018 19:06:24: Auto JTAG speed: 8000 kHz
+Sun Jan 28, 2018 19:06:24: 8448 bytes downloaded (105.77 Kbytes/sec)
+Sun Jan 28, 2018 19:06:24: Loaded debugee: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\AT91SAM7S256-EK\internalflash-sam7s256.out
+Sun Jan 28, 2018 19:06:24: Target reset
+Sun Jan 28, 2018 19:06:24: -I- Internal flash loader
+Sun Jan 28, 2018 19:06:24: -I- Unlock arguments: address 0x00100000 of 0x4000 Bytes
+Sun Jan 28, 2018 19:06:24: -I- Write arguments: address 0x00100000,  offset 0x0 of 0x4000 Bytes
+Sun Jan 28, 2018 19:06:24: -I- Unlock arguments: address 0x00104000 of 0x4000 Bytes
+Sun Jan 28, 2018 19:06:24: -I- Write arguments: address 0x00104000,  offset 0x0 of 0x3600 Bytes
+Sun Jan 28, 2018 19:06:25: execUserFlashExit
+Sun Jan 28, 2018 19:06:25: ------------------------------- The Remap is done -----------------------------------------
+Sun Jan 28, 2018 19:06:25: Unloaded macro file: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\resources\FlashAT91SAM7Sxx.mac
+Sun Jan 28, 2018 19:06:25: Downloaded C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\Flash Bin\Exe\rtosdemo.out to flash memory.
+Sun Jan 28, 2018 19:06:25: 30167 bytes downloaded into FLASH (23.57 Kbytes/sec)
+Sun Jan 28, 2018 19:06:25: Loaded debugee: C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\Flash Bin\Exe\rtosdemo.out
+Sun Jan 28, 2018 19:06:25: Software reset was performed
+Sun Jan 28, 2018 19:06:25: Target reset
+Sun Jan 28, 2018 19:06:28: Error (col 15): No such field. 
+Sun Jan 28, 2018 19:06:28: Error (col 15): No such field. 
+Sun Jan 28, 2018 19:06:28: Error (col 15): No such field. 
+Sun Jan 28, 2018 19:07:00: Breakpoint hit: Code @ mapping.c:153.5, type: default (auto) 
+Sun Jan 28, 2018 19:07:00: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:10:44: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+
+
+ << Logging to file resumes >> 
+
+Sun Jan 28, 2018 19:16:14: Loaded macro file: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\resources\FlashAT91SAM7Sxx.mac
+Sun Jan 28, 2018 19:16:15: JLINK command: ProjectFile = C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\settings\nxt_kartlegging_Flash Bin.jlink, return = 0
+
+Sun Jan 28, 2018 19:16:15: Device "AT91SAM7S256" selected.
+Sun Jan 28, 2018 19:16:15: DLL version: V6.20f, compiled Oct 13 2017 17:18:41
+
+Sun Jan 28, 2018 19:16:15: Firmware: J-Link V9 compiled Dec  1 2017 14:40:21
+
+Sun Jan 28, 2018 19:16:15: JTAG speed is initially set to: 1000 kHz
+Sun Jan 28, 2018 19:16:15: Initial reset was performed
+Sun Jan 28, 2018 19:16:15: TotalIRLen = 4, IRPrint = 0x01
+Sun Jan 28, 2018 19:16:15: JTAG chain detection found 1 devices:
+Sun Jan 28, 2018 19:16:15:  #0 Id: 0x3F0F0F0F, IRLen: 04, ARM7TDMI Core
+Sun Jan 28, 2018 19:16:15: Found 1 JTAG device, Total IRLen = 4:
+
+Sun Jan 28, 2018 19:16:15:  #0 Id: 0x3F0F0F0F, IRLen:  4, IRPrint: 0x1 ARM7TDMI Core
+
+Sun Jan 28, 2018 19:16:15: J-Link found 1 JTAG device(s). ARM core Id: 3F0F0F0F ARM7
+
+Sun Jan 28, 2018 19:16:15:  ---------------------------------------- FLASH Download V1.3
+Sun Jan 28, 2018 19:16:15:  ---------------------------------------- 14/November/2005
+Sun Jan 28, 2018 19:16:15:  ---------------------------------------- PLL Enable 
+Sun Jan 28, 2018 19:16:15: -------------------------------Set CPSR  ----------------------------------
+Sun Jan 28, 2018 19:16:15: CPSR     000000D3
+Sun Jan 28, 2018 19:16:15:  ---------------------------------------- PLL Enable 
+Sun Jan 28, 2018 19:16:16: ------------------------------- The Remap is NOT -----------------------------------------
+Sun Jan 28, 2018 19:16:16:  ---------------------------------------- Chip ID   0x270B0941
+Sun Jan 28, 2018 19:16:16:  ---------------------------------------- Extention 0x00000000
+Sun Jan 28, 2018 19:16:16:  ---------------------------------------- Flash Version 0x00000112
+Sun Jan 28, 2018 19:16:16: -------------------------------Set PC ----------------------------------------
+Sun Jan 28, 2018 19:16:16: Adaptive clocking not supported for selected CPU core. Only supported for -S cores.
+Sun Jan 28, 2018 19:16:16: Auto JTAG speed: 8000 kHz
+Sun Jan 28, 2018 19:16:16: 8448 bytes downloaded (105.77 Kbytes/sec)
+Sun Jan 28, 2018 19:16:16: Loaded debugee: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\AT91SAM7S256-EK\internalflash-sam7s256.out
+Sun Jan 28, 2018 19:16:16: Target reset
+Sun Jan 28, 2018 19:16:16: -I- Internal flash loader
+Sun Jan 28, 2018 19:16:16: -I- Unlock arguments: address 0x00100000 of 0x4000 Bytes
+Sun Jan 28, 2018 19:16:16: -I- Write arguments: address 0x00100000,  offset 0x0 of 0x4000 Bytes
+Sun Jan 28, 2018 19:16:16: -I- Unlock arguments: address 0x00104000 of 0x4000 Bytes
+Sun Jan 28, 2018 19:16:16: -I- Write arguments: address 0x00104000,  offset 0x0 of 0x3600 Bytes
+Sun Jan 28, 2018 19:16:17: execUserFlashExit
+Sun Jan 28, 2018 19:16:17: ------------------------------- The Remap is done -----------------------------------------
+Sun Jan 28, 2018 19:16:17: Unloaded macro file: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\resources\FlashAT91SAM7Sxx.mac
+Sun Jan 28, 2018 19:16:17: Downloaded C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\Flash Bin\Exe\rtosdemo.out to flash memory.
+Sun Jan 28, 2018 19:16:17: 30167 bytes downloaded into FLASH (23.00 Kbytes/sec)
+Sun Jan 28, 2018 19:16:17: Loaded debugee: C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\Flash Bin\Exe\rtosdemo.out
+Sun Jan 28, 2018 19:16:17: Software reset was performed
+Sun Jan 28, 2018 19:16:17: Target reset
+Sun Jan 28, 2018 19:16:20: Error (col 15): No such field. 
+Sun Jan 28, 2018 19:16:20: Error (col 15): No such field. 
+Sun Jan 28, 2018 19:16:20: Error (col 15): No such field. 
+
+
+ << Logging to file resumes >> 
+
+Sun Jan 28, 2018 19:17:13: Loaded macro file: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\resources\FlashAT91SAM7Sxx.mac
+Sun Jan 28, 2018 19:17:14: JLINK command: ProjectFile = C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\settings\nxt_kartlegging_Flash Bin.jlink, return = 0
+
+Sun Jan 28, 2018 19:17:14: Device "AT91SAM7S256" selected.
+Sun Jan 28, 2018 19:17:14: DLL version: V6.20f, compiled Oct 13 2017 17:18:41
+
+Sun Jan 28, 2018 19:17:14: Firmware: J-Link V9 compiled Dec  1 2017 14:40:21
+
+Sun Jan 28, 2018 19:17:14: JTAG speed is initially set to: 1000 kHz
+Sun Jan 28, 2018 19:17:14: Initial reset was performed
+Sun Jan 28, 2018 19:17:14: TotalIRLen = 4, IRPrint = 0x01
+Sun Jan 28, 2018 19:17:14: JTAG chain detection found 1 devices:
+Sun Jan 28, 2018 19:17:14:  #0 Id: 0x3F0F0F0F, IRLen: 04, ARM7TDMI Core
+Sun Jan 28, 2018 19:17:14: Found 1 JTAG device, Total IRLen = 4:
+
+Sun Jan 28, 2018 19:17:14:  #0 Id: 0x3F0F0F0F, IRLen:  4, IRPrint: 0x1 ARM7TDMI Core
+
+Sun Jan 28, 2018 19:17:14: J-Link found 1 JTAG device(s). ARM core Id: 3F0F0F0F ARM7
+
+Sun Jan 28, 2018 19:17:14:  ---------------------------------------- FLASH Download V1.3
+Sun Jan 28, 2018 19:17:14:  ---------------------------------------- 14/November/2005
+Sun Jan 28, 2018 19:17:14:  ---------------------------------------- PLL Enable 
+Sun Jan 28, 2018 19:17:14: -------------------------------Set CPSR  ----------------------------------
+Sun Jan 28, 2018 19:17:14: CPSR     000000D3
+Sun Jan 28, 2018 19:17:14:  ---------------------------------------- PLL Enable 
+Sun Jan 28, 2018 19:17:14: ------------------------------- The Remap is NOT -----------------------------------------
+Sun Jan 28, 2018 19:17:14:  ---------------------------------------- Chip ID   0x270B0941
+Sun Jan 28, 2018 19:17:14:  ---------------------------------------- Extention 0x00000000
+Sun Jan 28, 2018 19:17:14:  ---------------------------------------- Flash Version 0x00000112
+Sun Jan 28, 2018 19:17:14: -------------------------------Set PC ----------------------------------------
+Sun Jan 28, 2018 19:17:14: Adaptive clocking not supported for selected CPU core. Only supported for -S cores.
+Sun Jan 28, 2018 19:17:14: Auto JTAG speed: 8000 kHz
+Sun Jan 28, 2018 19:17:14: 8448 bytes downloaded (105.77 Kbytes/sec)
+Sun Jan 28, 2018 19:17:14: Loaded debugee: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\AT91SAM7S256-EK\internalflash-sam7s256.out
+Sun Jan 28, 2018 19:17:14: Target reset
+Sun Jan 28, 2018 19:17:14: -I- Internal flash loader
+Sun Jan 28, 2018 19:17:14: -I- Unlock arguments: address 0x00100000 of 0x4000 Bytes
+Sun Jan 28, 2018 19:17:14: -I- Write arguments: address 0x00100000,  offset 0x0 of 0x4000 Bytes
+Sun Jan 28, 2018 19:17:14: -I- Unlock arguments: address 0x00104000 of 0x4000 Bytes
+Sun Jan 28, 2018 19:17:14: -I- Write arguments: address 0x00104000,  offset 0x0 of 0x3600 Bytes
+Sun Jan 28, 2018 19:17:15: execUserFlashExit
+Sun Jan 28, 2018 19:17:15: ------------------------------- The Remap is done -----------------------------------------
+Sun Jan 28, 2018 19:17:15: Unloaded macro file: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\resources\FlashAT91SAM7Sxx.mac
+Sun Jan 28, 2018 19:17:15: Downloaded C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\Flash Bin\Exe\rtosdemo.out to flash memory.
+Sun Jan 28, 2018 19:17:15: 30167 bytes downloaded into FLASH (23.57 Kbytes/sec)
+Sun Jan 28, 2018 19:17:15: Loaded debugee: C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\Flash Bin\Exe\rtosdemo.out
+Sun Jan 28, 2018 19:17:15: Software reset was performed
+Sun Jan 28, 2018 19:17:15: Target reset
+Sun Jan 28, 2018 19:17:18: Error (col 15): No such field. 
+Sun Jan 28, 2018 19:17:18: Error (col 15): No such field. 
+Sun Jan 28, 2018 19:17:18: Error (col 15): No such field. 
+
+
+ << Logging to file resumes >> 
+
+Sun Jan 28, 2018 19:25:48: Loaded macro file: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\resources\FlashAT91SAM7Sxx.mac
+Sun Jan 28, 2018 19:25:50: JLINK command: ProjectFile = C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\settings\nxt_kartlegging_Flash Bin.jlink, return = 0
+
+Sun Jan 28, 2018 19:25:50: Device "AT91SAM7S256" selected.
+Sun Jan 28, 2018 19:25:50: DLL version: V6.20f, compiled Oct 13 2017 17:18:41
+
+Sun Jan 28, 2018 19:25:50: Firmware: J-Link V9 compiled Dec  1 2017 14:40:21
+
+Sun Jan 28, 2018 19:25:50: JTAG speed is initially set to: 1000 kHz
+Sun Jan 28, 2018 19:25:50: Initial reset was performed
+Sun Jan 28, 2018 19:25:50: TotalIRLen = 4, IRPrint = 0x01
+Sun Jan 28, 2018 19:25:50: JTAG chain detection found 1 devices:
+Sun Jan 28, 2018 19:25:50:  #0 Id: 0x3F0F0F0F, IRLen: 04, ARM7TDMI Core
+Sun Jan 28, 2018 19:25:50: Found 1 JTAG device, Total IRLen = 4:
+
+Sun Jan 28, 2018 19:25:50:  #0 Id: 0x3F0F0F0F, IRLen:  4, IRPrint: 0x1 ARM7TDMI Core
+
+Sun Jan 28, 2018 19:25:50: J-Link found 1 JTAG device(s). ARM core Id: 3F0F0F0F ARM7
+
+Sun Jan 28, 2018 19:25:50:  ---------------------------------------- FLASH Download V1.3
+Sun Jan 28, 2018 19:25:50:  ---------------------------------------- 14/November/2005
+Sun Jan 28, 2018 19:25:50:  ---------------------------------------- PLL Enable 
+Sun Jan 28, 2018 19:25:50: -------------------------------Set CPSR  ----------------------------------
+Sun Jan 28, 2018 19:25:50: CPSR     000000D3
+Sun Jan 28, 2018 19:25:50:  ---------------------------------------- PLL Enable 
+Sun Jan 28, 2018 19:25:50: ------------------------------- The Remap is NOT -----------------------------------------
+Sun Jan 28, 2018 19:25:50:  ---------------------------------------- Chip ID   0x270B0941
+Sun Jan 28, 2018 19:25:50:  ---------------------------------------- Extention 0x00000000
+Sun Jan 28, 2018 19:25:50:  ---------------------------------------- Flash Version 0x00000112
+Sun Jan 28, 2018 19:25:50: -------------------------------Set PC ----------------------------------------
+Sun Jan 28, 2018 19:25:50: Adaptive clocking not supported for selected CPU core. Only supported for -S cores.
+Sun Jan 28, 2018 19:25:50: Auto JTAG speed: 8000 kHz
+Sun Jan 28, 2018 19:25:50: 8448 bytes downloaded (105.77 Kbytes/sec)
+Sun Jan 28, 2018 19:25:50: Loaded debugee: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\AT91SAM7S256-EK\internalflash-sam7s256.out
+Sun Jan 28, 2018 19:25:50: Target reset
+Sun Jan 28, 2018 19:25:50: -I- Internal flash loader
+Sun Jan 28, 2018 19:25:50: -I- Unlock arguments: address 0x00100000 of 0x4000 Bytes
+Sun Jan 28, 2018 19:25:50: -I- Write arguments: address 0x00100000,  offset 0x0 of 0x4000 Bytes
+Sun Jan 28, 2018 19:25:51: -I- Unlock arguments: address 0x00104000 of 0x4000 Bytes
+Sun Jan 28, 2018 19:25:51: -I- Write arguments: address 0x00104000,  offset 0x0 of 0x3600 Bytes
+Sun Jan 28, 2018 19:25:51: execUserFlashExit
+Sun Jan 28, 2018 19:25:51: ------------------------------- The Remap is done -----------------------------------------
+Sun Jan 28, 2018 19:25:51: Unloaded macro file: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\resources\FlashAT91SAM7Sxx.mac
+Sun Jan 28, 2018 19:25:51: Downloaded C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\Flash Bin\Exe\rtosdemo.out to flash memory.
+Sun Jan 28, 2018 19:25:51: 30167 bytes downloaded into FLASH (23.85 Kbytes/sec)
+Sun Jan 28, 2018 19:25:51: Loaded debugee: C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\Flash Bin\Exe\rtosdemo.out
+Sun Jan 28, 2018 19:25:51: Software reset was performed
+Sun Jan 28, 2018 19:25:51: Target reset
+Sun Jan 28, 2018 19:25:54: Error (col 15): No such field. 
+Sun Jan 28, 2018 19:25:54: Error (col 15): No such field. 
+Sun Jan 28, 2018 19:25:54: Error (col 15): No such field. 
+Sun Jan 28, 2018 19:26:22: Breakpoint hit: Code @ mapping.c:92.19, type: default (auto) 
+Sun Jan 28, 2018 19:26:22: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:27:54: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:27:57: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:28:11: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:28:16: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:28:17: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:28:20: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:28:25: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:28:40: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:28:48: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:29:05: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:29:06: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:29:10: Breakpoint hit: Code @ mapping.c:92.19, type: default (auto) 
+Sun Jan 28, 2018 19:29:10: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:29:14: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:29:20: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:29:23: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:29:24: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:29:25: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:29:26: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:29:28: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:29:30: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:29:36: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:29:38: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:29:38: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:29:40: Breakpoint hit: Code @ mapping.c:92.19, type: default (auto) 
+Sun Jan 28, 2018 19:29:40: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:29:51: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:29:56: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:29:57: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:29:58: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:29:59: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:30:02: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:30:04: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:30:06: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:30:13: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:30:22: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:31:23: Breakpoint hit: Code @ mapping.c:146.15, type: default (auto) 
+Sun Jan 28, 2018 19:31:23: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:31:46: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:31:47: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:32:36: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:32:39: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:32:40: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:32:40: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:32:41: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:32:42: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:32:42: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:32:43: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:32:43: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:32:44: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:32:44: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:32:45: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:32:45: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:33:40: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:34:14: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:34:25: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:34:31: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:34:32: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:34:35: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:35:46: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:35:52: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:35:53: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:35:57: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:36:00: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:36:01: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:36:01: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:36:01: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:36:02: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:36:02: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:36:02: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:36:03: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:36:03: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:36:03: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:36:04: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:36:04: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:36:10: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:36:10: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:36:11: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:36:11: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:36:12: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:36:12: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:36:12: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:36:13: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:36:13: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:36:13: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:36:14: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:36:25: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:36:34: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:36:38: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:36:39: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:36:46: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:36:48: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:36:51: Breakpoint hit: Code @ mapping.c:92.19, type: default (auto) 
+Sun Jan 28, 2018 19:36:51: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:36:53: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:37:00: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:37:13: The stack pointer for stack 'CSTACK' (currently 0x00201C00) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:37:15: The stack pointer for stack 'CSTACK' (currently 0x00201C00) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:37:15: The stack pointer for stack 'CSTACK' (currently 0x00201C00) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:37:17: The stack pointer for stack 'CSTACK' (currently 0x00201C00) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:37:23: The stack pointer for stack 'CSTACK' (currently 0x00201C00) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:37:26: The stack pointer for stack 'CSTACK' (currently 0x00201C00) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:37:26: The stack pointer for stack 'CSTACK' (currently 0x00201C00) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:37:29: The stack pointer for stack 'CSTACK' (currently 0x00201C00) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:37:32: The stack pointer for stack 'CSTACK' (currently 0x00201C00) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:37:33: The stack pointer for stack 'CSTACK' (currently 0x00201C00) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:37:33: The stack pointer for stack 'CSTACK' (currently 0x00201C00) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:37:34: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:37:35: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:37:36: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:37:38: The stack pointer for stack 'CSTACK' (currently 0x00201C00) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:37:41: The stack pointer for stack 'CSTACK' (currently 0x00201C00) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:37:42: The stack pointer for stack 'CSTACK' (currently 0x00201C00) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:37:42: The stack pointer for stack 'CSTACK' (currently 0x00201C00) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:37:44: The stack pointer for stack 'CSTACK' (currently 0x00201C00) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:37:45: The stack pointer for stack 'CSTACK' (currently 0x00201C00) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:37:45: The stack pointer for stack 'CSTACK' (currently 0x00201C00) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:37:49: The stack pointer for stack 'CSTACK' (currently 0x00201C00) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:38:10: Breakpoint hit: Code @ mapping.c:92.19, type: default (auto) 
+Sun Jan 28, 2018 19:38:10: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:38:37: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:38:42: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:38:47: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:38:56: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:38:58: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:39:03: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:39:03: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:39:07: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:39:11: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:39:13: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:39:13: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:39:15: Breakpoint hit: Code @ mapping.c:92.19, type: default (auto) 
+Sun Jan 28, 2018 19:39:15: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:39:16: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:39:17: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:39:18: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:39:19: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:39:20: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:39:21: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:39:23: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:39:26: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:39:31: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:39:32: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:39:33: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:39:34: Breakpoint hit: Code @ mapping.c:92.19, type: default (auto) 
+Sun Jan 28, 2018 19:39:34: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:39:35: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:39:35: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:39:36: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:39:37: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:39:37: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:39:38: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:39:41: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:39:46: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:39:55: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:39:56: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:39:57: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:39:59: Breakpoint hit: Code @ mapping.c:92.19, type: default (auto) 
+Sun Jan 28, 2018 19:39:59: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:40:00: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:40:02: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:40:03: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:40:03: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:40:04: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:40:06: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:40:11: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:40:20: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:40:22: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:40:22: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:40:23: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:40:25: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:40:26: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:40:27: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:40:27: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:40:28: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:40:28: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:40:29: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:40:29: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:40:30: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:40:30: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:40:31: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:40:31: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:40:31: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:40:32: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:40:32: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:40:33: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:40:33: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:40:33: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:40:34: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:40:35: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:40:35: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:40:35: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:40:36: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:40:37: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:40:37: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:40:38: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:40:38: Breakpoint hit: Code @ mapping.c:92.19, type: default (auto) 
+Sun Jan 28, 2018 19:40:38: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:40:58: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:41:06: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:41:07: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:41:09: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:41:09: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:41:11: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:41:12: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:41:13: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:41:15: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:41:18: The stack pointer for stack 'CSTACK' (currently 0x00201C08) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:41:18: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:41:19: Breakpoint hit: Code @ mapping.c:92.19, type: default (auto) 
+Sun Jan 28, 2018 19:41:19: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:41:20: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:41:21: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:41:21: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:41:23: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:41:24: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:41:25: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:41:26: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:41:26: Breakpoint hit: Code @ mapping.c:92.19, type: default (auto) 
+Sun Jan 28, 2018 19:41:26: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:41:27: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:41:27: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:41:28: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:41:28: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:41:29: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:41:29: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:41:29: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:41:30: Breakpoint hit: Code @ mapping.c:92.19, type: default (auto) 
+Sun Jan 28, 2018 19:41:30: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:41:31: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:41:31: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:41:32: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:41:32: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:41:32: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Sun Jan 28, 2018 19:41:34: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+
+
+ << Logging to file resumes >> 
+
+Mon Jan 29, 2018 13:21:33: Loaded macro file: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\resources\FlashAT91SAM7Sxx.mac
+Mon Jan 29, 2018 13:21:37: JLINK command: ProjectFile = C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\settings\nxt_kartlegging_Flash Bin.jlink, return = 0
+
+Mon Jan 29, 2018 13:21:37: Device "AT91SAM7S256" selected.
+Mon Jan 29, 2018 13:21:37: DLL version: V6.20f, compiled Oct 13 2017 17:18:41
+
+Mon Jan 29, 2018 13:21:37: Firmware: J-Link V9 compiled Dec  1 2017 14:40:21
+
+Mon Jan 29, 2018 13:21:37: JTAG speed is initially set to: 1000 kHz
+Mon Jan 29, 2018 13:21:37: Initial reset was performed
+Mon Jan 29, 2018 13:21:37: TotalIRLen = 4, IRPrint = 0x01
+Mon Jan 29, 2018 13:21:37: JTAG chain detection found 1 devices:
+Mon Jan 29, 2018 13:21:37:  #0 Id: 0x3F0F0F0F, IRLen: 04, ARM7TDMI Core
+Mon Jan 29, 2018 13:21:37: Found 1 JTAG device, Total IRLen = 4:
+
+Mon Jan 29, 2018 13:21:37:  #0 Id: 0x3F0F0F0F, IRLen:  4, IRPrint: 0x1 ARM7TDMI Core
+
+Mon Jan 29, 2018 13:21:37: J-Link found 1 JTAG device(s). ARM core Id: 3F0F0F0F ARM7
+
+Mon Jan 29, 2018 13:21:37:  ---------------------------------------- FLASH Download V1.3
+Mon Jan 29, 2018 13:21:37:  ---------------------------------------- 14/November/2005
+Mon Jan 29, 2018 13:21:37:  ---------------------------------------- PLL Enable 
+Mon Jan 29, 2018 13:21:37: -------------------------------Set CPSR  ----------------------------------
+Mon Jan 29, 2018 13:21:37: CPSR     000000D3
+Mon Jan 29, 2018 13:21:37:  ---------------------------------------- PLL Enable 
+Mon Jan 29, 2018 13:21:37: ------------------------------- The Remap is NOT -----------------------------------------
+Mon Jan 29, 2018 13:21:37:  ---------------------------------------- Chip ID   0x270B0941
+Mon Jan 29, 2018 13:21:37:  ---------------------------------------- Extention 0x00000000
+Mon Jan 29, 2018 13:21:37:  ---------------------------------------- Flash Version 0x00000112
+Mon Jan 29, 2018 13:21:37: -------------------------------Set PC ----------------------------------------
+Mon Jan 29, 2018 13:21:37: Adaptive clocking not supported for selected CPU core. Only supported for -S cores.
+Mon Jan 29, 2018 13:21:37: Auto JTAG speed: 8000 kHz
+Mon Jan 29, 2018 13:21:37: 8448 bytes downloaded (58.93 Kbytes/sec)
+Mon Jan 29, 2018 13:21:37: Loaded debugee: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\AT91SAM7S256-EK\internalflash-sam7s256.out
+Mon Jan 29, 2018 13:21:37: Target reset
+Mon Jan 29, 2018 13:21:37: -I- Internal flash loader
+Mon Jan 29, 2018 13:21:38: -I- Unlock arguments: address 0x00100000 of 0x4000 Bytes
+Mon Jan 29, 2018 13:21:38: -I- Write arguments: address 0x00100000,  offset 0x0 of 0x4000 Bytes
+Mon Jan 29, 2018 13:21:38: -I- Unlock arguments: address 0x00104000 of 0x4000 Bytes
+Mon Jan 29, 2018 13:21:38: -I- Write arguments: address 0x00104000,  offset 0x0 of 0x3600 Bytes
+Mon Jan 29, 2018 13:21:38: execUserFlashExit
+Mon Jan 29, 2018 13:21:38: ------------------------------- The Remap is done -----------------------------------------
+Mon Jan 29, 2018 13:21:38: Unloaded macro file: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\resources\FlashAT91SAM7Sxx.mac
+Mon Jan 29, 2018 13:21:38: Downloaded C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\Flash Bin\Exe\rtosdemo.out to flash memory.
+Mon Jan 29, 2018 13:21:39: 30167 bytes downloaded into FLASH (23.85 Kbytes/sec)
+Mon Jan 29, 2018 13:21:39: Loaded debugee: C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\Flash Bin\Exe\rtosdemo.out
+Mon Jan 29, 2018 13:21:39: Software reset was performed
+Mon Jan 29, 2018 13:21:39: Target reset
+Mon Jan 29, 2018 13:21:41: Error (col 15): No such field. 
+Mon Jan 29, 2018 13:21:41: Error (col 15): No such field. 
+Mon Jan 29, 2018 13:21:41: Error (col 15): No such field. 
+
+
+ << Logging to file resumes >> 
+
+Mon Jan 29, 2018 13:54:29: Loaded macro file: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\resources\FlashAT91SAM7Sxx.mac
+Mon Jan 29, 2018 13:54:30: JLINK command: ProjectFile = C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\settings\nxt_kartlegging_Flash Bin.jlink, return = 0
+
+Mon Jan 29, 2018 13:54:30: Device "AT91SAM7S256" selected.
+Mon Jan 29, 2018 13:54:30: DLL version: V6.20f, compiled Oct 13 2017 17:18:41
+
+Mon Jan 29, 2018 13:54:30: Firmware: J-Link V9 compiled Dec  1 2017 14:40:21
+
+Mon Jan 29, 2018 13:54:30: JTAG speed is initially set to: 1000 kHz
+Mon Jan 29, 2018 13:54:30: Initial reset was performed
+Mon Jan 29, 2018 13:54:30: TotalIRLen = 4, IRPrint = 0x01
+Mon Jan 29, 2018 13:54:30: JTAG chain detection found 1 devices:
+Mon Jan 29, 2018 13:54:30:  #0 Id: 0x3F0F0F0F, IRLen: 04, ARM7TDMI Core
+Mon Jan 29, 2018 13:54:30: Found 1 JTAG device, Total IRLen = 4:
+
+Mon Jan 29, 2018 13:54:30:  #0 Id: 0x3F0F0F0F, IRLen:  4, IRPrint: 0x1 ARM7TDMI Core
+
+Mon Jan 29, 2018 13:54:30: J-Link found 1 JTAG device(s). ARM core Id: 3F0F0F0F ARM7
+
+Mon Jan 29, 2018 13:54:30:  ---------------------------------------- FLASH Download V1.3
+Mon Jan 29, 2018 13:54:30:  ---------------------------------------- 14/November/2005
+Mon Jan 29, 2018 13:54:30:  ---------------------------------------- PLL Enable 
+Mon Jan 29, 2018 13:54:30: -------------------------------Set CPSR  ----------------------------------
+Mon Jan 29, 2018 13:54:30: CPSR     000000D3
+Mon Jan 29, 2018 13:54:30:  ---------------------------------------- PLL Enable 
+Mon Jan 29, 2018 13:54:30: ------------------------------- The Remap is NOT -----------------------------------------
+Mon Jan 29, 2018 13:54:30:  ---------------------------------------- Chip ID   0x270B0941
+Mon Jan 29, 2018 13:54:30:  ---------------------------------------- Extention 0x00000000
+Mon Jan 29, 2018 13:54:30:  ---------------------------------------- Flash Version 0x00000112
+Mon Jan 29, 2018 13:54:30: -------------------------------Set PC ----------------------------------------
+Mon Jan 29, 2018 13:54:30: Adaptive clocking not supported for selected CPU core. Only supported for -S cores.
+Mon Jan 29, 2018 13:54:30: Auto JTAG speed: 8000 kHz
+Mon Jan 29, 2018 13:54:30: 8448 bytes downloaded (88.71 Kbytes/sec)
+Mon Jan 29, 2018 13:54:30: Loaded debugee: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\AT91SAM7S256-EK\internalflash-sam7s256.out
+Mon Jan 29, 2018 13:54:30: Target reset
+Mon Jan 29, 2018 13:54:30: -I- Internal flash loader
+Mon Jan 29, 2018 13:54:30: -I- Unlock arguments: address 0x00100000 of 0x4000 Bytes
+Mon Jan 29, 2018 13:54:30: -I- Write arguments: address 0x00100000,  offset 0x0 of 0x4000 Bytes
+Mon Jan 29, 2018 13:54:31: -I- Unlock arguments: address 0x00104000 of 0x4000 Bytes
+Mon Jan 29, 2018 13:54:31: -I- Write arguments: address 0x00104000,  offset 0x0 of 0x3600 Bytes
+Mon Jan 29, 2018 13:54:31: execUserFlashExit
+Mon Jan 29, 2018 13:54:31: ------------------------------- The Remap is done -----------------------------------------
+Mon Jan 29, 2018 13:54:31: Unloaded macro file: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\resources\FlashAT91SAM7Sxx.mac
+Mon Jan 29, 2018 13:54:31: Downloaded C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\Flash Bin\Exe\rtosdemo.out to flash memory.
+Mon Jan 29, 2018 13:54:31: 30167 bytes downloaded into FLASH (24.47 Kbytes/sec)
+Mon Jan 29, 2018 13:54:31: Loaded debugee: C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\Flash Bin\Exe\rtosdemo.out
+Mon Jan 29, 2018 13:54:31: Software reset was performed
+Mon Jan 29, 2018 13:54:31: Target reset
+Mon Jan 29, 2018 13:54:34: Error (col 15): No such field. 
+Mon Jan 29, 2018 13:54:34: Error (col 15): No such field. 
+Mon Jan 29, 2018 13:54:34: Error (col 15): No such field. 
+
+
+ << Logging to file resumes >> 
+
+Mon Jan 29, 2018 14:51:51: Loaded macro file: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\resources\FlashAT91SAM7Sxx.mac
+Mon Jan 29, 2018 14:51:52: JLINK command: ProjectFile = C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\settings\nxt_kartlegging_Flash Bin.jlink, return = 0
+
+Mon Jan 29, 2018 14:51:52: Device "AT91SAM7S256" selected.
+Mon Jan 29, 2018 14:51:52: DLL version: V6.20f, compiled Oct 13 2017 17:18:41
+
+Mon Jan 29, 2018 14:51:52: Firmware: J-Link V9 compiled Dec  1 2017 14:40:21
+
+Mon Jan 29, 2018 14:51:52: JTAG speed is initially set to: 1000 kHz
+Mon Jan 29, 2018 14:51:52: Initial reset was performed
+Mon Jan 29, 2018 14:51:52: TotalIRLen = 4, IRPrint = 0x01
+Mon Jan 29, 2018 14:51:52: JTAG chain detection found 1 devices:
+Mon Jan 29, 2018 14:51:52:  #0 Id: 0x3F0F0F0F, IRLen: 04, ARM7TDMI Core
+Mon Jan 29, 2018 14:51:52: Found 1 JTAG device, Total IRLen = 4:
+
+Mon Jan 29, 2018 14:51:52:  #0 Id: 0x3F0F0F0F, IRLen:  4, IRPrint: 0x1 ARM7TDMI Core
+
+Mon Jan 29, 2018 14:51:52: J-Link found 1 JTAG device(s). ARM core Id: 3F0F0F0F ARM7
+
+Mon Jan 29, 2018 14:51:52:  ---------------------------------------- FLASH Download V1.3
+Mon Jan 29, 2018 14:51:52:  ---------------------------------------- 14/November/2005
+Mon Jan 29, 2018 14:51:52:  ---------------------------------------- PLL Enable 
+Mon Jan 29, 2018 14:51:52: -------------------------------Set CPSR  ----------------------------------
+Mon Jan 29, 2018 14:51:52: CPSR     000000D3
+Mon Jan 29, 2018 14:51:52:  ---------------------------------------- PLL Enable 
+Mon Jan 29, 2018 14:51:52: ------------------------------- The Remap is NOT -----------------------------------------
+Mon Jan 29, 2018 14:51:52:  ---------------------------------------- Chip ID   0x270B0941
+Mon Jan 29, 2018 14:51:52:  ---------------------------------------- Extention 0x00000000
+Mon Jan 29, 2018 14:51:52:  ---------------------------------------- Flash Version 0x00000112
+Mon Jan 29, 2018 14:51:52: -------------------------------Set PC ----------------------------------------
+Mon Jan 29, 2018 14:51:52: Adaptive clocking not supported for selected CPU core. Only supported for -S cores.
+Mon Jan 29, 2018 14:51:52: Auto JTAG speed: 8000 kHz
+Mon Jan 29, 2018 14:51:52: 8448 bytes downloaded (133.06 Kbytes/sec)
+Mon Jan 29, 2018 14:51:52: Loaded debugee: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\AT91SAM7S256-EK\internalflash-sam7s256.out
+Mon Jan 29, 2018 14:51:52: Target reset
+Mon Jan 29, 2018 14:51:52: -I- Internal flash loader
+Mon Jan 29, 2018 14:51:52: -I- Unlock arguments: address 0x00100000 of 0x4000 Bytes
+Mon Jan 29, 2018 14:51:52: -I- Write arguments: address 0x00100000,  offset 0x0 of 0x4000 Bytes
+Mon Jan 29, 2018 14:51:53: -I- Unlock arguments: address 0x00104000 of 0x4000 Bytes
+Mon Jan 29, 2018 14:51:53: -I- Write arguments: address 0x00104000,  offset 0x0 of 0x3600 Bytes
+Mon Jan 29, 2018 14:51:53: execUserFlashExit
+Mon Jan 29, 2018 14:51:53: ------------------------------- The Remap is done -----------------------------------------
+Mon Jan 29, 2018 14:51:53: Unloaded macro file: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\resources\FlashAT91SAM7Sxx.mac
+Mon Jan 29, 2018 14:51:53: Downloaded C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\Flash Bin\Exe\rtosdemo.out to flash memory.
+Mon Jan 29, 2018 14:51:54: 30167 bytes downloaded into FLASH (22.18 Kbytes/sec)
+Mon Jan 29, 2018 14:51:54: Loaded debugee: C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\Flash Bin\Exe\rtosdemo.out
+Mon Jan 29, 2018 14:51:54: Software reset was performed
+Mon Jan 29, 2018 14:51:54: Target reset
+Mon Jan 29, 2018 14:51:57: Error (col 15): No such field. 
+Mon Jan 29, 2018 14:51:57: Error (col 15): No such field. 
+Mon Jan 29, 2018 14:51:57: Error (col 15): No such field. 
+Mon Jan 29, 2018 14:57:11: Breakpoint hit: Code @ communication.c:191.2, type: default (auto) 
+Mon Jan 29, 2018 14:57:11: The stack pointer for stack 'CSTACK' (currently 0x00201C00) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:58:01: The stack pointer for stack 'CSTACK' (currently 0x00201C00) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:58:04: The stack pointer for stack 'CSTACK' (currently 0x00201C00) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:58:08: The stack pointer for stack 'CSTACK' (currently 0x00201C00) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:58:18: The stack pointer for stack 'CSTACK' (currently 0x00201C00) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:58:18: The stack pointer for stack 'CSTACK' (currently 0x00201C00) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:58:19: The stack pointer for stack 'CSTACK' (currently 0x00201C00) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:58:19: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:58:21: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:58:22: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:58:23: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:58:24: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:58:24: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:58:25: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:58:26: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:58:26: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:58:27: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:58:28: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:58:28: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:58:29: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:58:29: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:58:30: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:58:30: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:58:31: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:58:32: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:58:32: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:58:33: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:58:33: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:58:34: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:58:34: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:58:34: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:58:35: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:58:35: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:58:36: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:58:36: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:58:37: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:58:54: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:58:59: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:59:35: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:59:37: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:59:44: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:59:48: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:59:48: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:59:49: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:59:49: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:59:50: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:59:50: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:59:50: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:59:51: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:59:51: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:59:52: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:59:52: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:59:52: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:59:53: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:59:53: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:59:54: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 14:59:56: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:00:07: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:00:08: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:00:39: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:00:42: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:00:46: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:00:47: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:00:48: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:00:48: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:00:49: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:00:49: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:00:51: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:00:52: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:00:54: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:00:55: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:01:08: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:01:16: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:01:18: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:01:18: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:01:23: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:01:26: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:01:29: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:01:35: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:01:38: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:01:43: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:01:43: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:01:44: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:01:44: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:01:45: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:01:45: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:01:45: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:01:46: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:01:46: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:01:47: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:01:47: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:01:47: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:01:47: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:01:48: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:01:48: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:01:48: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:01:49: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:01:49: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:01:49: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:01:49: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:01:50: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:02:16: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:02:17: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:02:18: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:02:20: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:02:22: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:02:22: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:02:22: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:02:23: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:02:24: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:02:25: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:02:25: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:02:25: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:02:25: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:02:25: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:02:26: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:02:26: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:02:27: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:02:27: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:02:27: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:02:27: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:02:27: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:02:28: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:02:28: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:02:31: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:02:40: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:02:40: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:02:46: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:03:02: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:03:03: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:03:04: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:03:05: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:03:05: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:03:05: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:03:06: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:03:06: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:03:07: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:03:07: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:03:08: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:03:08: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:03:09: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:03:10: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:03:11: The stack pointer for stack 'CSTACK' (currently 0x00201C18) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:03:11: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:03:11: The stack pointer for stack 'CSTACK' (currently 0x00201C38) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:03:27: Breakpoint hit: Code @ communication.c:191.2, type: default (auto) 
+Mon Jan 29, 2018 15:03:27: The stack pointer for stack 'CSTACK' (currently 0x00201C00) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:03:38: The stack pointer for stack 'CSTACK' (currently 0x00201C00) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:03:42: The stack pointer for stack 'CSTACK' (currently 0x00201C00) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:04:49: The stack pointer for stack 'CSTACK' (currently 0x00201C00) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:05:13: Breakpoint hit: Code @ communication.c:191.2, type: default (auto) 
+Mon Jan 29, 2018 15:05:13: The stack pointer for stack 'CSTACK' (currently 0x00201C00) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:05:18: The stack pointer for stack 'CSTACK' (currently 0x00201C00) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:05:22: The stack pointer for stack 'CSTACK' (currently 0x00201C00) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:05:30: The stack pointer for stack 'CSTACK' (currently 0x00201C00) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:05:35: Breakpoint hit: Code @ communication.c:191.2, type: default (auto) 
+Mon Jan 29, 2018 15:05:35: The stack pointer for stack 'CSTACK' (currently 0x00201C00) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:06:58: The stack pointer for stack 'CSTACK' (currently 0x00201C00) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:07:06: The stack pointer for stack 'CSTACK' (currently 0x00201C00) is outside the stack range (0x0020CA30 to 0x0020DA30)
+Mon Jan 29, 2018 15:07:12: The stack pointer for stack 'CSTACK' (currently 0x00201C00) is outside the stack range (0x0020CA30 to 0x0020DA30)
+
+
+ << Logging to file resumes >> 
+
+Mon Jan 29, 2018 15:10:09: Loaded macro file: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\resources\FlashAT91SAM7Sxx.mac
+Mon Jan 29, 2018 15:10:11: JLINK command: ProjectFile = C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\settings\nxt_kartlegging_Flash Bin.jlink, return = 0
+
+Mon Jan 29, 2018 15:10:11: Device "AT91SAM7S256" selected.
+Mon Jan 29, 2018 15:10:11: DLL version: V6.20f, compiled Oct 13 2017 17:18:41
+
+Mon Jan 29, 2018 15:10:11: Firmware: J-Link V9 compiled Dec  1 2017 14:40:21
+
+Mon Jan 29, 2018 15:10:11: JTAG speed is initially set to: 1000 kHz
+Mon Jan 29, 2018 15:10:11: Initial reset was performed
+Mon Jan 29, 2018 15:10:11: TotalIRLen = 4, IRPrint = 0x01
+Mon Jan 29, 2018 15:10:11: JTAG chain detection found 1 devices:
+Mon Jan 29, 2018 15:10:11:  #0 Id: 0x3F0F0F0F, IRLen: 04, ARM7TDMI Core
+Mon Jan 29, 2018 15:10:11: Found 1 JTAG device, Total IRLen = 4:
+
+Mon Jan 29, 2018 15:10:11:  #0 Id: 0x3F0F0F0F, IRLen:  4, IRPrint: 0x1 ARM7TDMI Core
+
+Mon Jan 29, 2018 15:10:11: J-Link found 1 JTAG device(s). ARM core Id: 3F0F0F0F ARM7
+
+Mon Jan 29, 2018 15:10:11:  ---------------------------------------- FLASH Download V1.3
+Mon Jan 29, 2018 15:10:11:  ---------------------------------------- 14/November/2005
+Mon Jan 29, 2018 15:10:11:  ---------------------------------------- PLL Enable 
+Mon Jan 29, 2018 15:10:11: -------------------------------Set CPSR  ----------------------------------
+Mon Jan 29, 2018 15:10:11: CPSR     000000D3
+Mon Jan 29, 2018 15:10:11:  ---------------------------------------- PLL Enable 
+Mon Jan 29, 2018 15:10:11: ------------------------------- The Remap is NOT -----------------------------------------
+Mon Jan 29, 2018 15:10:11:  ---------------------------------------- Chip ID   0x270B0941
+Mon Jan 29, 2018 15:10:11:  ---------------------------------------- Extention 0x00000000
+Mon Jan 29, 2018 15:10:11:  ---------------------------------------- Flash Version 0x00000112
+Mon Jan 29, 2018 15:10:11: -------------------------------Set PC ----------------------------------------
+Mon Jan 29, 2018 15:10:11: Adaptive clocking not supported for selected CPU core. Only supported for -S cores.
+Mon Jan 29, 2018 15:10:11: Auto JTAG speed: 8000 kHz
+Mon Jan 29, 2018 15:10:11: 8448 bytes downloaded (105.77 Kbytes/sec)
+Mon Jan 29, 2018 15:10:11: Loaded debugee: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\AT91SAM7S256-EK\internalflash-sam7s256.out
+Mon Jan 29, 2018 15:10:11: Target reset
+Mon Jan 29, 2018 15:10:11: -I- Internal flash loader
+Mon Jan 29, 2018 15:10:11: -I- Unlock arguments: address 0x00100000 of 0x4000 Bytes
+Mon Jan 29, 2018 15:10:11: -I- Write arguments: address 0x00100000,  offset 0x0 of 0x4000 Bytes
+Mon Jan 29, 2018 15:10:11: -I- Unlock arguments: address 0x00104000 of 0x4000 Bytes
+Mon Jan 29, 2018 15:10:11: -I- Write arguments: address 0x00104000,  offset 0x0 of 0x3600 Bytes
+Mon Jan 29, 2018 15:10:12: execUserFlashExit
+Mon Jan 29, 2018 15:10:12: ------------------------------- The Remap is done -----------------------------------------
+Mon Jan 29, 2018 15:10:12: Unloaded macro file: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\resources\FlashAT91SAM7Sxx.mac
+Mon Jan 29, 2018 15:10:12: Downloaded C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\Flash Bin\Exe\rtosdemo.out to flash memory.
+Mon Jan 29, 2018 15:10:12: 30171 bytes downloaded into FLASH (23.57 Kbytes/sec)
+Mon Jan 29, 2018 15:10:12: Loaded debugee: C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\Flash Bin\Exe\rtosdemo.out
+Mon Jan 29, 2018 15:10:12: Software reset was performed
+Mon Jan 29, 2018 15:10:12: Target reset
+Mon Jan 29, 2018 15:10:15: Error (col 15): No such field. 
+Mon Jan 29, 2018 15:10:15: Error (col 15): No such field. 
+Mon Jan 29, 2018 15:10:15: Error (col 15): No such field. 
+
+
+ << Logging to file resumes >> 
+
+Mon Jan 29, 2018 15:58:33: Loaded macro file: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\resources\FlashAT91SAM7Sxx.mac
+Mon Jan 29, 2018 15:58:34: JLINK command: ProjectFile = C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\settings\nxt_kartlegging_Flash Bin.jlink, return = 0
+
+Mon Jan 29, 2018 15:58:34: Device "AT91SAM7S256" selected.
+Mon Jan 29, 2018 15:58:34: DLL version: V6.20f, compiled Oct 13 2017 17:18:41
+
+Mon Jan 29, 2018 15:58:34: Firmware: J-Link V9 compiled Dec  1 2017 14:40:21
+
+Mon Jan 29, 2018 15:58:34: JTAG speed is initially set to: 1000 kHz
+Mon Jan 29, 2018 15:58:34: Initial reset was performed
+Mon Jan 29, 2018 15:58:34: TotalIRLen = 4, IRPrint = 0x01
+Mon Jan 29, 2018 15:58:34: JTAG chain detection found 1 devices:
+Mon Jan 29, 2018 15:58:34:  #0 Id: 0x3F0F0F0F, IRLen: 04, ARM7TDMI Core
+Mon Jan 29, 2018 15:58:34: Found 1 JTAG device, Total IRLen = 4:
+
+Mon Jan 29, 2018 15:58:34:  #0 Id: 0x3F0F0F0F, IRLen:  4, IRPrint: 0x1 ARM7TDMI Core
+
+Mon Jan 29, 2018 15:58:34: J-Link found 1 JTAG device(s). ARM core Id: 3F0F0F0F ARM7
+
+Mon Jan 29, 2018 15:58:34:  ---------------------------------------- FLASH Download V1.3
+Mon Jan 29, 2018 15:58:34:  ---------------------------------------- 14/November/2005
+Mon Jan 29, 2018 15:58:34:  ---------------------------------------- PLL Enable 
+Mon Jan 29, 2018 15:58:34: -------------------------------Set CPSR  ----------------------------------
+Mon Jan 29, 2018 15:58:34: CPSR     000000D3
+Mon Jan 29, 2018 15:58:34:  ---------------------------------------- PLL Enable 
+Mon Jan 29, 2018 15:58:34: ------------------------------- The Remap is NOT -----------------------------------------
+Mon Jan 29, 2018 15:58:34:  ---------------------------------------- Chip ID   0x270B0941
+Mon Jan 29, 2018 15:58:34:  ---------------------------------------- Extention 0x00000000
+Mon Jan 29, 2018 15:58:34:  ---------------------------------------- Flash Version 0x00000112
+Mon Jan 29, 2018 15:58:34: -------------------------------Set PC ----------------------------------------
+Mon Jan 29, 2018 15:58:34: Adaptive clocking not supported for selected CPU core. Only supported for -S cores.
+Mon Jan 29, 2018 15:58:35: Auto JTAG speed: 8000 kHz
+Mon Jan 29, 2018 15:58:35: 8448 bytes downloaded (88.71 Kbytes/sec)
+Mon Jan 29, 2018 15:58:35: Loaded debugee: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\AT91SAM7S256-EK\internalflash-sam7s256.out
+Mon Jan 29, 2018 15:58:35: Target reset
+Mon Jan 29, 2018 15:58:35: -I- Internal flash loader
+Mon Jan 29, 2018 15:58:35: -I- Unlock arguments: address 0x00100000 of 0x4000 Bytes
+Mon Jan 29, 2018 15:58:35: -I- Write arguments: address 0x00100000,  offset 0x0 of 0x4000 Bytes
+Mon Jan 29, 2018 15:58:35: -I- Unlock arguments: address 0x00104000 of 0x4000 Bytes
+Mon Jan 29, 2018 15:58:35: -I- Write arguments: address 0x00104000,  offset 0x0 of 0x3600 Bytes
+Mon Jan 29, 2018 15:58:36: execUserFlashExit
+Mon Jan 29, 2018 15:58:36: ------------------------------- The Remap is done -----------------------------------------
+Mon Jan 29, 2018 15:58:36: Unloaded macro file: C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\flashloader\ATMEL\resources\FlashAT91SAM7Sxx.mac
+Mon Jan 29, 2018 15:58:36: Downloaded C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\Flash Bin\Exe\rtosdemo.out to flash memory.
+Mon Jan 29, 2018 15:58:36: 30171 bytes downloaded into FLASH (22.98 Kbytes/sec)
+Mon Jan 29, 2018 15:58:36: Loaded debugee: C:\Users\geirhei\Documents\nxt-robot\NXT\ARM7_AT91SAM7S64_IAR\Flash Bin\Exe\rtosdemo.out
+Mon Jan 29, 2018 15:58:36: Software reset was performed
+Mon Jan 29, 2018 15:58:36: Target reset
+Mon Jan 29, 2018 15:58:39: Error (col 15): No such field. 
+Mon Jan 29, 2018 15:58:39: Error (col 15): No such field. 
+Mon Jan 29, 2018 15:58:39: Error (col 15): No such field. 

@@ -83,7 +83,9 @@ void vMainMappingTask( void *pvParameters )
 				for (uint8_t j = 0; j < NUMBER_OF_SENSORS; j++) {
 					//line_t Line = { PointBuffers[j]->buffer[0], PointBuffers[j]->buffer[PointBuffers[j]->len] };
 					//sendLine(&Line);
+					vTaskSuspendAll();
 					vMappingLineCreate(PointBuffers[j], LineBuffers[j]);
+					xTaskResumeAll();
 					//message_t LineMsg = vMappingGetLineMessage(&LineBuffers[0]->buffer[0]);
 					//line_t testLine = LineBuffers[0]->buffer[0];
 					//vMappingLineMerge(LineBuffers[j], LineRepo);
@@ -145,16 +147,16 @@ static void vMappingLineCreate(point_buffer_t *PointBuffer, line_buffer_t *LineB
 		line_t Line;
 		if (vFunc_areCollinear(&A, &B, &PointBuffer->buffer[i])) {
 			if (i == PointBuffer->len-1) {
-				point_t P = { A.x, A.y };
-				point_t Q = { PointBuffer->buffer[i].x, PointBuffer->buffer[i].y };
+				point_t P = { .x = A.x, .y = A.y };
+				point_t Q = { .x = PointBuffer->buffer[i].x, .y = PointBuffer->buffer[i].y };
 				Line.P = P;
-				Line.P = Q;
+				Line.Q = Q;
 			} else {
 				continue;
 			}
 		} else {
-			point_t P = { A.x, A.y };
-			point_t Q = { PointBuffer->buffer[i-1].x, PointBuffer->buffer[i-1].y };
+			point_t P = { .x = A.x, .y = A.y };
+			point_t Q = { .x = PointBuffer->buffer[i-1].x, .y = PointBuffer->buffer[i-1].y };
 			Line.P = P;
 			Line.Q = Q;
 			if (i > PointBuffer->len-3) {
