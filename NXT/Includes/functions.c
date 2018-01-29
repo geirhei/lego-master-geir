@@ -177,28 +177,8 @@ float vFunc_distanceBetween(point_t *Pos1, point_t *Pos2) {
     return sqrt( pow(Pos1->x - Pos2->x, 2) + pow(Pos1->y - Pos2->y, 2) );
 }
 
-
-int8_t vFunc_isMergeable(line_t *Line1, line_t *Line2) {
-    const float MU = 1.0; // slope
-    const float DELTA = 10.0; // cm
-
-    float m1 = vFunc_getSlope(Line1);
-    float m2 = vFunc_getSlope(Line2);
-
-    // Test slope
-    if (abs(m1 - m2) > MU) {
-        // Slope test failed
-        return -1;
-    }
-
-    // Test distance between endpoints
-    float d1 = vFunc_distanceBetween(&Line1->P, &Line2->P);
-    float d2 = vFunc_distanceBetween(&Line1->P, &Line2->Q);
-    float d3 = vFunc_distanceBetween(&Line1->Q, &Line2->P);
-    float d4 = vFunc_distanceBetween(&Line1->Q, &Line2->Q);
-
-    if ( (d1 <= DELTA) || (d2 <= DELTA) || (d3 <= DELTA) || (d4 <= DELTA) ) {
-        return 1;
-    }
-    return -1;
+point_t vFunc_getProjectedPoint(point_t P, float a, float b) {
+    float x = (P.x + a * P.y - a * b) / (1 + pow(a, 2));
+    float y = (a * P.x + pow(a, 2) * P.y + b) / (1 + pow(a, 2));
+    return (point_t) { x, y };
 }

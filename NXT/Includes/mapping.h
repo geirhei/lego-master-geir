@@ -11,4 +11,8 @@ static void vMappingLineCreate(point_buffer_t *PointBuffer, line_buffer_t *LineB
 
 static void vMappingLineMerge(line_buffer_t *LineBuffer, line_buffer_t *LineRepo);
 
+static int8_t vMappingIsMergeable(line_t *Line1, line_t *Line2);
+
+static line_t vMappingMergeSegments(line_t *Line1, line_t *Line2);
+
 #endif

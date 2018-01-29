@@ -45,4 +45,6 @@ float vFunc_distanceBetween(point_t *Pos1, point_t *Pos2);
 
 int8_t vFunc_isMergeable(line_t *Line1, line_t *Line2);
 
+point_t vFunc_getProjectedPoint(point_t P, float a, float b);
+
 #endif /* FUNCTIONS_H_ */
