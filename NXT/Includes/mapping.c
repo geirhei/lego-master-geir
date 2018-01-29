@@ -147,18 +147,18 @@ static void vMappingLineCreate(point_buffer_t *PointBuffer, line_buffer_t *LineB
 		line_t Line;
 		if (vFunc_areCollinear(&A, &B, &PointBuffer->buffer[i])) {
 			if (i == PointBuffer->len-1) {
-				point_t P = { .x = A.x, .y = A.y };
-				point_t Q = { .x = PointBuffer->buffer[i].x, .y = PointBuffer->buffer[i].y };
-				Line.P = P;
-				Line.Q = Q;
+				Line = (line_t) {
+					{A.x, A.y},
+					{PointBuffer->buffer[i].x, PointBuffer->buffer[i].y}
+				};
 			} else {
 				continue;
 			}
 		} else {
-			point_t P = { .x = A.x, .y = A.y };
-			point_t Q = { .x = PointBuffer->buffer[i-1].x, .y = PointBuffer->buffer[i-1].y };
-			Line.P = P;
-			Line.Q = Q;
+			Line = (line_t) {
+				{A.x, A.y},
+				{PointBuffer->buffer[i-1].x, PointBuffer->buffer[i-1].y}
+			};
 			if (i > PointBuffer->len-3) {
 				break;
 			} else {
