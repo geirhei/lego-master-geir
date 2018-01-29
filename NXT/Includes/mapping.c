@@ -27,21 +27,21 @@ static message_t vMappingGetLineMessage(line_t *Line);
 void vMainMappingTask( void *pvParameters )
 {
 	// init:
-	point_buffer_t **PointBuffers;
-	line_buffer_t **LineBuffers;
+	point_buffer_t *PointBuffers;
+	line_buffer_t *LineBuffers;
 	line_buffer_t *LineRepo;
 	
-	PointBuffers = pvPortMalloc(NUMBER_OF_SENSORS * sizeof(point_buffer_t*));
-	LineBuffers = pvPortMalloc(NUMBER_OF_SENSORS * sizeof(line_buffer_t*));
+	PointBuffers = pvPortMalloc(NUMBER_OF_SENSORS * sizeof(point_buffer_t));
+	LineBuffers = pvPortMalloc(NUMBER_OF_SENSORS * sizeof(line_buffer_t));
 	
 	for (uint8_t i = 0; i < NUMBER_OF_SENSORS; i++) {
-		PointBuffers[i] = pvPortMalloc(sizeof(point_buffer_t));
-		PointBuffers[i]->buffer = pvPortMalloc(PB_SIZE * sizeof(point_t));
-		PointBuffers[i]->len = 0;
+		//PointBuffers[i] = pvPortMalloc(sizeof(point_buffer_t));
+		PointBuffers[i].buffer = pvPortMalloc(PB_SIZE * sizeof(point_t));
+		PointBuffers[i].len = 0;
 
-		LineBuffers[i] = pvPortMalloc(sizeof(line_buffer_t));
-		LineBuffers[i]->buffer = pvPortMalloc(LB_SIZE * sizeof(line_t));
-		LineBuffers[i]->len = 0;
+		//LineBuffers[i] = pvPortMalloc(sizeof(line_buffer_t));
+		LineBuffers[i].buffer = pvPortMalloc(LB_SIZE * sizeof(line_t));
+		LineBuffers[i].len = 0;
 	}
 
 	LineRepo = pvPortMalloc(sizeof(line_buffer_t));
@@ -83,17 +83,17 @@ void vMainMappingTask( void *pvParameters )
 					//line_t Line = { PointBuffers[j]->buffer[0], PointBuffers[j]->buffer[PointBuffers[j]->len] };
 					//sendLine(&Line);
 					vTaskSuspendAll();
-					vMappingLineCreate(PointBuffers[j], LineBuffers[j]);
+					vMappingLineCreate(&PointBuffers[j], &LineBuffers[j]);
 					xTaskResumeAll();
 					//message_t LineMsg = vMappingGetLineMessage(&LineBuffers[0]->buffer[0]);
 					//line_t testLine = LineBuffers[0]->buffer[0];
 					//vMappingLineMerge(LineBuffers[j], LineRepo);
-					for (uint8_t k = 0; k < LineBuffers[j]->len; k++) {
-						line_t line = LineBuffers[j]->buffer[k];
+					for (uint8_t k = 0; k < LineBuffers[j].len; k++) {
+						line_t line = LineBuffers[j].buffer[k];
 						send_line(line);
 					}
 					// Prevent overflow while testing
-					LineBuffers[j]->len = 0;
+					LineBuffers[j].len = 0;
 				}
 				//xTaskResumeAll();
 			}
@@ -107,7 +107,7 @@ void vMainMappingTask( void *pvParameters )
 	}
 }
 
-static void vMappingUpdatePointBuffers(point_buffer_t **Buffers, measurement_t Measurement, pose_t Pose) {
+static void vMappingUpdatePointBuffers(point_buffer_t *Buffers, measurement_t Measurement, pose_t Pose) {
 	float towerAngle = (float) Measurement.servoStep * DEG2RAD; //[0,pi/2]
 	float theta = towerAngle + Pose.theta;
 
@@ -125,9 +125,9 @@ static void vMappingUpdatePointBuffers(point_buffer_t **Buffers, measurement_t M
 		// Get the coordinates relative to the global coordinate system
 		Pos.x += Pose.x;
 		Pos.y += Pose.y;
-		uint8_t currentLength = Buffers[i]->len;
-		Buffers[i]->buffer[currentLength] = Pos;
-		Buffers[i]->len++;
+		uint8_t currentLength = Buffers[i].len;
+		Buffers[i].buffer[currentLength] = Pos;
+		Buffers[i].len++;
 	}
 }
 
