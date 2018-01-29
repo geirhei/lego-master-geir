@@ -81,21 +81,19 @@ void vMainMappingTask( void *pvParameters )
 			// Do not wait.
 			if (ulTaskNotifyTake(pdTRUE, 0) == 1) {
 				for (uint8_t j = 0; j < NUMBER_OF_SENSORS; j++) {
-					//line_t Line = { PointBuffers[j]->buffer[0], PointBuffers[j]->buffer[PointBuffers[j]->len] };
-					//sendLine(&Line);
+
 					vTaskSuspendAll();
 					vMappingLineCreate(&PointBuffers[j], &LineBuffers[j]);
+					vMappingLineMerge(&LineBuffers[j], LineRepo);
 					xTaskResumeAll();
-					//vMappingLineMerge(LineBuffers[j], LineRepo);
-					for (uint8_t k = 0; k < LineBuffers[j].len; k++) {
-						line_t line = LineBuffers[j].buffer[k];
-						send_line(line);
-					}
-					// Prevent overflow while testing
-					LineBuffers[j].len = 0;
+
+				}
+
+				for (uint8_t k = 0; k < LineRepo->len; k++) {
+					line_t line = LineRepo->buffer[k];
+					send_line(line);
 				}
 			}
-			
 			
 		} 
 		else {
