@@ -91,13 +91,7 @@ void vMainSensorTowerTask( void *pvParameters ) {
 		  	uint8_t rightSensor = distance_get_cm(3);
 
 		  	// Add measurements to struct for sending to queue
-		  	measurement_t Measurement = {
-			  	.forward = forwardSensor,
-			  	.left = leftSensor,
-			  	.rear = rearSensor,
-			  	.right = rightSensor,
-			  	.servoStep = servoStep
-			  };
+		  	measurement_t Measurement = { { forwardSensor, leftSensor, rearSensor, rightSensor }, servoStep };
 
 			// Send Measurement to mapping task
 		  	xQueueSendToBack(measurementQ, &Measurement, 10);

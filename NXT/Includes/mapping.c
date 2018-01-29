@@ -62,7 +62,6 @@ void vMainMappingTask( void *pvParameters )
 			// sensor tower sampling.
 			measurement_t Measurement;
 			if (xQueueReceive(measurementQ, &Measurement, 0) == pdTRUE) {
-				uint8_t sensorValues[] = { Measurement.forward, Measurement.left, Measurement.rear, Measurement.right };
 
 				pose_t Pose;
 				xQueuePeek(globalPoseQ, &Pose, 0);
@@ -73,7 +72,7 @@ void vMainMappingTask( void *pvParameters )
 				vFunc_wrapTo2Pi(&Pose.theta);
 
 				// Add new IR-measurements to end of PB
-				vMappingUpdatePointBuffers(PointBuffers, sensorValues, Measurement.servoStep, Pose);
+				vMappingUpdatePointBuffers(PointBuffers, Measurement, Pose);
 			}
 			
 			// Check for notification from sensor tower task.
@@ -108,8 +107,8 @@ void vMainMappingTask( void *pvParameters )
 	}
 }
 
-static void vMappingUpdatePointBuffers(point_buffer_t **Buffers, uint8_t *sensorValues, uint8_t servoStep, pose_t Pose) {
-	float towerAngle = (float) servoStep * DEG2RAD; //[0,pi/2]
+static void vMappingUpdatePointBuffers(point_buffer_t **Buffers, measurement_t Measurement, pose_t Pose) {
+	float towerAngle = (float) Measurement.servoStep * DEG2RAD; //[0,pi/2]
 	float theta = towerAngle + Pose.theta;
 
 	for (uint8_t i = 0; i < NUMBER_OF_SENSORS; i++) {
@@ -117,7 +116,7 @@ static void vMappingUpdatePointBuffers(point_buffer_t **Buffers, uint8_t *sensor
 			theta += 0.5 * M_PI;
 		}
 		vFunc_wrapTo2Pi(&theta); //[0,2pi)
-		uint8_t r = sensorValues[i];
+		uint8_t r = Measurement.data[i];
 		// Abort if the measurement is outside the valid range
 		if (r <= 0 || r > 40) {
 			continue;
