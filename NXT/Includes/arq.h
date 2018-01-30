@@ -1,5 +1,5 @@
 #ifndef _ARQ_H_
-#define _ARG_H_
+#define _ARQ_H_
 
 #include <stdint.h>
 

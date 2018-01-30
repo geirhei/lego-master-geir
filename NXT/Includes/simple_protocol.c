@@ -1,9 +1,13 @@
-#include "network.h"
 #include "simple_protocol.h"
-#include <string.h>
+
 #include "FreeRTOS.h"
-#include <math.h>
 #include "task.h"
+
+#include <string.h>
+#include <math.h>
+
+#include "network.h"
+
 
 #define MAX_MESSAGES 1
 

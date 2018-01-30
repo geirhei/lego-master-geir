@@ -19,7 +19,7 @@ extern volatile uint8_t gHandshook;
 
 extern QueueHandle_t measurementQ;
 extern QueueHandle_t globalPoseQ;
-extern SemaphoreHandle_t xBeginMergeBSem;
+//extern SemaphoreHandle_t xBeginMergeBSem;
 extern TaskHandle_t xMappingTask;
 
 /* Mapping task */
@@ -48,7 +48,7 @@ void vMainMappingTask( void *pvParameters )
 	LineRepo->len = 0;
 
 	TickType_t xLastWakeTime;
-	const TickType_t xFrequency = 50 / portTICK_PERIOD_MS;
+	const TickType_t xFrequency = 100 / portTICK_PERIOD_MS;
 	xLastWakeTime = xTaskGetTickCount();
 
 	while (1)

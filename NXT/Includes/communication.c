@@ -12,8 +12,8 @@
 
 #include "types.h"
 #include "led.h"
-#include "simple_protocol.h"
 #include "arq.h"
+#include "simple_protocol.h"
 #include "display.h"
 #include "types.h"
 

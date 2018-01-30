@@ -48,7 +48,7 @@
 #include "sensor_tower.h"
 #include "pose_estimator.h"
 #include "pose_controller.h"
-#include "navigation.h"
+//#include "navigation.h"
 #include "mapping.h"
 
 /* Semaphore handles */
@@ -62,7 +62,7 @@ QueueHandle_t scanStatusQ = 0;
 QueueHandle_t globalWheelTicksQ = 0;
 QueueHandle_t globalPoseQ = 0;
 QueueHandle_t measurementQ = 0;
-QueueHandle_t actuationQ = 0;
+//QueueHandle_t actuationQ = 0;
 
 /* Task handles */
 TaskHandle_t xPoseCtrlTask = NULL;
