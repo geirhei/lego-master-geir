@@ -82,10 +82,10 @@ void vMainMappingTask( void *pvParameters )
 			if (ulTaskNotifyTake(pdTRUE, 0) == 1) {
 				for (uint8_t j = 0; j < NUMBER_OF_SENSORS; j++) {
 
-					vTaskSuspendAll();
+					//vTaskSuspendAll();
 					vMappingLineCreate(&PointBuffers[j], &LineBuffers[j]);
 					vMappingLineMerge(&LineBuffers[j], LineRepo);
-					xTaskResumeAll();
+					//xTaskResumeAll();
 
 				}
 
@@ -190,7 +190,7 @@ static void vMappingLineMerge(line_buffer_t *LineBuffer, line_buffer_t *LineRepo
 		uint8_t merged = 0;
 		for (uint8_t j = 0; j < LineBuffer->len; j++) {
 			for (uint8_t k = 0; k < LineRepo->len; k++) {
-				if (vMappingIsMergeable(&LineBuffer->buffer[j], &LineRepo->buffer[k])) {
+				if (vMappingIsMergeable(&LineBuffer->buffer[j], &LineRepo->buffer[k]) == 1) {
 					LineRepo->buffer[k] = vMappingMergeSegments(&LineBuffer->buffer[j], &LineRepo->buffer[k]);
 					merged = 1;
 					break;
@@ -210,7 +210,7 @@ static void vMappingLineMerge(line_buffer_t *LineBuffer, line_buffer_t *LineRepo
 }
 
 static int8_t vMappingIsMergeable(line_t *Line1, line_t *Line2) {
-    const float MU = 1.0; // slope
+    const float MU = 0.5; // slope
     const float DELTA = 10.0; // cm
 
     float m1 = vFunc_getSlope(Line1);
