@@ -22,8 +22,6 @@ extern QueueHandle_t globalPoseQ;
 extern SemaphoreHandle_t xBeginMergeBSem;
 extern TaskHandle_t xMappingTask;
 
-static message_t vMappingGetLineMessage(line_t *Line);
-
 /* Mapping task */
 void vMainMappingTask( void *pvParameters )
 {
@@ -217,7 +215,7 @@ static int8_t vMappingIsMergeable(line_t *Line1, line_t *Line2) {
     float m2 = vFunc_getSlope(Line2);
 
     // Test slope
-    if (abs(m1 - m2) > MU) {
+    if (fabs(m1 - m2) > MU) {
         // Slope test failed
         return -1;
     }

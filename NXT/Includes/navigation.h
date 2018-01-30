@@ -9,17 +9,17 @@
 #define NAVIGATION_H_
 
 /* Kernel includes */
-#include "FreeRTOS.h"
-#include "queue.h"
-#include "semphr.h"
-#include "task.h"
+//#include "FreeRTOS.h"
+//#include "queue.h"
+//#include "semphr.h"
+//#include "task.h"
 
-#include <stdint.h>
+//#include <stdint.h>
 
-#include "types.h"
+//#include "types.h"
 
 //void vMainNavigationTask( void *pvParameters );
 
-void navigation_get_measurement_headings(float robotHeading, uint8_t servoStep, float *headings);
+//void navigation_get_measurement_headings(float robotHeading, uint8_t servoStep, float *headings);
 
 #endif

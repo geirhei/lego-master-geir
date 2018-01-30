@@ -52,7 +52,7 @@ void vMainNavigationTask( void *pvParameters )
 }
 */
 
-
+/*
 void navigation_get_measurement_headings(float robotHeading, uint8_t servoStep, float *headings) {
 	for (uint8_t i = 0; i < NUMBER_OF_SENSORS; i++) {
 		uint8_t heading = (int) robotHeading + servoStep + (i-1)*90;
@@ -64,3 +64,4 @@ void navigation_get_measurement_headings(float robotHeading, uint8_t servoStep, 
 		headings[i] = heading;
 	}
 }
+*/

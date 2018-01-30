@@ -32,8 +32,8 @@ void compassTask(void *par ) {
 	  vMotorMovementSwitch(-25, 25, &leftDirection, &rightDirection);
 
 	  float heading = 0;
-	  float gyroHeading = 0;
-	  float encoderHeading = 0;
+	  //float gyroHeading = 0;
+	  //float encoderHeading = 0;
 
 		/*	  
 	  gLeftWheelTicks = 0;
@@ -164,7 +164,7 @@ void vSensorCalibrationTask(void *pvParams) {
   uint16_t i;
   uint8_t last = 0;
   for(i=0;i<255;i++) {
-	debug("%d,", calibration[i] == 0 ? last : calibration[i] );
+	//debug("%d,", calibration[i] == 0 ? last : calibration[i] );
 	if(calibration[i] != 0) last = calibration[i];
 	vTaskDelay(100/portTICK_PERIOD_MS);
   }

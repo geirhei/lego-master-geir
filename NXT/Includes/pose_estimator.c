@@ -32,13 +32,13 @@ void vMainPoseEstimatorTask( void *pvParameters ) {
     pose_t PredictedPose = {0};
     
     float gyroOffset = 0.0;
-    float compassOffset = 0.0;
+    //float compassOffset = 0.0;
     
     // Found by using calibration task
     //int16_t xComOff = 11; 
     //int16_t yComOff = -78;
-    int16_t xComOff = -321; 
-    int16_t yComOff = -25;
+    //int16_t xComOff = -321; 
+    //int16_t yComOff = -25;
     
     float variance_gyro = 0.0482f; // [rad] calculated offline, see report
     float variance_encoder = (2.0f * WHEEL_FACTOR_MM) / (WHEELBASE_MM); // approximation, 0.0257 [rad]

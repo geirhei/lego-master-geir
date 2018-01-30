@@ -33,9 +33,9 @@ void vMainPoseControllerTask( void *pvParameters ) {
 	uint8_t lastMovement = 0;
 	
 	// Find better values for NXT
-	uint8_t maxRotateActuation = 40; //The max speed the motors will run at during rotation (was 75)
-	uint8_t maxDriveActuation = 45; //The max speed the motors will run at during drive (was 100)
-	uint8_t currentDriveActuation = maxRotateActuation;
+	float maxRotateActuation = 40; //The max speed the motors will run at during rotation (was 75)
+	float maxDriveActuation = 45; //The max speed the motors will run at during drive (was 100)
+	float currentDriveActuation = maxRotateActuation;
 	
 	/* Controller variables for tuning, probably needs calculation for NXT */
 	float rotateThreshold = 0.5235; // [rad] The threshold at which the robot will go from driving to rotation. Equals 10 degrees
@@ -90,7 +90,7 @@ void vMainPoseControllerTask( void *pvParameters ) {
 			
 			//Simple speed controller as the robot nears the target
 			if (distance < speedDecreaseThreshold) {
-				currentDriveActuation = (maxDriveActuation - 0.32*maxDriveActuation)*distance/speedDecreaseThreshold + 0.32*maxDriveActuation; //Reverse proportional + a constant so it reaches. 
+				currentDriveActuation = (maxDriveActuation - 0.32 * maxDriveActuation)*distance / speedDecreaseThreshold + 0.32 * maxDriveActuation; //Reverse proportional + a constant so it reaches. 
 			} else {
 				currentDriveActuation = maxDriveActuation;
 			}
@@ -111,8 +111,8 @@ void vMainPoseControllerTask( void *pvParameters ) {
 					doneTurning = TRUE;
 				}
 				
-				int16_t LSpeed = 0;
-				int16_t RSpeed = 0;
+				float LSpeed = 0;
+				float RSpeed = 0;
 				
 				if (doneTurning) { //Start forward movement
 					if (thetaDiff >= 0) { //Moving left
@@ -163,7 +163,7 @@ void vMainPoseControllerTask( void *pvParameters ) {
 					rightIntError = 0;
 				}
 
-				vMotorMovementSwitch(LSpeed, RSpeed, &gLeftWheelDirection, &gRightWheelDirection);
+				vMotorMovementSwitch(ROUND(LSpeed), ROUND(RSpeed), &gLeftWheelDirection, &gRightWheelDirection);
 		
 			} else {
 				if (idleSent == FALSE) {
