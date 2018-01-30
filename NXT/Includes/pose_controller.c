@@ -14,6 +14,7 @@
 #include "communication.h"
 
 extern volatile uint8_t gHandshook;
+extern volatile uint8_t gPaused;
 
 extern QueueHandle_t globalPoseQ;
 extern QueueHandle_t globalWheelTicksQ;
@@ -68,7 +69,7 @@ void vMainPoseControllerTask( void *pvParameters ) {
       
 	while(1) {
 		// Checking if server is ready
-		if (gHandshook) {
+		if (gHandshook == TRUE && gPaused == FALSE) {
 			
 			// Wait for synchronization by direct notification from the estimator task. Timeout after
 			// 1000ms to check if we are still connected.
