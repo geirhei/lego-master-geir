@@ -57,12 +57,11 @@ void vMainCommunicationTask( void *pvParameters ) {
 
 	while(1) {
 		if (xSemaphoreTake(xCommandReadyBSem, portMAX_DELAY) == pdTRUE) {
-			// We have a new command from the server, copy it to the memory
-			vTaskSuspendAll ();       // Temporarily disable context switching
+			// We have a new command from the server, copy it to the memory.
+			// Context switches are prevented.
 			taskENTER_CRITICAL();
 			command_in = message_in;
 			taskEXIT_CRITICAL();
-			xTaskResumeAll();      // Enable context switching
 
 			switch (command_in.type)
 			{

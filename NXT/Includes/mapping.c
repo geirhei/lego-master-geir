@@ -19,10 +19,8 @@ extern volatile uint8_t gHandshook;
 
 extern QueueHandle_t measurementQ;
 extern QueueHandle_t globalPoseQ;
-//extern SemaphoreHandle_t xBeginMergeBSem;
 extern TaskHandle_t xMappingTask;
 
-/* Mapping task */
 void vMainMappingTask( void *pvParameters )
 {
 	// Initialize the buffers used for mapping operations. Each sensor has its
@@ -185,19 +183,18 @@ static void vMappingLineMerge(line_buffer_t *LineBuffer, line_buffer_t *LineRepo
 		}
 	} else {
 		uint8_t index = LineRepo->len;
-		uint8_t merged = 0;
 		for (uint8_t j = 0; j < LineBuffer->len; j++) {
+			uint8_t merged = FALSE;
 			for (uint8_t k = 0; k < LineRepo->len; k++) {
 				if (vMappingIsMergeable(&LineBuffer->buffer[j], &LineRepo->buffer[k]) == 1) {
 					LineRepo->buffer[k] = vMappingMergeSegments(&LineBuffer->buffer[j], &LineRepo->buffer[k]);
-					merged = 1;
+					merged = TRUE;
 					break;
 				}
 			}
-			if (!merged) {
+			if (merged == FALSE) {
 				LineRepo->buffer[index] = LineBuffer->buffer[j];
 				index++;
-				merged = 0;
 			}
 		}
 		LineRepo->len = index;
@@ -208,8 +205,8 @@ static void vMappingLineMerge(line_buffer_t *LineBuffer, line_buffer_t *LineRepo
 }
 
 static int8_t vMappingIsMergeable(line_t *Line1, line_t *Line2) {
-    const float MU = 0.5; // slope
-    const float DELTA = 10.0; // cm
+    const float MU = 0.01; // slope
+    const float DELTA = 1.0; // cm
 
     float m1 = vFunc_getSlope(Line1);
     float m2 = vFunc_getSlope(Line2);
