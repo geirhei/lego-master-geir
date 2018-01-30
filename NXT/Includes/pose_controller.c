@@ -70,8 +70,9 @@ void vMainPoseControllerTask( void *pvParameters ) {
 		// Checking if server is ready
 		if (gHandshook) {
 			
-			// Wait for synchronization by direct notification from the estimator task. Blocks indefinetely?
-			ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+			// Wait for synchronization by direct notification from the estimator task. Timeout after
+			// 1000ms to check if we are still connected.
+			ulTaskNotifyTake(pdTRUE, 1000 / portTICK_PERIOD_MS);
 
 			if (xQueuePeek(globalPoseQ, &GlobalPose, 0)) { // Block time?
 				thetahat = GlobalPose.theta;
@@ -177,6 +178,12 @@ void vMainPoseControllerTask( void *pvParameters ) {
 			// Send the current movement to the sensor tower task
 			xQueueOverwrite(scanStatusQ, &lastMovement);
 			
+		} else {
+			// Stop motors if we get disconnected
+			if (lastMovement != moveStop) {
+				vMotorMovementSwitch(0, 0, &gLeftWheelDirection, &gRightWheelDirection);	
+			}
+			vTaskDelay(PERIOD_MOTOR_MS / portTICK_PERIOD_MS);
 		}
 	}
 }
