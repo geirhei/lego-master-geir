@@ -70,7 +70,7 @@ void vMainMappingTask( void *pvParameters )
 				vFunc_wrapTo2Pi(&Pose.theta);
 
 				// Append new IR measurements to the end of each PB
-				vMappingUpdatePointBuffers(PointBuffers, Measurement, Pose);
+				mapping_update_point_buffers(PointBuffers, Measurement, Pose);
 			}
 			
 			// Check for notification from sensor tower task.
@@ -79,16 +79,17 @@ void vMainMappingTask( void *pvParameters )
 				for (uint8_t j = 0; j < NUMBER_OF_SENSORS; j++) {
 
 					//vTaskSuspendAll();
-					vMappingLineCreate(&PointBuffers[j], &LineBuffers[j]);
-					vMappingLineMerge(&LineBuffers[j], LineRepo);
+					mapping_line_create(&PointBuffers[j], &LineBuffers[j]);
+					mapping_line_merge(&LineBuffers[j], LineRepo);
 					//xTaskResumeAll();
 
 				}
-
+				/*
 				for (uint8_t k = 0; k < LineRepo->len; k++) {
 					line_t line = LineRepo->buffer[k];
 					send_line(line);
 				}
+				*/
 			}
 			
 		} 
@@ -99,7 +100,7 @@ void vMainMappingTask( void *pvParameters )
 	}
 }
 
-static void vMappingUpdatePointBuffers(point_buffer_t *Buffers, measurement_t Measurement, pose_t Pose) {
+static void mapping_update_point_buffers(point_buffer_t *Buffers, measurement_t Measurement, pose_t Pose) {
 	float towerAngle = (float) Measurement.servoStep * DEG2RAD; //[0,pi/2]
 	float theta = towerAngle + Pose.theta;
 
@@ -128,7 +129,7 @@ static void vMappingUpdatePointBuffers(point_buffer_t *Buffers, measurement_t Me
 	}
 }
 
-static void vMappingLineCreate(point_buffer_t *PointBuffer, line_buffer_t *LineBuffer) {
+static void mapping_line_create(point_buffer_t *PointBuffer, line_buffer_t *LineBuffer) {
 	configASSERT(PointBuffer != NULL && LineBuffer != NULL);
 
 	LineBuffer->len = 0;
@@ -173,7 +174,7 @@ static void vMappingLineCreate(point_buffer_t *PointBuffer, line_buffer_t *LineB
 	PointBuffer->len = 0;
 }
 
-static void vMappingLineMerge(line_buffer_t *LineBuffer, line_buffer_t *LineRepo) {
+static void mapping_line_merge(line_buffer_t *LineBuffer, line_buffer_t *LineRepo) {
 	configASSERT(LineBuffer != NULL && LineRepo != NULL);
 
 	if (LineRepo->len == 0) {
@@ -186,8 +187,8 @@ static void vMappingLineMerge(line_buffer_t *LineBuffer, line_buffer_t *LineRepo
 		for (uint8_t j = 0; j < LineBuffer->len; j++) {
 			uint8_t merged = FALSE;
 			for (uint8_t k = 0; k < LineRepo->len; k++) {
-				if (vMappingIsMergeable(&LineBuffer->buffer[j], &LineRepo->buffer[k]) == 1) {
-					LineRepo->buffer[k] = vMappingMergeSegments(&LineBuffer->buffer[j], &LineRepo->buffer[k]);
+				if (mapping_is_mergeable(&LineBuffer->buffer[j], &LineRepo->buffer[k]) == 1) {
+					LineRepo->buffer[k] = mapping_merge_segments(&LineBuffer->buffer[j], &LineRepo->buffer[k]);
 					merged = TRUE;
 					break;
 				}
@@ -204,12 +205,12 @@ static void vMappingLineMerge(line_buffer_t *LineBuffer, line_buffer_t *LineRepo
 	LineBuffer->len = 0;
 }
 
-static int8_t vMappingIsMergeable(line_t *Line1, line_t *Line2) {
+static int8_t mapping_is_mergeable(line_t *Line1, line_t *Line2) {
     const float MU = 0.01; // slope
     const float DELTA = 1.0; // cm
 
-    float m1 = vFunc_getSlope(Line1);
-    float m2 = vFunc_getSlope(Line2);
+    float m1 = func_get_slope(Line1);
+    float m2 = func_get_slope(Line2);
 
     // Test slope
     if (fabs(m1 - m2) > MU) {
@@ -218,10 +219,10 @@ static int8_t vMappingIsMergeable(line_t *Line1, line_t *Line2) {
     }
 
     // Test distance between endpoints
-    float d1 = vFunc_distanceBetween(&Line1->P, &Line2->P);
-    float d2 = vFunc_distanceBetween(&Line1->P, &Line2->Q);
-    float d3 = vFunc_distanceBetween(&Line1->Q, &Line2->P);
-    float d4 = vFunc_distanceBetween(&Line1->Q, &Line2->Q);
+    float d1 = func_distance_between(&Line1->P, &Line2->P);
+    float d2 = func_distance_between(&Line1->P, &Line2->Q);
+    float d3 = func_distance_between(&Line1->Q, &Line2->P);
+    float d4 = func_distance_between(&Line1->Q, &Line2->Q);
 
     if ( (d1 <= DELTA) || (d2 <= DELTA) || (d3 <= DELTA) || (d4 <= DELTA) ) {
         return 1;
@@ -229,15 +230,15 @@ static int8_t vMappingIsMergeable(line_t *Line1, line_t *Line2) {
     return -1;
 }
 
-static line_t vMappingMergeSegments(line_t *Line1, line_t *Line2) {
+static line_t mapping_merge_segments(line_t *Line1, line_t *Line2) {
 	configASSERT(Line1 != NULL && Line2 != NULL);
 
-	float a1 = vFunc_getSlope(Line1);
-	float a2 = vFunc_getSlope(Line2);
+	float a1 = func_get_slope(Line1);
+	float a2 = func_get_slope(Line2);
 	float b1 = Line1->P.y - a1 * Line1->P.x;
 	float b2 = Line2->P.y - a2 * Line2->P.x;
-	float l1 = vFunc_distanceBetween(&Line1->P, &Line1->Q);
-	float l2 = vFunc_distanceBetween(&Line2->P, &Line2->Q);
+	float l1 = func_distance_between(&Line1->P, &Line1->Q);
+	float l2 = func_distance_between(&Line2->P, &Line2->Q);
 
 	// Find parameters for the merged line
 	float a = (l1 * a1 + l2 * a2) / (l1 + l2);
@@ -245,10 +246,10 @@ static line_t vMappingMergeSegments(line_t *Line1, line_t *Line2) {
 
 	// Find projections of all 4 points onto the merged line
 	point_t projectedPoints[4];
-	projectedPoints[0] = vFunc_getProjectedPoint(Line1->P, a, b);
-	projectedPoints[1] = vFunc_getProjectedPoint(Line2->P, a, b);
-	projectedPoints[2] = vFunc_getProjectedPoint(Line1->Q, a, b);
-	projectedPoints[3] = vFunc_getProjectedPoint(Line2->Q, a, b);
+	projectedPoints[0] = func_get_projected_point(Line1->P, a, b);
+	projectedPoints[1] = func_get_projected_point(Line2->P, a, b);
+	projectedPoints[2] = func_get_projected_point(Line1->Q, a, b);
+	projectedPoints[3] = func_get_projected_point(Line2->Q, a, b);
 
 	// Find the points farthest away from each other
 	point_t P = projectedPoints[0];

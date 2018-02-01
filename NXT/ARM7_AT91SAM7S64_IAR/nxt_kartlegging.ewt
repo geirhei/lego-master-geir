@@ -2397,9 +2397,6 @@
             <name>$PROJ_DIR$\..\Drivere\sensors1.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\Drivere\sound.c</name>
-        </file>
-        <file>
             <name>$PROJ_DIR$\..\Drivere\twi.c</name>
         </file>
     </group>

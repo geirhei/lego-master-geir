@@ -39,12 +39,12 @@ point_t vFunc_polar2Cart(float theta, float r);
 /* Returns 1 if the three points are collinear within a given tolerance */
 int8_t vFunc_areCollinear(point_t *a, point_t *b, point_t *c);
 
-float vFunc_getSlope(line_t *Line);
+float func_get_slope(line_t *Line);
 
-float vFunc_distanceBetween(point_t *Pos1, point_t *Pos2);
+float func_distance_between(point_t *Pos1, point_t *Pos2);
 
 int8_t vFunc_isMergeable(line_t *Line1, line_t *Line2);
 
-point_t vFunc_getProjectedPoint(point_t P, float a, float b);
+point_t func_get_projected_point(point_t P, float a, float b);
 
 #endif /* FUNCTIONS_H_ */

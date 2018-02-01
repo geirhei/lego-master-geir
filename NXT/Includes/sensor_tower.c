@@ -20,7 +20,6 @@ extern QueueHandle_t scanStatusQ;
 extern QueueHandle_t globalPoseQ;
 extern QueueHandle_t poseControllerQ;
 extern QueueHandle_t measurementQ;
-//extern SemaphoreHandle_t xBeginMergeBSem;
 extern TaskHandle_t xMappingTask;
 
 /**
@@ -33,7 +32,7 @@ void vMainSensorTowerTask( void *pvParameters ) {
 	
 	uint8_t rotationDirection = moveCounterClockwise;
 	uint8_t servoStep = 0;
-    uint8_t servoResolution = 1;
+    const uint8_t SERVO_RESOLUTION = 5;
 	uint8_t robotMovement = moveStop;
 	uint8_t lastRobotMovement = robotMovement;
 	uint8_t idleCounter = 0;
@@ -59,11 +58,11 @@ void vMainSensorTowerTask( void *pvParameters ) {
 				{
 					case moveStop:
 						//servoStep *= servoResolution;
-                    	servoResolution = 2;
+                    	//servoResolution = 2;
                     	idleCounter = 1;
 					case moveForward:
 					case moveBackward:
-						servoResolution = 2;
+						//servoResolution = 2;
                     	//servoStep /= servoResolution;
                     	idleCounter = 0;
                     	break;
@@ -134,11 +133,12 @@ void vMainSensorTowerTask( void *pvParameters ) {
 		  	// Iterate in a increasing/decreasing manner and depending on the robots movement
 		  	if ((servoStep <= 90) && (rotationDirection == moveCounterClockwise) && (robotMovement < moveClockwise)) {
 				//servoStep++;
-				servoStep = servoStep + servoResolution;
+				//servoStep = servoStep + SERVO_RESOLUTION;
+				servoStep += SERVO_RESOLUTION;
 		  	} 
 		  	else if ((servoStep > 0) && (rotationDirection == moveClockwise) && (robotMovement < moveClockwise)) {
 				//servoStep--;
-				servoStep = servoStep - servoResolution;
+				servoStep -= SERVO_RESOLUTION;
 		  	}
 		  
 		  	if ((servoStep >= 90) && (rotationDirection == moveCounterClockwise)) {

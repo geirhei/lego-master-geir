@@ -169,15 +169,15 @@ int8_t vFunc_areCollinear(point_t *a, point_t *b, point_t *c) {
     return fabs( (a->y - b->y) * (a->x - c->x) - (a->y - c->y) * (a->x - b->x) ) <= COLLINEAR_TOLERANCE;
 }
 
-float vFunc_getSlope(line_t *Line) {
+float func_get_slope(line_t *Line) {
     return (Line->Q.y - Line->P.y) / (Line->Q.x - Line->P.x);
 }
 
-float vFunc_distanceBetween(point_t *Pos1, point_t *Pos2) {
+float func_distance_between(point_t *Pos1, point_t *Pos2) {
     return sqrt( pow(Pos1->x - Pos2->x, 2) + pow(Pos1->y - Pos2->y, 2) );
 }
 
-point_t vFunc_getProjectedPoint(point_t P, float a, float b) {
+point_t func_get_projected_point(point_t P, float a, float b) {
     float x = (P.x + a * P.y - a * b) / (1 + pow(a, 2));
     float y = (a * P.x + pow(a, 2) * P.y + b) / (1 + pow(a, 2));
     return (point_t) { x, y };

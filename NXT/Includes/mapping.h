@@ -14,7 +14,7 @@ void vMainMappingTask( void *pvParameters );
  * @param[in]  Measurement  A struct containing measurement data
  * @param[in]  Pose         The current pose of the robot
  */
-static void vMappingUpdatePointBuffers(point_buffer_t *Buffers, measurement_t Measurement, pose_t Pose);
+static void mapping_update_point_buffers(point_buffer_t *Buffers, measurement_t Measurement, pose_t Pose);
 
 /**
  * @brief      Checks the points in the point buffers for collinearity, and adds
@@ -23,7 +23,7 @@ static void vMappingUpdatePointBuffers(point_buffer_t *Buffers, measurement_t Me
  * @param      PointBuffer  A pointer to a point buffer
  * @param      LineBuffer   A pointer to a line buffer
  */
-static void vMappingLineCreate(point_buffer_t *PointBuffer, line_buffer_t *LineBuffer);
+static void mapping_line_create(point_buffer_t *PointBuffer, line_buffer_t *LineBuffer);
 
 /**
  * @brief      Compare all the lines in the LineBuffer with the ones in
@@ -34,7 +34,7 @@ static void vMappingLineCreate(point_buffer_t *PointBuffer, line_buffer_t *LineB
  * @param      LineBuffer  A reference to a LineBuffer
  * @param      LineRepo    A reference to the LineRepo
  */
-static void vMappingLineMerge(line_buffer_t *LineBuffer, line_buffer_t *LineRepo);
+static void mapping_line_merge(line_buffer_t *LineBuffer, line_buffer_t *LineRepo);
 
 /**
  * @brief      Determine if 2 lines are eligible for merging.
@@ -44,7 +44,7 @@ static void vMappingLineMerge(line_buffer_t *LineBuffer, line_buffer_t *LineRepo
  *
  * @return     { 1 if lines are mergeable, -1 if not }
  */
-static int8_t vMappingIsMergeable(line_t *Line1, line_t *Line2);
+static int8_t mapping_is_mergeable(line_t *Line1, line_t *Line2);
 
 /**
  * @brief      Merges two lines and returns a new line from the calculated
@@ -55,6 +55,6 @@ static int8_t vMappingIsMergeable(line_t *Line1, line_t *Line2);
  *
  * @return     { line_t }
  */
-static line_t vMappingMergeSegments(line_t *Line1, line_t *Line2);
+static line_t mapping_merge_segments(line_t *Line1, line_t *Line2);
 
 #endif
