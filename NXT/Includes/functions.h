@@ -11,7 +11,6 @@
 #include <stdint.h>
 
 #include "types.h"
-#include "defines.h"
 
 /* Take any angle and put it inside -pi,pi */
 void vFunc_Inf2pi(float *angle_in_radians);
@@ -35,9 +34,6 @@ void itoa(int n, char s[]);
 void reverse(char s[]);
 
 point_t vFunc_polar2Cart(float theta, float r);
-
-/* Returns 1 if the three points are collinear within a given tolerance */
-int8_t vFunc_areCollinear(point_t *a, point_t *b, point_t *c);
 
 float func_get_slope(line_t *Line);
 

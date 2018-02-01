@@ -57,4 +57,17 @@ static int8_t mapping_is_mergeable(line_t *Line1, line_t *Line2);
  */
 static line_t mapping_merge_segments(line_t *Line1, line_t *Line2);
 
+static line_buffer_t* mapping_repo_merge(line_buffer_t *Repo);
+
+/**
+ * @brief      Check if 3 points are collinear within a given tolerance
+ *
+ * @param      a     { parameter_description }
+ * @param      b     { parameter_description }
+ * @param      c     { parameter_description }
+ *
+ * @return     { 1 if the points are collinear }
+ */
+static int8_t mapping_are_collinear(point_t *a, point_t *b, point_t *c);
+
 #endif

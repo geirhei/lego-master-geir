@@ -21,6 +21,12 @@ extern QueueHandle_t measurementQ;
 extern QueueHandle_t globalPoseQ;
 extern TaskHandle_t xMappingTask;
 
+#define PB_SIZE 				50
+#define LB_SIZE					50
+#define L_SIZE          		50
+#define MAX_IR_DISTANCE			40
+#define COLLINEAR_TOLERANCE		10
+
 void vMainMappingTask( void *pvParameters )
 {
 	// Initialize the buffers used for mapping operations. Each sensor has its
@@ -78,18 +84,23 @@ void vMainMappingTask( void *pvParameters )
 			if (ulTaskNotifyTake(pdTRUE, 0) == 1) {
 				for (uint8_t j = 0; j < NUMBER_OF_SENSORS; j++) {
 
-					//vTaskSuspendAll();
 					mapping_line_create(&PointBuffers[j], &LineBuffers[j]);
 					mapping_line_merge(&LineBuffers[j], LineRepo);
-					//xTaskResumeAll();
 
 				}
-				/*
+
+				// Merge the repo with itself until it cannot be reduced further
+				uint8_t lastRepoLen;
+				do {
+					lastRepoLen = LineRepo->len;
+					LineRepo = mapping_repo_merge(LineRepo);
+				} while (LineRepo->len < lastRepoLen);
+				
 				for (uint8_t k = 0; k < LineRepo->len; k++) {
 					line_t line = LineRepo->buffer[k];
 					send_line(line);
 				}
-				*/
+				
 			}
 			
 		} 
@@ -144,7 +155,7 @@ static void mapping_line_create(point_buffer_t *PointBuffer, line_buffer_t *Line
 
 	for (uint8_t i = 2; i < PointBuffer->len; i++) {
 		line_t Line;
-		if (vFunc_areCollinear(&A, &B, &PointBuffer->buffer[i])) {
+		if (mapping_are_collinear(&A, &B, &PointBuffer->buffer[i])) {
 			if (i == PointBuffer->len-1) {
 				Line = (line_t) {
 					{A.x, A.y},
@@ -264,4 +275,30 @@ static line_t mapping_merge_segments(line_t *Line1, line_t *Line2) {
 	}
 
 	return (line_t) { P, Q };
+}
+
+static line_buffer_t* mapping_repo_merge(line_buffer_t *Repo) {
+	// Allocate memory on the heap for the merged repo
+	line_buffer_t *MergedRepo;
+	MergedRepo = pvPortMalloc(sizeof(line_buffer_t));
+	MergedRepo->buffer = pvPortMalloc(Repo->len * sizeof(line_t));
+	MergedRepo->len = 0;
+
+	for (uint8_t i = 0; i < Repo->len; i++) {
+		for (uint8_t j = i + 1; j < Repo->len; j++) {
+			if (mapping_is_mergeable(&Repo->buffer[i], &Repo->buffer[j])) {
+				MergedRepo->buffer[MergedRepo->len] = mapping_merge_segments(&Repo->buffer[i], &Repo->buffer[j]);
+				MergedRepo->len++;
+			}
+		}
+	}
+
+	// Free the memory from the original repo and return a pointer to the merged one
+	vPortFree(Repo);
+	Repo = NULL;
+	return MergedRepo;
+}
+
+static int8_t mapping_are_collinear(point_t *a, point_t *b, point_t *c) {
+    return fabs( (a->y - b->y) * (a->x - c->x) - (a->y - c->y) * (a->x - b->x) ) <= COLLINEAR_TOLERANCE;
 }

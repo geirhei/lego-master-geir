@@ -165,10 +165,6 @@ point_t vFunc_polar2Cart(float theta, float r) {
     return newPoint;
 }
 
-int8_t vFunc_areCollinear(point_t *a, point_t *b, point_t *c) {
-    return fabs( (a->y - b->y) * (a->x - c->x) - (a->y - c->y) * (a->x - b->x) ) <= COLLINEAR_TOLERANCE;
-}
-
 float func_get_slope(line_t *Line) {
     return (Line->Q.y - Line->P.y) / (Line->Q.x - Line->P.x);
 }
