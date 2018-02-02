@@ -21,7 +21,7 @@ void vFunc_Inf2pi(float *angle_in_radians){
 }
 
 /* Wrap any angle in radians into the interval [0,2pi) */
-void vFunc_wrapTo2Pi(float *angle_in_radians) {
+void func_wrap_to_2pi(float *angle_in_radians) {
     do {
         if (*angle_in_radians >= 2*M_PI) *angle_in_radians -= 2*M_PI;
         else if (*angle_in_radians < 0) *angle_in_radians += 2*M_PI;
@@ -158,11 +158,10 @@ void reverse(char s[])
     }
 }
 
-point_t vFunc_polar2Cart(float theta, float r) {
-    point_t newPoint;
-    newPoint.x = r * cos(theta);
-    newPoint.y = r * sin(theta);
-    return newPoint;
+point_t func_polar2cart(float theta, float r) {
+    float x = r * cos(theta);
+    float y = r * sin(theta);
+    return (point_t) { x, y };
 }
 
 float func_get_slope(line_t *Line) {

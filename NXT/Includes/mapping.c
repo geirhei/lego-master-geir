@@ -25,7 +25,7 @@ extern TaskHandle_t xMappingTask;
 #define LB_SIZE					50
 #define L_SIZE          		50
 #define MAX_IR_DISTANCE			40
-#define COLLINEAR_TOLERANCE		10
+#define COLLINEAR_TOLERANCE		5
 
 void vMainMappingTask( void *pvParameters )
 {
@@ -73,7 +73,7 @@ void vMainMappingTask( void *pvParameters )
 				Pose.x /= 10;
 				Pose.y /= 10;
 				// Put inside [0,2pi)
-				vFunc_wrapTo2Pi(&Pose.theta);
+				func_wrap_to_2pi(&Pose.theta);
 
 				// Append new IR measurements to the end of each PB
 				mapping_update_point_buffers(PointBuffers, Measurement, Pose);
@@ -91,16 +91,19 @@ void vMainMappingTask( void *pvParameters )
 
 				// Merge the repo with itself until it cannot be reduced further
 				uint8_t lastRepoLen;
+				/*
 				do {
 					lastRepoLen = LineRepo->len;
 					LineRepo = mapping_repo_merge(LineRepo);
 				} while (LineRepo->len < lastRepoLen);
-				
+				*/
+
 				for (uint8_t k = 0; k < LineRepo->len; k++) {
 					line_t line = LineRepo->buffer[k];
-					send_line(line);
+					//send_line(line);
 				}
 				
+				LineRepo->len = 0;
 			}
 			
 		} 
@@ -116,16 +119,16 @@ static void mapping_update_point_buffers(point_buffer_t *Buffers, measurement_t 
 	float theta = towerAngle + Pose.theta;
 
 	for (uint8_t i = 0; i < NUMBER_OF_SENSORS; i++) {
-		if (i > 0) {
+		if (i > 0)
 			theta += 0.5 * M_PI;
-		}
-		vFunc_wrapTo2Pi(&theta); //[0,2pi)
+
+		func_wrap_to_2pi(&theta); //[0,2pi)
 		uint8_t r = Measurement.data[i];
 		// Abort if the measurement is outside the valid range
-		if (r <= 0 || r > 40) {
+		if (r <= 0 || r > 40)
 			continue;
-		}
-		point_t Pos = vFunc_polar2Cart(theta, (float) r);
+		
+		point_t Pos = func_polar2cart(theta, (float) r);
 		// Get the coordinates relative to the global coordinate system
 		Pos.x += Pose.x;
 		Pos.y += Pose.y;
@@ -134,9 +137,8 @@ static void mapping_update_point_buffers(point_buffer_t *Buffers, measurement_t 
 		Buffers[i].len++;
 
 		// Notify itself to call LineCreate if one of the buffers are full
-		if (Buffers[i].len >= PB_SIZE) {
+		if (Buffers[i].len >= PB_SIZE)
 			xTaskNotifyGive(xMappingTask);
-		}
 	}
 }
 
@@ -224,10 +226,8 @@ static int8_t mapping_is_mergeable(line_t *Line1, line_t *Line2) {
     float m2 = func_get_slope(Line2);
 
     // Test slope
-    if (fabs(m1 - m2) > MU) {
-        // Slope test failed
-        return -1;
-    }
+    if (fabs(m1 - m2) > MU)
+        return -1; // Slope-test failed
 
     // Test distance between endpoints
     float d1 = func_distance_between(&Line1->P, &Line2->P);
@@ -235,9 +235,9 @@ static int8_t mapping_is_mergeable(line_t *Line1, line_t *Line2) {
     float d3 = func_distance_between(&Line1->Q, &Line2->P);
     float d4 = func_distance_between(&Line1->Q, &Line2->Q);
 
-    if ( (d1 <= DELTA) || (d2 <= DELTA) || (d3 <= DELTA) || (d4 <= DELTA) ) {
+    if ( (d1 <= DELTA) || (d2 <= DELTA) || (d3 <= DELTA) || (d4 <= DELTA) )
         return 1;
-    }
+    
     return -1;
 }
 
@@ -256,22 +256,23 @@ static line_t mapping_merge_segments(line_t *Line1, line_t *Line2) {
 	float b = (l1 * b1 + l2 * b2) / (l1 + l2);
 
 	// Find projections of all 4 points onto the merged line
-	point_t projectedPoints[4];
-	projectedPoints[0] = func_get_projected_point(Line1->P, a, b);
-	projectedPoints[1] = func_get_projected_point(Line2->P, a, b);
-	projectedPoints[2] = func_get_projected_point(Line1->Q, a, b);
-	projectedPoints[3] = func_get_projected_point(Line2->Q, a, b);
+	point_t projectedPoints[] = { 
+		func_get_projected_point(Line1->P, a, b),
+		func_get_projected_point(Line2->P, a, b),
+		func_get_projected_point(Line1->Q, a, b),
+		func_get_projected_point(Line2->Q, a, b)
+	};
 
 	// Find the points farthest away from each other
 	point_t P = projectedPoints[0];
-	point_t Q = projectedPoints[0];
+	point_t Q = P;
+
 	for (uint8_t i = 1; i < 4; i++) {
-		if (projectedPoints[i].x < P.x) {
+		if (projectedPoints[i].x < P.x)
 			P = projectedPoints[i];
-		}
-		if (projectedPoints[i].x > P.x) {
+		
+		if (projectedPoints[i].x > P.x)
 			Q = projectedPoints[i];
-		}
 	}
 
 	return (line_t) { P, Q };
