@@ -23,12 +23,16 @@
 //
 /************************************************************************/
 
+
+
 /* KERNEL INCLUDES */
 #include "FreeRTOS.h" /* Must come first */
+#include "FreeRTOSConfig.h"
 #include "task.h"     /* RTOS task related API prototypes */
 #include "semphr.h"   /* Semaphore related API prototypes */
 #include "queue.h"    /* RTOS queue related API prototypes */
 //#include "event_groups.h" /* RTOS event group related APT prototypes */
+
 
 //#include <stdlib.h>         // For itoa();
 //#include <string.h>         // For stringstuff
@@ -50,6 +54,7 @@
 #include "pose_controller.h"
 //#include "navigation.h"
 #include "mapping.h"
+#include "motor.h"
 
 /* Semaphore handles */
 SemaphoreHandle_t xCommandReadyBSem;
@@ -97,6 +102,40 @@ void vApplicationStackOverflowHook(xTaskHandle *pxTask, signed char *pcTaskName)
   for (;;);
 }
 
+// Function executed when configASSERT is called. Used for debugging.
+// Enabled in FreeRTOSConfig.h
+void vAssertCalled(void)
+{
+	//static portBASE_TYPE xPrinted = pdFALSE;
+	volatile uint32_t ulSetToNonZeroInDebuggerToContinue = 0;
+
+    /* Parameters are not used. */
+    //( void ) ulLine;
+    //( void ) pcFileName;
+
+    //gHandshook = FALSE;
+    uint8_t dir = 0;
+    vMotorMovementSwitch(0, 0, &dir, &dir);
+    vTaskDelay(10);
+    led_set(LED_YELLOW);
+    vTaskDelay(10);
+
+    taskENTER_CRITICAL();
+    {
+        /* You can step out of this function to debug the assertion by using
+        the debugger to set ulSetToNonZeroInDebuggerToContinue to a non-zero
+        value. */
+        while( ulSetToNonZeroInDebuggerToContinue == 0 )
+        {
+        }
+    }
+    taskEXIT_CRITICAL();
+    led_clear(LED_YELLOW);
+    //taskDISABLE_INTERRUPTS();
+    //for (;;);
+}
+
+
 /* The main function */
 int main(void) {
   nxt_init();
@@ -139,14 +178,14 @@ int main(void) {
 
   BaseType_t ret;
   #ifndef DEBUG
-  xTaskCreate(vMainCommunicationTask, "Comm", 150, NULL, 3, NULL);  // Dependant on IO, sends instructions to other tasks
+  xTaskCreate(vMainCommunicationTask, "Comm", 256, NULL, 3, NULL);  // Dependant on IO, sends instructions to other tasks
   #endif
 #ifndef COMPASS_CALIBRATE
-  xTaskCreate(vMainPoseControllerTask, "PoseCon", 150, NULL, 2, &xPoseCtrlTask);// Dependant on estimator, sends instructions to movement task //2
-  xTaskCreate(vMainPoseEstimatorTask, "PoseEst", 150, NULL, 2, NULL); // Independent task,
-  xTaskCreate(vMainMappingTask, "Mapping", 200, NULL, 1, &xMappingTask);
+  xTaskCreate(vMainPoseControllerTask, "PoseCon", 256, NULL, 2, &xPoseCtrlTask);// Dependant on estimator, sends instructions to movement task //2
+  xTaskCreate(vMainPoseEstimatorTask, "PoseEst", 256, NULL, 2, NULL); // Independent task,
+  xTaskCreate(vMainMappingTask, "Mapping", 2048, NULL, 1, &xMappingTask);
   //xTaskCreate(vMainNavigationTask, "Navigation", 500, NULL, 1, NULL);
-  ret = xTaskCreate(vMainSensorTowerTask,"Tower", 100, NULL, 3, NULL); // Independent task, but use pose updates from estimator //1
+  ret = xTaskCreate(vMainSensorTowerTask,"Tower", 128, NULL, 3, NULL); // Independent task, but use pose updates from estimator //1
   //ret = pdPASS;
 #endif
   if(ret != pdPASS) {

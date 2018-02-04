@@ -91,12 +91,12 @@ void vMainMappingTask( void *pvParameters )
 
 				// Merge the repo with itself until it cannot be reduced further
 				uint8_t lastRepoLen;
-				/*
+				
 				do {
 					lastRepoLen = LineRepo->len;
 					LineRepo = mapping_repo_merge(LineRepo);
 				} while (LineRepo->len < lastRepoLen);
-				*/
+				
 
 				for (uint8_t k = 0; k < LineRepo->len; k++) {
 					line_t line = LineRepo->buffer[k];
@@ -285,12 +285,20 @@ static line_buffer_t* mapping_repo_merge(line_buffer_t *Repo) {
 	MergedRepo->buffer = pvPortMalloc(Repo->len * sizeof(line_t));
 	MergedRepo->len = 0;
 
+	/*
 	for (uint8_t i = 0; i < Repo->len; i++) {
 		for (uint8_t j = i + 1; j < Repo->len; j++) {
 			if (mapping_is_mergeable(&Repo->buffer[i], &Repo->buffer[j])) {
 				MergedRepo->buffer[MergedRepo->len] = mapping_merge_segments(&Repo->buffer[i], &Repo->buffer[j]);
 				MergedRepo->len++;
 			}
+		}
+	}
+	*/
+
+	for (uint8_t i = 0; i < Repo->len; i++) {
+		if (Repo->buffer[i] == NULL) {
+			continue;
 		}
 	}
 
