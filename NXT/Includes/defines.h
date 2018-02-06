@@ -73,7 +73,9 @@
 #define LB_SIZE					50
 #define L_SIZE          		50
 #define MAX_IR_DISTANCE			40
-#define COLLINEAR_TOLERANCE		100
+#define COLLINEAR_TOLERANCE		1
+#define MU 						0.5 // slope
+#define DELTA					0.5 	// cm
 
 /************************************************************************/
 /* Communication defines */

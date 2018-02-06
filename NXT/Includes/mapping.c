@@ -25,33 +25,29 @@ void vMainMappingTask( void *pvParameters )
 {
 	// Initialize the buffers used for mapping operations. Each sensor has its
 	// own buffers that are allocated on the heap.
-	//point_buffer_t *PointBuffers;
-	//line_buffer_t *LineBuffers;
-	
 	point_buffer_t *PointBuffers = pvPortMalloc(NUMBER_OF_SENSORS * sizeof(point_buffer_t));
 	line_buffer_t *LineBuffers = pvPortMalloc(NUMBER_OF_SENSORS * sizeof(line_buffer_t));
 	
-	// Allocate space for the desired buffer length and set initial length to 0.
+	// Set initial lengths to 0
 	for (uint8_t i = 0; i < NUMBER_OF_SENSORS; i++) {
-		//PointBuffers[i].buffer = pvPortMalloc(PB_SIZE * sizeof(point_t));
 		PointBuffers[i].len = 0;
-
-		//LineBuffers[i].buffer = pvPortMalloc(LB_SIZE * sizeof(line_t));
 		LineBuffers[i].len = 0;
 	}
 
+	// Initialize the repo for storing the completely merged line segments
 	line_repo_t *LineRepo = pvPortMalloc(sizeof(line_repo_t));
-	//LineRepo = pvPortMalloc(sizeof(line_buffer_t));
-	//LineRepo->buffer = pvPortMalloc(L_SIZE * sizeof(line_t));
 	LineRepo->len = 0;
 
+	// Verify allocation
+	configASSERT(PointBuffers != NULL && LineBuffers != NULL && LineRepo != NULL);
+
+	// Set task to run at a fixed frequency
 	TickType_t xLastWakeTime;
 	const TickType_t xFrequency = 100 / portTICK_PERIOD_MS;
 	xLastWakeTime = xTaskGetTickCount();
 
 	while (1)
 	{
-		// Runs with a fixed frequency
 		vTaskDelayUntil(&xLastWakeTime, xFrequency);
 		
 		if (gHandshook)
@@ -73,14 +69,11 @@ void vMainMappingTask( void *pvParameters )
 				mapping_update_point_buffers(PointBuffers, Measurement, Pose);
 			}
 			
-			// Check for notification from sensor tower task.
-			// Do not wait.
+			// Check for notification from sensor tower task. Do not wait.
 			if (ulTaskNotifyTake(pdTRUE, 0) == 1) {
 				for (uint8_t j = 0; j < NUMBER_OF_SENSORS; j++) {
-
 					mapping_line_create(&PointBuffers[j], &LineBuffers[j]);
 					mapping_line_merge(&LineBuffers[j], LineRepo);
-
 				}
 
 				// Merge the repo with itself until it cannot be reduced further
@@ -90,12 +83,13 @@ void vMainMappingTask( void *pvParameters )
 					LineRepo = mapping_repo_merge(LineRepo);
 				} while (LineRepo->len < lastRepoLen);
 				
-
+				// Send all lines in repo to server
 				for (uint8_t k = 0; k < LineRepo->len; k++) {
 					line_t line = LineRepo->buffer[k];
-					//send_line(line);
+					send_line(line);
 				}
 				
+				// Reset repo length
 				LineRepo->len = 0;
 			}
 			
@@ -202,13 +196,13 @@ static void mapping_line_merge(line_buffer_t *LineBuffer, line_repo_t *LineRepo)
 		for (uint8_t j = 0; j < LineBuffer->len; j++) {
 			uint8_t merged = FALSE;
 			for (uint8_t k = 0; k < LineRepo->len; k++) {
-				if (mapping_is_mergeable(&LineBuffer->buffer[j], &LineRepo->buffer[k]) == 1) {
+				if (mapping_is_mergeable(&LineBuffer->buffer[j], &LineRepo->buffer[k])) {
 					LineRepo->buffer[k] = mapping_merge_segments(&LineBuffer->buffer[j], &LineRepo->buffer[k]);
 					merged = TRUE;
 					break;
 				}
 			}
-			if (merged == FALSE) {
+			if (!merged) {
 				LineRepo->buffer[newLen] = LineBuffer->buffer[j];
 				newLen++;
 			}
@@ -224,8 +218,8 @@ static void mapping_line_merge(line_buffer_t *LineBuffer, line_repo_t *LineRepo)
 static uint8_t mapping_is_mergeable(line_t *Line1, line_t *Line2) {
 	configASSERT(Line1 != NULL && Line2 != NULL);
 
-    const float MU = 0.01; // slope
-    const float DELTA = 1.0; // cm
+    //MU = 0.5; // slope
+    //DELTA = 1.0; // cm
 
     float m1 = func_get_slope(Line1);
     float m2 = func_get_slope(Line2);
@@ -286,9 +280,8 @@ static line_t mapping_merge_segments(line_t *Line1, line_t *Line2) {
 static line_repo_t* mapping_repo_merge(line_buffer_t *Repo) {
 	configASSERT(Repo != NULL);
 
-	// Allocate memory on the heap for the merged repo
+	// Allocate memory on the heap for the resulting repo
 	line_repo_t *MergedRepo = pvPortMalloc(sizeof(line_repo_t));
-	//MergedRepo->buffer = pvPortMalloc(Repo->len * sizeof(line_t));
 	MergedRepo->len = 0;
 
 	for (uint8_t i = 0; i < Repo->len; i++) {

@@ -38,26 +38,6 @@ typedef struct {
   point_t buffer[PB_SIZE];
 } point_buffer_t;
 
-/**
- * Type containing a buffer of pointers to lines and the current length of the buffer
- */
-/*
-typedef struct {
-	line_t* buffer;
-	uint8_t len;
-} line_buffer_t;
-*/
-
-/**
- * Definition for type storing the IR data from a measurement
- */
-/*
-typedef struct {
-	uint8_t data[4];
-	uint8_t servoStep;
-} measurement_t;
-*/
-
 typedef struct {
 	uint8_t data[4];
 	uint8_t servoStep;

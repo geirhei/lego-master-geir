@@ -75,17 +75,20 @@ void vMainPoseControllerTask( void *pvParameters ) {
 			// 1000ms to check if we are still connected.
 			ulTaskNotifyTake(pdTRUE, 1000 / portTICK_PERIOD_MS);
 
-			if (xQueuePeek(globalPoseQ, &GlobalPose, 0)) { // Block time?
+			if (xQueuePeek(globalPoseQ, &GlobalPose, 0) == pdTRUE) {
 				thetahat = GlobalPose.theta;
 				xhat = GlobalPose.x;
 				yhat = GlobalPose.y;
 			}
 			
 			// Check if a new update is received
-			if (xQueueReceive(poseControllerQ, &Target, 0) == pdTRUE) { // Receive theta and radius set points from com task
+			if (xQueuePeek(poseControllerQ, &Target, 0) == pdTRUE) { // Read theta and radius set points from com task
 				xTargt = Target.x;
 				yTargt = Target.y;
-			} 
+			} else {
+				xTargt = xhat;
+				yTargt = yhat;
+			}
 			
 			distance = sqrt((xTargt-xhat)*(xTargt-xhat) + (yTargt-yhat)*(yTargt-yhat));
 			

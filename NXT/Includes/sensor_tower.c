@@ -124,9 +124,10 @@ void vMainSensorTowerTask( void *pvParameters ) {
 		  
 		  	if ((objectX > 0) && (objectX < 20)) {
 				// Stop controller
-				cartesian_t Target = {0};
-				xQueuePeek(globalPoseQ, &Target, 100);
-				xQueueOverwrite(poseControllerQ, &Target); // Uses overwrite, robot must stop immediately
+				//cartesian_t Target = {0};
+				//xQueuePeek(globalPoseQ, &Target, 100);
+				//xQueueOverwrite(poseControllerQ, &Target); // Uses overwrite, robot must stop immediately
+				xQueueReset(poseControllerQ);
 		  	}            
 		  	#endif
 
