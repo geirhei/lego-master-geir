@@ -69,7 +69,11 @@
 
 /************************************************************************/
 /* Mapping defines */
-
+#define PB_SIZE 				50
+#define LB_SIZE					50
+#define L_SIZE          		50
+#define MAX_IR_DISTANCE			40
+#define COLLINEAR_TOLERANCE		100
 
 /************************************************************************/
 /* Communication defines */

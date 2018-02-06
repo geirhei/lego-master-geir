@@ -21,34 +21,28 @@ extern QueueHandle_t measurementQ;
 extern QueueHandle_t globalPoseQ;
 extern TaskHandle_t xMappingTask;
 
-#define PB_SIZE 				50
-#define LB_SIZE					50
-#define L_SIZE          		50
-#define MAX_IR_DISTANCE			40
-#define COLLINEAR_TOLERANCE		5
-
 void vMainMappingTask( void *pvParameters )
 {
 	// Initialize the buffers used for mapping operations. Each sensor has its
 	// own buffers that are allocated on the heap.
-	point_buffer_t *PointBuffers;
-	line_buffer_t *LineBuffers;
-	line_buffer_t *LineRepo;
+	//point_buffer_t *PointBuffers;
+	//line_buffer_t *LineBuffers;
 	
-	PointBuffers = pvPortMalloc(NUMBER_OF_SENSORS * sizeof(point_buffer_t));
-	LineBuffers = pvPortMalloc(NUMBER_OF_SENSORS * sizeof(line_buffer_t));
+	point_buffer_t *PointBuffers = pvPortMalloc(NUMBER_OF_SENSORS * sizeof(point_buffer_t));
+	line_buffer_t *LineBuffers = pvPortMalloc(NUMBER_OF_SENSORS * sizeof(line_buffer_t));
 	
 	// Allocate space for the desired buffer length and set initial length to 0.
 	for (uint8_t i = 0; i < NUMBER_OF_SENSORS; i++) {
-		PointBuffers[i].buffer = pvPortMalloc(PB_SIZE * sizeof(point_t));
+		//PointBuffers[i].buffer = pvPortMalloc(PB_SIZE * sizeof(point_t));
 		PointBuffers[i].len = 0;
 
-		LineBuffers[i].buffer = pvPortMalloc(LB_SIZE * sizeof(line_t));
+		//LineBuffers[i].buffer = pvPortMalloc(LB_SIZE * sizeof(line_t));
 		LineBuffers[i].len = 0;
 	}
 
-	LineRepo = pvPortMalloc(sizeof(line_buffer_t));
-	LineRepo->buffer = pvPortMalloc(L_SIZE * sizeof(line_t));
+	line_repo_t *LineRepo = pvPortMalloc(sizeof(line_repo_t));
+	//LineRepo = pvPortMalloc(sizeof(line_buffer_t));
+	//LineRepo->buffer = pvPortMalloc(L_SIZE * sizeof(line_t));
 	LineRepo->len = 0;
 
 	TickType_t xLastWakeTime;
@@ -91,7 +85,6 @@ void vMainMappingTask( void *pvParameters )
 
 				// Merge the repo with itself until it cannot be reduced further
 				uint8_t lastRepoLen;
-				
 				do {
 					lastRepoLen = LineRepo->len;
 					LineRepo = mapping_repo_merge(LineRepo);
@@ -136,6 +129,8 @@ static void mapping_update_point_buffers(point_buffer_t *Buffers, measurement_t 
 		Buffers[i].buffer[currentLength] = Pos;
 		Buffers[i].len++;
 
+		configASSERT(Buffers[i].len <= PB_SIZE);
+
 		// Notify itself to call LineCreate if one of the buffers are full
 		if (Buffers[i].len >= PB_SIZE)
 			xTaskNotifyGive(xMappingTask);
@@ -144,6 +139,7 @@ static void mapping_update_point_buffers(point_buffer_t *Buffers, measurement_t 
 
 static void mapping_line_create(point_buffer_t *PointBuffer, line_buffer_t *LineBuffer) {
 	configASSERT(PointBuffer != NULL && LineBuffer != NULL);
+	configASSERT(LineBuffer->buffer != NULL);
 
 	LineBuffer->len = 0;
 
@@ -181,22 +177,28 @@ static void mapping_line_create(point_buffer_t *PointBuffer, line_buffer_t *Line
 		}
 		LineBuffer->buffer[LineBuffer->len] = Line;
 		LineBuffer->len++;
+		configASSERT(LineBuffer->buffer != NULL);
 	}
+
+	configASSERT(LineBuffer->len <= LB_SIZE);
 
 	// Reset PB length
 	PointBuffer->len = 0;
 }
 
-static void mapping_line_merge(line_buffer_t *LineBuffer, line_buffer_t *LineRepo) {
+static void mapping_line_merge(line_buffer_t *LineBuffer, line_repo_t *LineRepo) {
 	configASSERT(LineBuffer != NULL && LineRepo != NULL);
+	configASSERT(LineBuffer->buffer != NULL);
+	configASSERT(LineRepo->buffer != NULL);
 
 	if (LineRepo->len == 0) {
 		for (uint8_t i = 0; i < LineBuffer->len; i++) {
-			LineRepo->buffer[LineRepo->len] = LineBuffer->buffer[i];
+			LineRepo->buffer[i] = LineBuffer->buffer[i];
+			//configASSERT(LineRepo->buffer != NULL);
 			LineRepo->len++;
 		}
 	} else {
-		uint8_t index = LineRepo->len;
+		uint8_t newLen = LineRepo->len;
 		for (uint8_t j = 0; j < LineBuffer->len; j++) {
 			uint8_t merged = FALSE;
 			for (uint8_t k = 0; k < LineRepo->len; k++) {
@@ -207,18 +209,21 @@ static void mapping_line_merge(line_buffer_t *LineBuffer, line_buffer_t *LineRep
 				}
 			}
 			if (merged == FALSE) {
-				LineRepo->buffer[index] = LineBuffer->buffer[j];
-				index++;
+				LineRepo->buffer[newLen] = LineBuffer->buffer[j];
+				newLen++;
 			}
 		}
-		LineRepo->len = index;
+		LineRepo->len = newLen;
+		configASSERT(LineRepo->len <= L_SIZE);
 	}
 
 	// Reset LineBuffer length
 	LineBuffer->len = 0;
 }
 
-static int8_t mapping_is_mergeable(line_t *Line1, line_t *Line2) {
+static uint8_t mapping_is_mergeable(line_t *Line1, line_t *Line2) {
+	configASSERT(Line1 != NULL && Line2 != NULL);
+
     const float MU = 0.01; // slope
     const float DELTA = 1.0; // cm
 
@@ -227,7 +232,7 @@ static int8_t mapping_is_mergeable(line_t *Line1, line_t *Line2) {
 
     // Test slope
     if (fabs(m1 - m2) > MU)
-        return -1; // Slope-test failed
+        return 0; // Slope-test failed
 
     // Test distance between endpoints
     float d1 = func_distance_between(&Line1->P, &Line2->P);
@@ -238,7 +243,7 @@ static int8_t mapping_is_mergeable(line_t *Line1, line_t *Line2) {
     if ( (d1 <= DELTA) || (d2 <= DELTA) || (d3 <= DELTA) || (d4 <= DELTA) )
         return 1;
     
-    return -1;
+    return 0;
 }
 
 static line_t mapping_merge_segments(line_t *Line1, line_t *Line2) {
@@ -278,28 +283,41 @@ static line_t mapping_merge_segments(line_t *Line1, line_t *Line2) {
 	return (line_t) { P, Q };
 }
 
-static line_buffer_t* mapping_repo_merge(line_buffer_t *Repo) {
+static line_repo_t* mapping_repo_merge(line_buffer_t *Repo) {
+	configASSERT(Repo != NULL);
+
 	// Allocate memory on the heap for the merged repo
-	line_buffer_t *MergedRepo;
-	MergedRepo = pvPortMalloc(sizeof(line_buffer_t));
-	MergedRepo->buffer = pvPortMalloc(Repo->len * sizeof(line_t));
+	line_repo_t *MergedRepo = pvPortMalloc(sizeof(line_repo_t));
+	//MergedRepo->buffer = pvPortMalloc(Repo->len * sizeof(line_t));
 	MergedRepo->len = 0;
 
-	/*
 	for (uint8_t i = 0; i < Repo->len; i++) {
-		for (uint8_t j = i + 1; j < Repo->len; j++) {
-			if (mapping_is_mergeable(&Repo->buffer[i], &Repo->buffer[j])) {
-				MergedRepo->buffer[MergedRepo->len] = mapping_merge_segments(&Repo->buffer[i], &Repo->buffer[j]);
+
+		if (!mapping_is_empty(Repo->buffer[i])) {
+			uint8_t merged = FALSE;
+			for (uint8_t j = i + 1; j < Repo->len; j++) {
+
+				if (!mapping_is_empty(Repo->buffer[j])) {
+					if (mapping_is_mergeable(&Repo->buffer[i], &Repo->buffer[j])) {
+						// Add merged line to MergedRepo
+						MergedRepo->buffer[MergedRepo->len] = mapping_merge_segments(&Repo->buffer[i], &Repo->buffer[j]);
+						MergedRepo->len++;
+
+						//Set value of buffer entry to 0
+						Repo->buffer[j] = (line_t) { 0 };
+						merged = TRUE;
+					}
+				}
+
+			}
+
+			// If the line is not merged with another, add it to the end of MergedRepo
+			if (!merged) {
+				MergedRepo->buffer[MergedRepo->len] = Repo->buffer[i];
 				MergedRepo->len++;
 			}
 		}
-	}
-	*/
-
-	for (uint8_t i = 0; i < Repo->len; i++) {
-		if (Repo->buffer[i] == NULL) {
-			continue;
-		}
+		
 	}
 
 	// Free the memory from the original repo and return a pointer to the merged one
@@ -308,6 +326,10 @@ static line_buffer_t* mapping_repo_merge(line_buffer_t *Repo) {
 	return MergedRepo;
 }
 
-static int8_t mapping_are_collinear(point_t *a, point_t *b, point_t *c) {
+static uint8_t mapping_are_collinear(point_t *a, point_t *b, point_t *c) {
     return fabs( (a->y - b->y) * (a->x - c->x) - (a->y - c->y) * (a->x - b->x) ) <= COLLINEAR_TOLERANCE;
+}
+
+static uint8_t mapping_is_empty(line_t line) {
+	return ( line.P.x == 0 && line.P.y == 0 && line.Q.x == 0 && line.Q.y == 0 );
 }

@@ -34,7 +34,7 @@ static void mapping_line_create(point_buffer_t *PointBuffer, line_buffer_t *Line
  * @param      LineBuffer  A reference to a LineBuffer
  * @param      LineRepo    A reference to the LineRepo
  */
-static void mapping_line_merge(line_buffer_t *LineBuffer, line_buffer_t *LineRepo);
+static void mapping_line_merge(line_buffer_t *LineBuffer, line_repo_t *LineRepo);
 
 /**
  * @brief      Determine if 2 lines are eligible for merging.
@@ -42,9 +42,9 @@ static void mapping_line_merge(line_buffer_t *LineBuffer, line_buffer_t *LineRep
  * @param      Line1  The line 1
  * @param      Line2  The line 2
  *
- * @return     { 1 if lines are mergeable, -1 if not }
+ * @return     { 1 if lines are mergeable, 0 if not }
  */
-static int8_t mapping_is_mergeable(line_t *Line1, line_t *Line2);
+static uint8_t mapping_is_mergeable(line_t *Line1, line_t *Line2);
 
 /**
  * @brief      Merges two lines and returns a new line from the calculated
@@ -57,7 +57,7 @@ static int8_t mapping_is_mergeable(line_t *Line1, line_t *Line2);
  */
 static line_t mapping_merge_segments(line_t *Line1, line_t *Line2);
 
-static line_buffer_t* mapping_repo_merge(line_buffer_t *Repo);
+static line_repo_t* mapping_repo_merge(line_buffer_t *Repo);
 
 /**
  * @brief      Check if 3 points are collinear within a given tolerance
@@ -68,6 +68,8 @@ static line_buffer_t* mapping_repo_merge(line_buffer_t *Repo);
  *
  * @return     { 1 if the points are collinear }
  */
-static int8_t mapping_are_collinear(point_t *a, point_t *b, point_t *c);
+static uint8_t mapping_are_collinear(point_t *a, point_t *b, point_t *c);
+
+static uint8_t mapping_is_empty(line_t line);
 
 #endif

@@ -34,17 +34,19 @@ typedef struct {
  * Type containing a buffer of pointers to coordinates and the current length of the buffer
  */
 typedef struct {
-	point_t* buffer;
 	uint8_t len;
+  point_t buffer[PB_SIZE];
 } point_buffer_t;
 
 /**
  * Type containing a buffer of pointers to lines and the current length of the buffer
  */
+/*
 typedef struct {
 	line_t* buffer;
 	uint8_t len;
 } line_buffer_t;
+*/
 
 /**
  * Definition for type storing the IR data from a measurement
@@ -76,6 +78,16 @@ typedef struct {
 	float x;
 	float y;
 } cartesian_t;
+
+typedef struct {
+  uint8_t len;
+  line_t buffer[LB_SIZE];
+} line_buffer_t;
+
+typedef struct {
+  uint8_t len;
+  line_t buffer[L_SIZE];
+} line_repo_t;
 
 /* Communication types */
 typedef struct {
