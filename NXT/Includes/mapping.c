@@ -16,6 +16,7 @@
 #include "communication.h"
 
 extern volatile uint8_t gHandshook;
+extern volatile uint8_t gPaused;
 
 extern QueueHandle_t measurementQ;
 extern QueueHandle_t globalPoseQ;
@@ -42,35 +43,41 @@ void vMainMappingTask( void *pvParameters )
 	configASSERT(PointBuffers && LineBuffers && LineRepo );
 
 	// Set task to run at a fixed frequency
+	/*
 	TickType_t xLastWakeTime;
 	const TickType_t xFrequency = 100 / portTICK_PERIOD_MS;
 	xLastWakeTime = xTaskGetTickCount();
+	*/
 
 	while (1)
 	{
-		vTaskDelayUntil(&xLastWakeTime, xFrequency);
+		//vTaskDelayUntil(&xLastWakeTime, xFrequency);
 		
-		if (gHandshook)
+		if (gHandshook == TRUE && gPaused == FALSE)
 		{
-			// Retrieve a measurement sent by the sensor tower.
-			// Do not wait if there is none available
-			measurement_t Measurement;
-			if (xQueueReceive(measurementQ, &Measurement, 0) == pdTRUE) {
-				// Read the robots current pose
-				pose_t Pose;
-				xQueuePeek(globalPoseQ, &Pose, 0);
-				// Convert to centimeters
-				Pose.x /= 10;
-				Pose.y /= 10;
-				// Put inside [0,2pi)
-				func_wrap_to_2pi(&Pose.theta);
+			// Read the robots current pose
+			pose_t Pose;
+			xQueuePeek(globalPoseQ, &Pose, 10 / portTICK_PERIOD_MS);
 
+			// Convert to centimeters
+			Pose.x /= 10;
+			Pose.y /= 10;
+
+			// Put inside [0,2pi)
+			func_wrap_to_2pi(&Pose.theta);
+
+			// Block here waiting for measurement from the sensor tower.
+			measurement_t Measurement;
+			if (xQueueReceive(measurementQ, &Measurement, 200 / portTICK_PERIOD_MS) == pdTRUE) {
+				
 				// Append new IR measurements to the end of each PB
 				mapping_update_point_buffers(PointBuffers, Measurement, Pose);
 			}
 			
 			// Check for notification from sensor tower task. Do not wait.
 			if (ulTaskNotifyTake(pdTRUE, 0) == 1) {
+
+				// Run create and merge functions for each of the sensors' buffers
 				for (uint8_t j = 0; j < NUMBER_OF_SENSORS; j++) {
 					mapping_line_create(&PointBuffers[j], &LineBuffers[j]);
 					mapping_line_merge(&LineBuffers[j], LineRepo);
@@ -81,21 +88,22 @@ void vMainMappingTask( void *pvParameters )
 				do {
 					lastRepoLen = LineRepo->len;
 					LineRepo = mapping_repo_merge(LineRepo);
-				} while (LineRepo->len < lastRepoLen);
-				
-				// Send all lines in repo to server
-				for (uint8_t k = 0; k < LineRepo->len; k++) {
-					line_t line = LineRepo->buffer[k];
-					send_line(line);
-				}
-				
-				// Reset repo length
-				LineRepo->len = 0;
+				} while (LineRepo->len < lastRepoLen);	
 			}
-			
-		} 
+
+			line_t LineOut = { 0 };
+			if (LineRepo->len > 0) {
+				LineOut = LineRepo->buffer[LineRepo->len-1];
+				LineRepo->len--;
+			}
+
+			// Send update to server. LineOut contains all zeroes if one was not available from the LineRepo.
+			send_line(ROUND(Pose.x), ROUND(Pose.y), ROUND(Pose.theta*RAD2DEG), LineOut);
+		}
+
 		else {
-			// do nothing
+			// If disconnected or paused
+			vTaskDelay(200 / portTICK_PERIOD_MS);
 		}
 		
 	}

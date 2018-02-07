@@ -128,16 +128,19 @@ to exclude the API function. */
 
 
 /* Integrates the Tracealyzer recorder with FreeRTOS */
+/*
 #if ( configUSE_TRACE_FACILITY == 1 )
 #include "trcRecorder.h"
 #endif
-
+*/
 /* IAR Embedded Workbench */
+/*
 #ifdef __ICCARM__
 #if ( configUSE_TRACE_FACILITY == 1 )
 #include "trcRecorder.h"
 #endif
 #endif
+*/
 
 #endif /* FREERTOS_CONFIG_H */
 

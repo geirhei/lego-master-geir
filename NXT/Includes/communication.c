@@ -179,14 +179,17 @@ void send_idle(void) {
   else simple_p_send(SERVER_ADDRESS, &status, 1);
 }
 
-void send_line(line_t line) {
+void send_line(int16_t x, int16_t y, uint16_t heading, line_t line) {
 	if (!connected) return;
 	message_t msg;
-	msg.type = TYPE_LINE;					
-	msg.message.line.x_p = (int16_t) ROUND(line.P.x);
-	msg.message.line.y_p = (int16_t) ROUND(line.P.y);
-	msg.message.line.x_q = (int16_t) ROUND(line.Q.x);
-	msg.message.line.y_q = (int16_t) ROUND(line.Q.y);
+	msg.type = TYPE_LINE;
+	msg.message.line.x = x;
+	msg.message.line.y = y;
+	msg.message.line.heading = heading;
+	msg.message.line.p_x = (int16_t) ROUND(line.P.x);
+	msg.message.line.p_y = (int16_t) ROUND(line.P.y);
+	msg.message.line.q_x = (int16_t) ROUND(line.Q.x);
+	msg.message.line.q_y = (int16_t) ROUND(line.Q.y);
 
 	uint8_t data[sizeof(line_message_t)+1];
 	memcpy(data, (uint8_t*) &msg, sizeof(data));

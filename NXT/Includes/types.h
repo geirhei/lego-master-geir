@@ -105,11 +105,23 @@ typedef struct {
   int16_t y;
 } __attribute__((packed)) order_message_t;
 
+/*
 typedef struct {
   int16_t x_p;
   int16_t y_p;
   int16_t x_q;
   int16_t y_q;
+} __attribute__((packed)) line_message_t;
+*/
+
+typedef struct {
+  int16_t x;
+  int16_t y;
+  uint16_t heading;
+  int16_t p_x;
+  int16_t p_y;
+  int16_t q_x;
+  int16_t q_y;
 } __attribute__((packed)) line_message_t;
 
 union Message {

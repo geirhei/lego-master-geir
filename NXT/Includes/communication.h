@@ -30,7 +30,7 @@ void send_idle(void);
 /**
  * Sends the coordinates of the start and endpoints of a line. [cm]
  */
-void send_line(line_t line);
+void send_line(int16_t x, int16_t y, uint16_t heading, line_t line);
 
 //void debug(const char *fmt, ...);
 
