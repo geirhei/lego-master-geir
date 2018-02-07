@@ -39,7 +39,7 @@ void vMainMappingTask( void *pvParameters )
 	LineRepo->len = 0;
 
 	// Verify allocation
-	configASSERT(PointBuffers != NULL && LineBuffers != NULL && LineRepo != NULL);
+	configASSERT(PointBuffers && LineBuffers && LineRepo );
 
 	// Set task to run at a fixed frequency
 	TickType_t xLastWakeTime;
@@ -132,8 +132,8 @@ static void mapping_update_point_buffers(point_buffer_t *Buffers, measurement_t 
 }
 
 static void mapping_line_create(point_buffer_t *PointBuffer, line_buffer_t *LineBuffer) {
-	configASSERT(PointBuffer != NULL && LineBuffer != NULL);
-	configASSERT(LineBuffer->buffer != NULL);
+	configASSERT(PointBuffer && LineBuffer);
+	configASSERT(LineBuffer->buffer);
 
 	LineBuffer->len = 0;
 
@@ -171,7 +171,7 @@ static void mapping_line_create(point_buffer_t *PointBuffer, line_buffer_t *Line
 		}
 		LineBuffer->buffer[LineBuffer->len] = Line;
 		LineBuffer->len++;
-		configASSERT(LineBuffer->buffer != NULL);
+		configASSERT(LineBuffer->buffer);
 	}
 
 	configASSERT(LineBuffer->len <= LB_SIZE);
@@ -181,9 +181,9 @@ static void mapping_line_create(point_buffer_t *PointBuffer, line_buffer_t *Line
 }
 
 static void mapping_line_merge(line_buffer_t *LineBuffer, line_repo_t *LineRepo) {
-	configASSERT(LineBuffer != NULL && LineRepo != NULL);
-	configASSERT(LineBuffer->buffer != NULL);
-	configASSERT(LineRepo->buffer != NULL);
+	configASSERT(LineBuffer&& LineRepo);
+	configASSERT(LineBuffer->buffer);
+	configASSERT(LineRepo->buffer);
 
 	if (LineRepo->len == 0) {
 		for (uint8_t i = 0; i < LineBuffer->len; i++) {
@@ -216,7 +216,7 @@ static void mapping_line_merge(line_buffer_t *LineBuffer, line_repo_t *LineRepo)
 }
 
 static uint8_t mapping_is_mergeable(line_t *Line1, line_t *Line2) {
-	configASSERT(Line1 != NULL && Line2 != NULL);
+	configASSERT(Line1 && Line2);
 
     //MU = 0.5; // slope
     //DELTA = 1.0; // cm
@@ -241,7 +241,7 @@ static uint8_t mapping_is_mergeable(line_t *Line1, line_t *Line2) {
 }
 
 static line_t mapping_merge_segments(line_t *Line1, line_t *Line2) {
-	configASSERT(Line1 != NULL && Line2 != NULL);
+	configASSERT(Line1 && Line2);
 
 	float a1 = func_get_slope(Line1);
 	float a2 = func_get_slope(Line2);
@@ -278,7 +278,7 @@ static line_t mapping_merge_segments(line_t *Line1, line_t *Line2) {
 }
 
 static line_repo_t* mapping_repo_merge(line_buffer_t *Repo) {
-	configASSERT(Repo != NULL);
+	configASSERT(Repo);
 
 	// Allocate memory on the heap for the resulting repo
 	line_repo_t *MergedRepo = pvPortMalloc(sizeof(line_repo_t));
