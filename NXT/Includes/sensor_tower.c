@@ -105,13 +105,13 @@ void vMainSensorTowerTask( void *pvParameters ) {
 		  	}
 
 		  	// Get the latest pose estimate, dont't remove from queue
-		  	xQueuePeek(globalPoseQ, &Pose, 0);
+		  	//xQueuePeek(globalPoseQ, &Pose, 0);
 
 		  	// Convert to range [0,2pi) for compatibility with server
-		  	func_wrap_to_2pi(&Pose.theta);
+		  	//func_wrap_to_2pi(&Pose.theta);
 		  
 		  	//Send updates to server in the correct format (centimeter and degrees, rounded)
-		  	send_update(ROUND(Pose.x/10), ROUND(Pose.y/10), ROUND(Pose.theta*RAD2DEG), servoStep, forwardSensor, leftSensor, rearSensor, rightSensor);
+		  	//send_update(ROUND(Pose.x/10), ROUND(Pose.y/10), ROUND(Pose.theta*RAD2DEG), servoStep, forwardSensor, leftSensor, rearSensor, rightSensor);
 		  
 		  	#define MANUAL
 		  	#ifdef MANUAL
