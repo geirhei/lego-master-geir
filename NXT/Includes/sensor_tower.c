@@ -19,7 +19,7 @@ extern volatile uint8_t gPaused;
 extern QueueHandle_t scanStatusQ;
 extern QueueHandle_t globalPoseQ;
 extern QueueHandle_t poseControllerQ;
-extern QueueHandle_t measurementQ;
+extern QueueHandle_t mappingMeasurementQ;
 extern TaskHandle_t xMappingTask;
 
 /**
@@ -93,7 +93,7 @@ void vMainSensorTowerTask( void *pvParameters ) {
 		  	measurement_t Measurement = { { forwardSensor, leftSensor, rearSensor, rightSensor }, servoStep };
 
 			// Send Measurement to mapping task
-		  	xQueueSendToBack(measurementQ, &Measurement, 10);
+		  	xQueueSendToBack(mappingMeasurementQ, &Measurement, 10);
 
 		  	if ((idleCounter > 10) && (robotMovement == moveStop)) {
 				// If the robot stands idle for 1 second, send 'status:idle' in case the server missed it.
@@ -104,15 +104,18 @@ void vMainSensorTowerTask( void *pvParameters ) {
 				idleCounter++;
 		  	}
 
+		  	//#define SEND_UPDATE
+		  	#ifdef SEND_UPDATE
 		  	// Get the latest pose estimate, dont't remove from queue
-		  	//xQueuePeek(globalPoseQ, &Pose, 0);
+		  	xQueuePeek(globalPoseQ, &Pose, 0);
 
 		  	// Convert to range [0,2pi) for compatibility with server
-		  	//func_wrap_to_2pi(&Pose.theta);
+		  	func_wrap_to_2pi(&Pose.theta);
 		  
 		  	//Send updates to server in the correct format (centimeter and degrees, rounded)
-		  	//send_update(ROUND(Pose.x/10), ROUND(Pose.y/10), ROUND(Pose.theta*RAD2DEG), servoStep, forwardSensor, leftSensor, rearSensor, rightSensor);
-		  
+		  	send_update(ROUND(Pose.x/10), ROUND(Pose.y/10), ROUND(Pose.theta*RAD2DEG), servoStep, forwardSensor, leftSensor, rearSensor, rightSensor);
+		  	#endif
+
 		  	#define MANUAL
 		  	#ifdef MANUAL
 		  	// Low level anti collision
