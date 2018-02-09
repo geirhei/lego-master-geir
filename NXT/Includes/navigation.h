@@ -20,6 +20,5 @@
 
 void vMainNavigationTask( void *pvParameters );
 
-//void navigation_get_measurement_headings(float robotHeading, uint8_t servoStep, float *headings);
 
 #endif
