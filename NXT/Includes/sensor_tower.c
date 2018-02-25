@@ -16,7 +16,7 @@
 extern volatile uint8_t gHandshook;
 extern volatile uint8_t gPaused;
 
-extern QueueHandle_t scanStatusQ;
+extern QueueHandle_t movementStatusQ;
 extern QueueHandle_t globalPoseQ;
 extern QueueHandle_t poseControllerQ;
 extern QueueHandle_t mappingMeasurementQ;
@@ -47,7 +47,7 @@ void vMainSensorTowerTask( void *pvParameters ) {
 			xLastWakeTime = xTaskGetTickCount();
 			// Set scanning resolution depending on which movement the robot is executing.
 			// Note that the iterations are skipped while robot is rotating (see further downbelow)
-			if (xQueuePeek(scanStatusQ, &robotMovement, 150 / portTICK_PERIOD_MS) == pdTRUE) {
+			if (xQueuePeek(movementStatusQ, &robotMovement, 150 / portTICK_PERIOD_MS) == pdTRUE) {
 				if (robotMovement != lastRobotMovement) {
 					// Tell mapping task to start line creation.
 					xTaskNotifyGive(xMappingTask);
@@ -104,7 +104,7 @@ void vMainSensorTowerTask( void *pvParameters ) {
 				idleCounter++;
 		  	}
 
-		  	//#define SEND_UPDATE
+		  	#define SEND_UPDATE
 		  	#ifdef SEND_UPDATE
 		  	// Get the latest pose estimate, dont't remove from queue
 		  	xQueuePeek(globalPoseQ, &Pose, 0);
@@ -116,8 +116,8 @@ void vMainSensorTowerTask( void *pvParameters ) {
 		  	send_update(ROUND(Pose.x/10), ROUND(Pose.y/10), ROUND(Pose.theta*RAD2DEG), servoStep, forwardSensor, leftSensor, rearSensor, rightSensor);
 		  	#endif
 
-		  	#define MANUAL
-		  	#ifdef MANUAL
+		  	//#define MANUAL
+		  	#ifndef MANUAL
 		  	// Low level anti collision
 		  	uint8_t objectX;
 		  
@@ -131,6 +131,7 @@ void vMainSensorTowerTask( void *pvParameters ) {
 				//xQueuePeek(globalPoseQ, &Target, 100);
 				//xQueueOverwrite(poseControllerQ, &Target); // Uses overwrite, robot must stop immediately
 				xQueueReset(poseControllerQ);
+				send_idle();
 		  	}            
 		  	#endif
 

@@ -24,15 +24,12 @@
 /************************************************************************/
 
 
-
 /* KERNEL INCLUDES */
 #include "FreeRTOS.h" /* Must come first */
 #include "FreeRTOSConfig.h"
 #include "task.h"     /* RTOS task related API prototypes */
 #include "semphr.h"   /* Semaphore related API prototypes */
 #include "queue.h"    /* RTOS queue related API prototypes */
-//#include "event_groups.h" /* RTOS event group related APT prototypes */
-
 
 //#include <stdlib.h>         // For itoa();
 //#include <string.h>         // For stringstuff
@@ -62,7 +59,7 @@ SemaphoreHandle_t xCommandReadyBSem;
 /* Queues */
 QueueHandle_t movementQ = 0;
 QueueHandle_t poseControllerQ = 0;
-QueueHandle_t scanStatusQ = 0;
+QueueHandle_t movementStatusQ = 0;
 QueueHandle_t globalWheelTicksQ = 0;
 QueueHandle_t globalPoseQ = 0;
 QueueHandle_t mappingMeasurementQ = 0;
@@ -155,7 +152,7 @@ int main(void) {
 	/* Initialize RTOS utilities  */
 	movementQ = xQueueCreate(2, sizeof(uint8_t)); // For sending movements to vMainMovementTask (used in compass task only)
 	poseControllerQ = xQueueCreate(1, sizeof(cartesian_t)); // For setpoints to controller
-	scanStatusQ = xQueueCreate(1, sizeof(uint8_t)); // For robot status
+	movementStatusQ = xQueueCreate(1, sizeof(uint8_t)); // For robot status
 	globalWheelTicksQ = xQueueCreate(1, sizeof(wheel_ticks_t));
 	globalPoseQ = xQueueCreate(1, sizeof(pose_t)); // For storing and passing the global pose estimate
 	mappingMeasurementQ = xQueueCreate(3, sizeof(measurement_t));
@@ -167,7 +164,7 @@ int main(void) {
 	// For debugging
 	vQueueAddToRegistry(movementQ, "Movement queue");
 	vQueueAddToRegistry(poseControllerQ, "Pose controller queue");
-	vQueueAddToRegistry(scanStatusQ, "Scan status queue");
+	vQueueAddToRegistry(movementStatusQ, "Scan status queue");
 	vQueueAddToRegistry(globalWheelTicksQ, "Global wheel ticks queue");
 	vQueueAddToRegistry(globalPoseQ, "Global pose queue");
 	vQueueAddToRegistry(mappingMeasurementQ, "Measurement queue");

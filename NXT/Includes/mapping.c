@@ -68,8 +68,7 @@ void vMainMappingTask( void *pvParameters )
 
 			// Block here waiting for measurement from the sensor tower.
 			measurement_t Measurement;
-			if (xQueueReceive(mappingMeasurementQ, &Measurement, 200 / portTICK_PERIOD_MS) == pdTRUE) {
-				
+			if (xQueueReceive(mappingMeasurementQ, &Measurement, 200 / portTICK_PERIOD_MS) == pdTRUE) {				
 				// Append new IR measurements to the end of each PB
 				mapping_update_point_buffers(PointBuffers, Measurement, Pose);
 			}
@@ -97,12 +96,15 @@ void vMainMappingTask( void *pvParameters )
 				LineRepo->len--;
 			}
 
+			//#define SEND_LINE
+			#ifdef SEND_LINE
 			// Send update to server. LineOut contains all zeroes if one was not available from the LineRepo.
 			send_line(ROUND(Pose.x), ROUND(Pose.y), ROUND(Pose.theta*RAD2DEG), LineOut);
+			#endif
 		}
 
 		else {
-			// If disconnected or paused
+			// If disconnected and/or paused
 			vTaskDelay(200 / portTICK_PERIOD_MS);
 		}
 		
