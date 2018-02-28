@@ -151,7 +151,7 @@ int main(void) {
 	
 	/* Initialize RTOS utilities  */
 	movementQ = xQueueCreate(2, sizeof(uint8_t)); // For sending movements to vMainMovementTask (used in compass task only)
-	poseControllerQ = xQueueCreate(1, sizeof(cartesian_t)); // For setpoints to controller
+	poseControllerQ = xQueueCreate(1, sizeof(point_t)); // For setpoints to controller
 	movementStatusQ = xQueueCreate(1, sizeof(uint8_t)); // For robot status
 	globalWheelTicksQ = xQueueCreate(1, sizeof(wheel_ticks_t));
 	globalPoseQ = xQueueCreate(1, sizeof(pose_t)); // For storing and passing the global pose estimate

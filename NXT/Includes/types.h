@@ -54,10 +54,12 @@ typedef struct {
 /**
  * Type for representing a position in cartesian coordinates
  */
+/*
 typedef struct {
 	float x;
 	float y;
-} cartesian_t;
+} point_t;
+*/
 
 typedef struct {
   uint8_t len;

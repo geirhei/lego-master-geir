@@ -29,7 +29,7 @@ void vMainPoseControllerTask( void *pvParameters ) {
     #endif
 
     /* Task init */
-    cartesian_t Target = {0};
+    point_t Target = {0};
 	float radiusEpsilon = 5; //[mm]The acceptable radius from goal for completion
 	uint8_t lastMovement = 0;
 	

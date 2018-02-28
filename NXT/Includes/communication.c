@@ -79,7 +79,7 @@ void vMainCommunicationTask( void *pvParameters ) {
 					break;
 				case TYPE_ORDER: {
 					// Coordinates received in cm, convert to mm for internal use in the robot.
-					cartesian_t Target = {
+					point_t Target = {
 						(float) command_in.message.order.x * 10,
 						(float) command_in.message.order.y * 10
 					};
