@@ -60,8 +60,8 @@ void vMainMappingTask( void *pvParameters )
 			xQueuePeek(globalPoseQ, &Pose, 10 / portTICK_PERIOD_MS);
 
 			// Convert to centimeters
-			Pose.x /= 10;
-			Pose.y /= 10;
+			Pose.x /= 10.0;
+			Pose.y /= 10.0;
 
 			// Put inside [0,2pi)
 			func_wrap_to_2pi(&Pose.theta);
@@ -96,11 +96,11 @@ void vMainMappingTask( void *pvParameters )
 				LineRepo->len--;
 			}
 
-			//#define SEND_LINE
+			#define SEND_LINE
 			#ifdef SEND_LINE
 			// Send update to server. LineOut contains all zeroes if one was not available from the LineRepo.
 			send_line(ROUND(Pose.x), ROUND(Pose.y), ROUND(Pose.theta*RAD2DEG), LineOut);
-			#endif
+			#endif /* SEND_LINE */
 		}
 
 		else {

@@ -104,7 +104,7 @@ void vMainSensorTowerTask( void *pvParameters ) {
 				idleCounter++;
 		  	}
 
-		  	#define SEND_UPDATE
+		  	//#define SEND_UPDATE
 		  	#ifdef SEND_UPDATE
 		  	// Get the latest pose estimate, dont't remove from queue
 		  	xQueuePeek(globalPoseQ, &Pose, 0);
@@ -114,7 +114,7 @@ void vMainSensorTowerTask( void *pvParameters ) {
 		  
 		  	//Send updates to server in the correct format (centimeter and degrees, rounded)
 		  	send_update(ROUND(Pose.x/10), ROUND(Pose.y/10), ROUND(Pose.theta*RAD2DEG), servoStep, forwardSensor, leftSensor, rearSensor, rightSensor);
-		  	#endif
+		  	#endif /* SEND_UPDATE */
 
 		  	//#define MANUAL
 		  	#ifndef MANUAL
@@ -133,7 +133,7 @@ void vMainSensorTowerTask( void *pvParameters ) {
 				xQueueReset(poseControllerQ);
 				send_idle();
 		  	}            
-		  	#endif
+		  	#endif /* MANUAL */
 
 		  	// Iterate in a increasing/decreasing manner and depending on the robots movement
 		  	if ((servoStep <= 90) && (rotationDirection == moveCounterClockwise) && (robotMovement < moveClockwise)) {

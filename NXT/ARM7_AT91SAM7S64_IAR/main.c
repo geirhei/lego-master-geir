@@ -181,7 +181,7 @@ int main(void) {
 	xTaskCreate(vMainPoseEstimatorTask, "PoseEst", 256, NULL, 2, NULL); // Independent task,
 	xTaskCreate(vMainMappingTask, "Mapping", 256, NULL, 1, &xMappingTask);
 	xTaskCreate(vMainNavigationTask, "Navigation", 128, NULL, 1, NULL);
-	ret = xTaskCreate(vMainSensorTowerTask,"Tower", 128, NULL, 2, NULL); // Independent task, but use pose updates from estimator //1
+	ret = xTaskCreate(vMainSensorTowerTask,"Tower", 128, NULL, 3, NULL); // Independent task, but use pose updates from estimator //1
 	//ret = pdPASS;
 #endif
 	if(ret != pdPASS) {
