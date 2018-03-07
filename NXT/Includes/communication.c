@@ -21,7 +21,7 @@ extern volatile uint8_t gHandshook;
 extern volatile uint8_t gPaused;
 volatile message_t message_in;
 
-extern QueueHandle_t globalPoseQ;
+//extern QueueHandle_t globalPoseQ;
 extern QueueHandle_t poseControllerQ;
 extern SemaphoreHandle_t xCommandReadyBSem;
 

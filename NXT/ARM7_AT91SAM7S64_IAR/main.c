@@ -2,7 +2,7 @@
 // File:			main.c
 // Author:			Erlend Ese, NTNU Spring 2016
 //                  Modified for use with NXT by Kristian Lien, Spring 2017
-//                  Modified by Geir Eikeland, Fall 2017
+//                  Mapping functionality added by Geir Eikeland, Spring 2018
 //                  Credit is given where credit is due.
 // Purpose:
 // NXT Robot with FreeRTOS implementation in the collaborating robots
@@ -16,6 +16,7 @@
 // Sensors:                     vMainSensorTowerTask
 // Robot control:               vMainPoseControllerTask
 // Position estimator:          vMainPoseEstimatorTask
+// Mapping:						vMainMappingTask
 // Stack overflow handling:     vApplicationStackOverflowHook
 //
 // See FreeRTOSConfig.h for scheduler settings
@@ -31,11 +32,6 @@
 #include "semphr.h"   /* Semaphore related API prototypes */
 #include "queue.h"    /* RTOS queue related API prototypes */
 
-//#include <stdlib.h>         // For itoa();
-//#include <string.h>         // For stringstuff
-//#include <stdio.h>
-//#include <math.h>
-
 #include "display.h"
 #include "types.h"
 #include "defines.h"
@@ -49,27 +45,27 @@
 #include "sensor_tower.h"
 #include "pose_estimator.h"
 #include "pose_controller.h"
-#include "navigation.h"
+//#include "navigation.h"
 #include "mapping.h"
 #include "motor.h"
 
 /* Semaphore handles */
 SemaphoreHandle_t xCommandReadyBSem;
 
-/* Queues */
+/* Queue handles */
 QueueHandle_t movementQ = 0;
 QueueHandle_t poseControllerQ = 0;
 QueueHandle_t movementStatusQ = 0;
 QueueHandle_t globalWheelTicksQ = 0;
 QueueHandle_t globalPoseQ = 0;
 QueueHandle_t mappingMeasurementQ = 0;
-QueueHandle_t navigationmappingMeasurementQ = 0;
+//QueueHandle_t navigationmappingMeasurementQ = 0;
 
 /* Task handles */
 TaskHandle_t xPoseCtrlTask = NULL;
 TaskHandle_t xMappingTask = NULL;
 
-// Flag to indicate connection status.
+/* Global flags to indicate system status */
 volatile uint8_t gHandshook = FALSE;
 volatile uint8_t gPaused = FALSE;
 
@@ -79,8 +75,15 @@ void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName
 	#warning DEBUG IS ACTIVE
 #endif
 
-//#define COMPASS_CALIBRATE
-//#define SENSOR_CALIBRATE
+/* Defines for enabling system tasks and functionality */
+//#define COMPASS_CALIBRATE		// Compass calibration task
+//#define SENSOR_CALIBRATE		// Sensor calibration task
+#define MAPPING 		// Mapping task
+//#define NAVIGATION 		// Navigation task 
+#define SEND_LINE 		// Sending of lines to server in mapping task
+//#define SEND_UPDATE	// Sending of IR data to server in sensor tower task
+//#define MANUAL		// Manual drive mode
+
 
 /**
 In case of stack overflow, disable all interrupts and handle it.
@@ -133,23 +136,17 @@ void vAssertCalled(void)
 
 
 /* The main function */
-int main(void) {
+int main(void)
+{
 	nxt_init();
 	network_init();
 	arq_init();
 	simple_p_init(server_receiver);
 
-	// Set red LED on to indicate INIT is ongoing
+	/* Set red LED on to indicate INIT is ongoing */
 	led_set(LED_RED);
-
-	// assert test
-	//uint8_t a = 0;
-	//configASSERT(a == 1);
-
-	/* Init and start tracing */
-	//vTraceEnable(TRC_START);
 	
-	/* Initialize RTOS utilities  */
+	/* Initialize queues and semaphores */
 	movementQ = xQueueCreate(2, sizeof(uint8_t)); // For sending movements to vMainMovementTask (used in compass task only)
 	poseControllerQ = xQueueCreate(1, sizeof(point_t)); // For setpoints to controller
 	movementStatusQ = xQueueCreate(1, sizeof(uint8_t)); // For robot status
@@ -159,35 +156,41 @@ int main(void) {
 //  actuationQ = xQueueCreate(2, sizeof)
 
 	xCommandReadyBSem = xSemaphoreCreateBinary();
-	//xBeginMergeBSem = xSemaphoreCreateBinary();
 
-	// For debugging
+	/* For debugging using the FreeRTOS-aware plugin in IAR embedded studio. */
 	vQueueAddToRegistry(movementQ, "Movement queue");
 	vQueueAddToRegistry(poseControllerQ, "Pose controller queue");
 	vQueueAddToRegistry(movementStatusQ, "Scan status queue");
 	vQueueAddToRegistry(globalWheelTicksQ, "Global wheel ticks queue");
 	vQueueAddToRegistry(globalPoseQ, "Global pose queue");
 	vQueueAddToRegistry(mappingMeasurementQ, "Measurement queue");
-
 	vQueueAddToRegistry(xCommandReadyBSem, "Command ready semaphore");
-	//vQueueAddToRegistry(xBeginMergeBSem, "Begin merge semaphore");
 
+	/* Create tasks */
 	BaseType_t ret;
 	#ifndef DEBUG
 	xTaskCreate(vMainCommunicationTask, "Comm", 256, NULL, 3, NULL);  // Dependant on IO, sends instructions to other tasks
-	#endif
+	#endif /* DEBUG */
+
 #ifndef COMPASS_CALIBRATE
 	xTaskCreate(vMainPoseControllerTask, "PoseCon", 256, NULL, 2, &xPoseCtrlTask);// Dependant on estimator, sends instructions to movement task //2
 	xTaskCreate(vMainPoseEstimatorTask, "PoseEst", 256, NULL, 2, NULL); // Independent task,
+
+	#ifdef MAPPING
 	xTaskCreate(vMainMappingTask, "Mapping", 256, NULL, 1, &xMappingTask);
+	#endif /* MAPPING */
+
+	#ifdef NAVIGATION
 	xTaskCreate(vMainNavigationTask, "Navigation", 128, NULL, 1, NULL);
+	#endif /* NAVIGATION */
+
 	ret = xTaskCreate(vMainSensorTowerTask,"Tower", 128, NULL, 3, NULL); // Independent task, but use pose updates from estimator //1
 	//ret = pdPASS;
-#endif
-	if(ret != pdPASS) {
-	display_goto_xy(0,2);
-	display_string("Error");
-	display_update();
+#endif /* COMPASS_CALIBRATE */
+	if (ret != pdPASS) {
+		display_goto_xy(0,2);
+		display_string("Error");
+		display_update();
 	}
 	
 #ifdef COMPASS_CALIBRATE
@@ -197,11 +200,12 @@ int main(void) {
 	display_string("COMPASS CALIBRATION!\n");
 	display_string("{S,CON} to begin\n");
 	xTaskCreate(compassTask, "compasscal", 2000, NULL, 4, NULL); // Task used for compass calibration, dependant on communication and movement task
-#endif
+#endif /* COMPASS_CALIBRATE */
 	
+	/* Indicate that init is complete */
 	led_clear(LED_RED);
 	
-	/*  Start scheduler */
+	/* Start scheduler */
 	display_goto_xy(0,0);
 	display_string("Init complete");
 	display_update();
@@ -209,11 +213,10 @@ int main(void) {
 	vTaskStartScheduler();
 	
 	/*  MCU is out of RAM if the program comes here */
-	while(1){
-	led_toggle(LED_GREEN);
-	led_toggle(LED_RED);
-	led_toggle(LED_YELLOW);
+	while(1) {
+		led_toggle(LED_GREEN);
+		led_toggle(LED_RED);
+		led_toggle(LED_YELLOW);
 	}
 
-	
 }

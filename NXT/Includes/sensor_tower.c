@@ -104,7 +104,6 @@ void vMainSensorTowerTask( void *pvParameters ) {
 				idleCounter++;
 		  	}
 
-		  	//#define SEND_UPDATE
 		  	#ifdef SEND_UPDATE
 		  	// Get the latest pose estimate, dont't remove from queue
 		  	xQueuePeek(globalPoseQ, &Pose, 0);
@@ -116,7 +115,6 @@ void vMainSensorTowerTask( void *pvParameters ) {
 		  	send_update(ROUND(Pose.x/10), ROUND(Pose.y/10), ROUND(Pose.theta*RAD2DEG), servoStep, forwardSensor, leftSensor, rearSensor, rightSensor);
 		  	#endif /* SEND_UPDATE */
 
-		  	//#define MANUAL
 		  	#ifndef MANUAL
 		  	// Low level anti collision
 		  	uint8_t objectX;

@@ -96,7 +96,6 @@ void vMainMappingTask( void *pvParameters )
 				LineRepo->len--;
 			}
 
-			#define SEND_LINE
 			#ifdef SEND_LINE
 			// Send update to server. LineOut contains all zeroes if one was not available from the LineRepo.
 			send_line(ROUND(Pose.x), ROUND(Pose.y), ROUND(Pose.theta*RAD2DEG), LineOut);
