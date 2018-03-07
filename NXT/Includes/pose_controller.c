@@ -17,7 +17,6 @@ extern volatile uint8_t gHandshook;
 extern volatile uint8_t gPaused;
 
 extern QueueHandle_t globalPoseQ;
-//extern QueueHandle_t globalWheelTicksQ;
 extern QueueHandle_t poseControllerQ;
 extern QueueHandle_t movementStatusQ;
 extern TaskHandle_t xPoseCtrlTask;
