@@ -22,14 +22,8 @@ extern QueueHandle_t poseControllerQ;
 extern QueueHandle_t mappingMeasurementQ;
 extern TaskHandle_t xMappingTask;
 
-/**
- * Task responsible for control of the sensor tower. Tower rotation depends on
- * movement status received from the pose controller.
- */
 void vMainSensorTowerTask( void *pvParameters ) {
 	/* Task init */
-	pose_t Pose = { 0, 0, 0 };
-	
 	uint8_t rotationDirection = moveCounterClockwise;
 	uint8_t servoStep = 0;
     const uint8_t SERVO_RESOLUTION = 5;
@@ -108,6 +102,7 @@ void vMainSensorTowerTask( void *pvParameters ) {
 
 		  	#ifdef SEND_UPDATE
 		  	// Get the latest pose estimate, dont't remove from queue
+		  	pose_t Pose = { 0 };
 		  	xQueuePeek(globalPoseQ, &Pose, 0);
 
 		  	// Convert to range [0,2pi) for compatibility with server
@@ -127,9 +122,6 @@ void vMainSensorTowerTask( void *pvParameters ) {
 		  
 		  	if ((objectX > 0) && (objectX < 20)) {
 				// Stop controller
-				//point_t Target = {0};
-				//xQueuePeek(globalPoseQ, &Target, 100);
-				//xQueueOverwrite(poseControllerQ, &Target); // Uses overwrite, robot must stop immediately
 				xQueueReset(poseControllerQ);
 				send_idle();
 		  	}            
@@ -137,12 +129,9 @@ void vMainSensorTowerTask( void *pvParameters ) {
 
 		  	// Iterate in a increasing/decreasing manner and depending on the robots movement
 		  	if ((servoStep <= 90) && (rotationDirection == moveCounterClockwise) && (robotMovement < moveClockwise)) {
-				//servoStep++;
-				//servoStep = servoStep + SERVO_RESOLUTION;
 				servoStep += SERVO_RESOLUTION;
 		  	} 
 		  	else if ((servoStep > 0) && (rotationDirection == moveClockwise) && (robotMovement < moveClockwise)) {
-				//servoStep--;
 				servoStep -= SERVO_RESOLUTION;
 		  	}
 		  

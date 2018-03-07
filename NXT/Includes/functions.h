@@ -1,6 +1,9 @@
 /************************************************************************/
 // File:			functions.h
-// Author:			Erlend Ese, NTNU Spring 2016
+// Author:			- Erlend Ese, NTNU Spring 2016
+// 					- Line utility functions added by Geir Eikeland,
+// 					NTNU Spring 2018
+// 					
 // Purpose:         Various functions needed
 //
 /************************************************************************/
@@ -31,6 +34,7 @@ char* vFunc_inc(char* s, char* e);
 char* vFunc_ftoa(float num, char* dest, int afterPoint);
 
 void itoa(int n, char s[]);
+
 void reverse(char s[]);
 
 point_t func_polar2cart(float theta, float r);

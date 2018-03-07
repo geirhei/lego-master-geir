@@ -69,16 +69,15 @@
 #define L_SIZE          		50
 #define MAX_IR_DISTANCE			40
 
-#define COLLINEAR_TOLERANCE		15
+#define COLLINEAR_TOLERANCE		15	// [cm]
 #define MU 						0.3 // slope
-#define DELTA					10 	// cm
+#define DELTA					10 	// [cm]
 
 /************************************************************************/
 /* Communication defines */
 #define TYPE_HANDSHAKE      0
 #define TYPE_UPDATE         1
 #define TYPE_ORDER          2
-//#define TPYE_PRIORITY_ORDER 3
 #define TYPE_IDLE           3
 #define TYPE_PAUSE          4
 #define TYPE_UNPAUSE        5
