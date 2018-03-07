@@ -49,8 +49,10 @@ void vMainSensorTowerTask( void *pvParameters ) {
 			// Note that the iterations are skipped while robot is rotating (see further downbelow)
 			if (xQueuePeek(movementStatusQ, &robotMovement, 150 / portTICK_PERIOD_MS) == pdTRUE) {
 				if (robotMovement != lastRobotMovement) {
+					#ifdef MAPPING
 					// Tell mapping task to start line creation.
 					xTaskNotifyGive(xMappingTask);
+					#endif /* MAPPING */
 					lastRobotMovement = robotMovement;
 				}
 
@@ -146,13 +148,17 @@ void vMainSensorTowerTask( void *pvParameters ) {
 		  
 		  	if ((servoStep >= 90) && (rotationDirection == moveCounterClockwise)) {
 				rotationDirection = moveClockwise;
+				#ifdef MAPPING
 				// Notify mapping task about tower direction change
 				xTaskNotifyGive(xMappingTask);
+				#endif /* MAPPING */
 		  	}
 		  	else if ((servoStep <= 0) && (rotationDirection == moveClockwise)) {
 				rotationDirection = moveCounterClockwise;
+				#ifdef MAPPING
 				// Notify mapping task about tower direction change
             	xTaskNotifyGive(xMappingTask);
+            	#endif /* MAPPING */
 		  	}
 
 		}

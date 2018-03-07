@@ -63,11 +63,6 @@
 #define ROUND(x) ((x)>=0?(long)((x)+0.5):(long)((x)-0.5))
 
 /************************************************************************/
-/* Event group defines */
-//#define HANDSHOOK_BIT	(1 << 0)
-//define PAUSED_BIT		(1 << 1)
-
-/************************************************************************/
 /* Mapping defines */
 #define PB_SIZE 				50
 #define LB_SIZE					50
@@ -95,5 +90,15 @@
 #define TYPE_DEBUG          11
 
 #define SERVER_ADDRESS       0
+
+/************************************************************************/
+/* Defines for enabling system tasks and functionality */
+//#define COMPASS_CALIBRATE		// Compass calibration task
+//#define SENSOR_CALIBRATE		// Sensor calibration task
+//#define MAPPING 		// Mapping task
+//#define NAVIGATION 		// Navigation task 
+//#define SEND_LINE 		// Sending of lines to server in mapping task
+#define SEND_UPDATE	// Sending of IR data to server in sensor tower task
+//#define MANUAL		// Manual drive mode
 
 #endif /* DEFINES_H_ */

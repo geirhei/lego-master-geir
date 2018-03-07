@@ -75,16 +75,6 @@ void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName
 	#warning DEBUG IS ACTIVE
 #endif
 
-/* Defines for enabling system tasks and functionality */
-//#define COMPASS_CALIBRATE		// Compass calibration task
-//#define SENSOR_CALIBRATE		// Sensor calibration task
-#define MAPPING 		// Mapping task
-//#define NAVIGATION 		// Navigation task 
-#define SEND_LINE 		// Sending of lines to server in mapping task
-//#define SEND_UPDATE	// Sending of IR data to server in sensor tower task
-//#define MANUAL		// Manual drive mode
-
-
 /**
 In case of stack overflow, disable all interrupts and handle it.
 */
@@ -176,14 +166,15 @@ int main(void)
 	xTaskCreate(vMainPoseControllerTask, "PoseCon", 256, NULL, 2, &xPoseCtrlTask);// Dependant on estimator, sends instructions to movement task //2
 	xTaskCreate(vMainPoseEstimatorTask, "PoseEst", 256, NULL, 2, NULL); // Independent task,
 
+	/*
 	#ifdef MAPPING
 	xTaskCreate(vMainMappingTask, "Mapping", 256, NULL, 1, &xMappingTask);
 	#endif /* MAPPING */
-
+	/*
 	#ifdef NAVIGATION
 	xTaskCreate(vMainNavigationTask, "Navigation", 128, NULL, 1, NULL);
 	#endif /* NAVIGATION */
-
+	
 	ret = xTaskCreate(vMainSensorTowerTask,"Tower", 128, NULL, 3, NULL); // Independent task, but use pose updates from estimator //1
 	//ret = pdPASS;
 #endif /* COMPASS_CALIBRATE */
