@@ -138,10 +138,11 @@ void vMainPoseEstimatorTask( void *pvParameters ) {
             float error = (compassHeading - predictedTheta);
             //float error = 0; // Compass data not included
             vFunc_Inf2pi(&error);
-            #endif
+            #endif /* COMPASS_ENABLED */
+            
             #ifndef COMPASS_ENABLED
             float error = 0.0;
-            #endif
+            #endif /* COMPASS_ENABLED */
 
             kalmanGain = covariance_filter_predicted / (covariance_filter_predicted + CONST_VARIANCE_COMPASS);
             ///* Commented back in due to fixed encoder

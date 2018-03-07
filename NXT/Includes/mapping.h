@@ -1,3 +1,13 @@
+/************************************************************************/
+// File:			mapping.h
+// Author:			Geir Eikeland, NTNU Spring 2018
+//
+// The functions that are used in the mapping task. Most are declared static
+// since they are only used here.
+//
+//
+/************************************************************************/
+
 #ifndef MAPPING_H_
 #define MAPPING_H_
 
@@ -42,7 +52,7 @@ static void mapping_line_merge(line_buffer_t *LineBuffer, line_repo_t *LineRepo)
  * @param      Line1  The line 1
  * @param      Line2  The line 2
  *
- * @return     { 1 if lines are mergeable, 0 if not }
+ * @return     1 if lines are mergeable, 0 if not
  */
 static uint8_t mapping_is_mergeable(line_t *Line1, line_t *Line2);
 
@@ -53,23 +63,38 @@ static uint8_t mapping_is_mergeable(line_t *Line1, line_t *Line2);
  * @param      Line1  The line 1
  * @param      Line2  The line 2
  *
- * @return     { line_t }
+ * @return     A line segment
  */
 static line_t mapping_merge_segments(line_t *Line1, line_t *Line2);
 
+/**
+ * @brief      Merges the lines in the repo with each other until it cannot be
+ *             reduced further.
+ *
+ * @param      Repo  A LineRepo
+ *
+ * @return     A LineRepo of merged lines
+ */
 static line_repo_t* mapping_repo_merge(line_buffer_t *Repo);
 
 /**
  * @brief      Check if 3 points are collinear within a given tolerance
  *
- * @param      a     { parameter_description }
- * @param      b     { parameter_description }
- * @param      c     { parameter_description }
+ * @param      a     A point (x,y)
+ * @param      b     A point (x,y)
+ * @param      c     A point (x,y)
  *
- * @return     { 1 if the points are collinear }
+ * @return     1 if the points are collinear
  */
 static uint8_t mapping_are_collinear(point_t *a, point_t *b, point_t *c);
 
+/**
+ * @brief      Checks if all values in the line coordinates are 0.
+ *
+ * @param[in]  line  The line
+ *
+ * @return     1 if the line is empty
+ */
 static uint8_t mapping_is_empty(line_t line);
 
 #endif

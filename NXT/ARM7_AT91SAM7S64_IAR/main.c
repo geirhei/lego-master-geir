@@ -3,6 +3,7 @@
 // Author:			Erlend Ese, NTNU Spring 2016
 //                  Modified for use with NXT by Kristian Lien, Spring 2017
 //                  Mapping functionality added by Geir Eikeland, Spring 2018
+//                  Tasks divided into separate files by Geir Eikeland, Spring 2018
 //                  Credit is given where credit is due.
 // Purpose:
 // NXT Robot with FreeRTOS implementation in the collaborating robots
