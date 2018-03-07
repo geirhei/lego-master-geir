@@ -1,12 +1,21 @@
-#ifndef _TYPES_H_
-#define _TYPES_H_
+/************************************************************************/
+// File:      types.h
+// Author:    - Geir Eikeland, NTNU Spring 2018  
+//
+// Contains all the custom type definitions used in the application for easy
+// inclusion where they are needed.
+//
+// /************************************************************************/
+
+#ifndef TYPES_H_
+#define TYPES_H_
 
 #include <stdint.h>
 
 #include "defines.h"
 
 /**
- * Type representing the heading and position of the robot
+ * Type for storing the pose of a robot.
  */
 typedef struct {
 	float theta;
@@ -15,7 +24,7 @@ typedef struct {
 } pose_t;
 
 /**
- * Definition for type representing the coordinates of a measurement
+ * Type for storing the coordinates of a point in the environment.
  */
 typedef struct {
 	float x;
@@ -23,7 +32,7 @@ typedef struct {
 } point_t;
 
 /**
- * Definition for type representing a line segment
+ * Type for storing the endpoints of a line segment.
  */
 typedef struct {
 	point_t P;
@@ -31,13 +40,8 @@ typedef struct {
 } line_t;
 
 /**
- * Type containing a buffer of pointers to coordinates and the current length of the buffer
+ * Type for storing IR-measurements.
  */
-typedef struct {
-	uint8_t len;
-  point_t buffer[PB_SIZE];
-} point_buffer_t;
-
 typedef struct {
 	uint8_t data[4];
 	uint8_t servoStep;
@@ -52,20 +56,24 @@ typedef struct {
 } wheel_ticks_t;
 
 /**
- * Type for representing a position in cartesian coordinates
+ * Type for storing a point buffer
  */
-/*
 typedef struct {
-	float x;
-	float y;
-} point_t;
-*/
+  uint8_t len;
+  point_t buffer[PB_SIZE];
+} point_buffer_t;
 
+/**
+ * Type for storing a line buffer
+ */
 typedef struct {
   uint8_t len;
   line_t buffer[LB_SIZE];
 } line_buffer_t;
 
+/**
+ * Type for storing a line repo
+ */
 typedef struct {
   uint8_t len;
   line_t buffer[L_SIZE];
@@ -106,15 +114,6 @@ typedef struct {
   int16_t x;
   int16_t y;
 } __attribute__((packed)) order_message_t;
-
-/*
-typedef struct {
-  int16_t x_p;
-  int16_t y_p;
-  int16_t x_q;
-  int16_t y_q;
-} __attribute__((packed)) line_message_t;
-*/
 
 typedef struct {
   int16_t x;
