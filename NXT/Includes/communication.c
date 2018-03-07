@@ -21,7 +21,6 @@ extern volatile uint8_t gHandshook;
 extern volatile uint8_t gPaused;
 volatile message_t message_in;
 
-//extern QueueHandle_t globalPoseQ;
 extern QueueHandle_t poseControllerQ;
 extern SemaphoreHandle_t xCommandReadyBSem;
 
@@ -92,9 +91,6 @@ void vMainCommunicationTask( void *pvParameters ) {
 					taskENTER_CRITICAL();
 					gPaused = TRUE;
 					taskEXIT_CRITICAL();
-					// Stop controller - pass the current position
-					//xQueuePeek(globalPoseQ, &Target, 0);
-					//xQueueOverwrite(poseControllerQ, &Target);
 					break;
 				case TYPE_UNPAUSE:
 					taskENTER_CRITICAL();
@@ -102,9 +98,6 @@ void vMainCommunicationTask( void *pvParameters ) {
 					taskEXIT_CRITICAL(); 
 					break;
 				case TYPE_FINISH:
-					// Stop controller - pass the current position
-					//xQueuePeek(globalPoseQ, &Target, 0);
-					//xQueueOverwrite(poseControllerQ, &Target);
 					taskENTER_CRITICAL();
 					gHandshook = FALSE;
 					taskEXIT_CRITICAL();
