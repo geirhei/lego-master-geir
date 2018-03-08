@@ -46,7 +46,6 @@
 #include "sensor_tower.h"
 #include "pose_estimator.h"
 #include "pose_controller.h"
-//#include "navigation.h"
 #include "mapping.h"
 #include "motor.h"
 
@@ -60,7 +59,6 @@ QueueHandle_t movementStatusQ = 0;
 QueueHandle_t globalWheelTicksQ = 0;
 QueueHandle_t globalPoseQ = 0;
 QueueHandle_t mappingMeasurementQ = 0;
-//QueueHandle_t navigationmappingMeasurementQ = 0;
 
 /* Task handles */
 TaskHandle_t xPoseCtrlTask = NULL;
@@ -171,10 +169,6 @@ int main(void)
 	#ifdef MAPPING
 	xTaskCreate(vMainMappingTask, "Mapping", 256, NULL, 1, &xMappingTask);
 	#endif /* MAPPING */
-	/*
-	#ifdef NAVIGATION
-	xTaskCreate(vMainNavigationTask, "Navigation", 128, NULL, 1, NULL);
-	#endif /* NAVIGATION */
 	
 	ret = xTaskCreate(vMainSensorTowerTask,"Tower", 128, NULL, 3, NULL); // Independent task, but use pose updates from estimator //1
 	//ret = pdPASS;
