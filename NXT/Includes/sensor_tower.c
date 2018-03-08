@@ -22,7 +22,8 @@ extern QueueHandle_t poseControllerQ;
 extern QueueHandle_t measurementQ;
 extern TaskHandle_t xMappingTask;
 
-void vMainSensorTowerTask( void *pvParameters ) {
+void vMainSensorTowerTask( void *pvParameters )
+{
 	/* Task init */
 	uint8_t rotationDirection = moveCounterClockwise;
 	uint8_t servoStep = 0;

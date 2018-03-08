@@ -21,7 +21,8 @@ extern QueueHandle_t poseControllerQ;
 extern QueueHandle_t movementStatusQ;
 extern TaskHandle_t xPoseCtrlTask;
 
-void vMainPoseControllerTask( void *pvParameters ) {
+void vMainPoseControllerTask( void *pvParameters )
+{
     #ifdef DEBUG
         //debug("PoseController OK\n");
         uint8_t tellar = 0;

@@ -19,8 +19,9 @@ extern QueueHandle_t globalPoseQ;
 extern QueueHandle_t globalWheelTicksQ;
 extern TaskHandle_t xPoseCtrlTask;
 
-void vMainPoseEstimatorTask( void *pvParameters ) {
-    
+void vMainPoseEstimatorTask( void *pvParameters )
+{
+    /* Task init */
     const TickType_t xDelay = PERIOD_ESTIMATOR_MS;
     float period_in_S = PERIOD_ESTIMATOR_MS / 1000.0f;
     
@@ -66,7 +67,7 @@ void vMainPoseEstimatorTask( void *pvParameters ) {
     TickType_t xLastWakeTime;
     xLastWakeTime = xTaskGetTickCount();
     
-    while(1) {
+    while (1) {
         // Loop
         vTaskDelayUntil(&xLastWakeTime, xDelay / portTICK_PERIOD_MS );
         if (gHandshook) { // Check if we are ready    
@@ -139,7 +140,7 @@ void vMainPoseEstimatorTask( void *pvParameters ) {
             //float error = 0; // Compass data not included
             vFunc_Inf2pi(&error);
             #endif /* COMPASS_ENABLED */
-            
+
             #ifndef COMPASS_ENABLED
             float error = 0.0;
             #endif /* COMPASS_ENABLED */

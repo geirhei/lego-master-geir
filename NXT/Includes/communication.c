@@ -36,7 +36,8 @@ uint8_t use_arq[12] = {
   [TYPE_DEBUG] = 0
 };
 
-void vMainCommunicationTask( void *pvParameters ) {
+void vMainCommunicationTask( void *pvParameters )
+{
 	// Setup for the communication task
 	message_t command_in; // Buffer for recieved messages
 
