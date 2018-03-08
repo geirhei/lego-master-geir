@@ -33,6 +33,7 @@
 #include "semphr.h"   /* Semaphore related API prototypes */
 #include "queue.h"    /* RTOS queue related API prototypes */
 
+/* Application includes */
 #include "display.h"
 #include "types.h"
 #include "defines.h"
