@@ -95,7 +95,6 @@
 //#define COMPASS_CALIBRATE		// Compass calibration task
 //#define SENSOR_CALIBRATE		// Sensor calibration task
 //#define MAPPING 		// Mapping task
-//#define NAVIGATION 		// Navigation task 
 //#define SEND_LINE 		// Sending of lines to server in mapping task
 #define SEND_UPDATE	// Sending of IR data to server in sensor tower task
 //#define MANUAL		// Manual drive mode

@@ -19,7 +19,7 @@ extern volatile uint8_t gPaused;
 extern QueueHandle_t movementStatusQ;
 extern QueueHandle_t globalPoseQ;
 extern QueueHandle_t poseControllerQ;
-extern QueueHandle_t mappingMeasurementQ;
+extern QueueHandle_t measurementQ;
 extern TaskHandle_t xMappingTask;
 
 void vMainSensorTowerTask( void *pvParameters ) {
@@ -44,8 +44,8 @@ void vMainSensorTowerTask( void *pvParameters ) {
 			if (xQueuePeek(movementStatusQ, &robotMovement, 150 / portTICK_PERIOD_MS) == pdTRUE) {
 				if (robotMovement != lastRobotMovement) {
 					#ifdef MAPPING
-					// Tell mapping task to start line creation.
-					xTaskNotifyGive(xMappingTask);
+						// Tell mapping task to start line creation.
+						xTaskNotifyGive(xMappingTask);
 					#endif /* MAPPING */
 					lastRobotMovement = robotMovement;
 				}
@@ -89,7 +89,7 @@ void vMainSensorTowerTask( void *pvParameters ) {
 		  	measurement_t Measurement = { { forwardSensor, leftSensor, rearSensor, rightSensor }, servoStep };
 
 			// Send Measurement to mapping task
-		  	xQueueSendToBack(mappingMeasurementQ, &Measurement, 10);
+		  	xQueueSendToBack(measurementQ, &Measurement, 10);
 
 		  	if ((idleCounter > 10) && (robotMovement == moveStop)) {
 				// If the robot stands idle for 1 second, send 'status:idle' in case the server missed it.
@@ -101,30 +101,30 @@ void vMainSensorTowerTask( void *pvParameters ) {
 		  	}
 
 		  	#ifdef SEND_UPDATE
-		  	// Get the latest pose estimate, dont't remove from queue
-		  	pose_t Pose = { 0 };
-		  	xQueuePeek(globalPoseQ, &Pose, 0);
+			  	// Get the latest pose estimate, dont't remove from queue
+			  	pose_t Pose = { 0 };
+			  	xQueuePeek(globalPoseQ, &Pose, 0);
 
-		  	// Convert to range [0,2pi) for compatibility with server
-		  	func_wrap_to_2pi(&Pose.theta);
-		  
-		  	//Send updates to server in the correct format (centimeter and degrees, rounded)
-		  	send_update(ROUND(Pose.x/10), ROUND(Pose.y/10), ROUND(Pose.theta*RAD2DEG), servoStep, forwardSensor, leftSensor, rearSensor, rightSensor);
+			  	// Convert to range [0,2pi) for compatibility with server
+			  	func_wrap_to_2pi(&Pose.theta);
+			  
+			  	//Send updates to server in the correct format (centimeter and degrees, rounded)
+			  	send_update(ROUND(Pose.x/10), ROUND(Pose.y/10), ROUND(Pose.theta*RAD2DEG), servoStep, forwardSensor, leftSensor, rearSensor, rightSensor);
 		  	#endif /* SEND_UPDATE */
 
 		  	#ifndef MANUAL
-		  	// Low level anti collision
-		  	uint8_t objectX;
-		  
-		  	if ((servoStep) <= 30) objectX = forwardSensor; // * cos(servoStep*5);
-		  	else if ((servoStep) >= 60) objectX = rightSensor; // * cos(270 + servoStep*5);
-		  	else objectX = 0;
-		  
-		  	if ((objectX > 0) && (objectX < 20)) {
-				// Stop controller
-				xQueueReset(poseControllerQ);
-				send_idle();
-		  	}            
+			  	// Low level anti collision
+			  	uint8_t objectX;
+			  
+			  	if ((servoStep) <= 30) objectX = forwardSensor; // * cos(servoStep*5);
+			  	else if ((servoStep) >= 60) objectX = rightSensor; // * cos(270 + servoStep*5);
+			  	else objectX = 0;
+			  
+			  	if ((objectX > 0) && (objectX < 20)) {
+					// Stop controller
+					xQueueReset(poseControllerQ);
+					send_idle();
+			  	}            
 		  	#endif /* MANUAL */
 
 		  	// Iterate in a increasing/decreasing manner and depending on the robots movement
@@ -138,15 +138,15 @@ void vMainSensorTowerTask( void *pvParameters ) {
 		  	if ((servoStep >= 90) && (rotationDirection == moveCounterClockwise)) {
 				rotationDirection = moveClockwise;
 				#ifdef MAPPING
-				// Notify mapping task about tower direction change
-				xTaskNotifyGive(xMappingTask);
+					// Notify mapping task about tower direction change
+					xTaskNotifyGive(xMappingTask);
 				#endif /* MAPPING */
 		  	}
 		  	else if ((servoStep <= 0) && (rotationDirection == moveClockwise)) {
 				rotationDirection = moveCounterClockwise;
 				#ifdef MAPPING
-				// Notify mapping task about tower direction change
-            	xTaskNotifyGive(xMappingTask);
+					// Notify mapping task about tower direction change
+	            	xTaskNotifyGive(xMappingTask);
             	#endif /* MAPPING */
 		  	}
 

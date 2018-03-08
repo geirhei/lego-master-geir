@@ -58,7 +58,7 @@ QueueHandle_t poseControllerQ = 0;
 QueueHandle_t movementStatusQ = 0;
 QueueHandle_t globalWheelTicksQ = 0;
 QueueHandle_t globalPoseQ = 0;
-QueueHandle_t mappingMeasurementQ = 0;
+QueueHandle_t measurementQ = 0;
 
 /* Task handles */
 TaskHandle_t xPoseCtrlTask = NULL;
@@ -68,63 +68,56 @@ TaskHandle_t xMappingTask = NULL;
 volatile uint8_t gHandshook = FALSE;
 volatile uint8_t gPaused = FALSE;
 
-void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName );
-
 #ifdef DEBUG
 	#warning DEBUG IS ACTIVE
 #endif
 
 /**
-In case of stack overflow, disable all interrupts and handle it.
-*/
+ * In case of stack overflow, disable all interrupts and handle it.
+ */
 void vApplicationStackOverflowHook(xTaskHandle *pxTask, signed char *pcTaskName) {
 	led_set(LED_GREEN);
 	led_set(LED_YELLOW);
 	led_set(LED_RED);
 
 	#ifdef DEBUG
-	//debug("s", "Stack overflow!\n");
+		//debug("s", "Stack overflow!\n");
 		//#warning STACK OVERFLOW
 	#endif
 	
 	for (;;);
 }
 
-// Function executed when configASSERT is called. Used for debugging.
-// Enabled in FreeRTOSConfig.h
+/**
+ * Function executed when configASSERT is called. Used for debugging. Enabled in
+ * FreeRTOSConfig.h
+ */
 void vAssertCalled(void)
 {
-	//static portBASE_TYPE xPrinted = pdFALSE;
 	volatile uint32_t ulSetToNonZeroInDebuggerToContinue = 0;
+	uint8_t dir = 0;
+	vMotorMovementSwitch(0, 0, &dir, &dir);
+	vTaskDelay(10);
+	led_set(LED_YELLOW);
+	vTaskDelay(10);
 
-		/* Parameters are not used. */
-		//( void ) ulLine;
-		//( void ) pcFileName;
-
-		//gHandshook = FALSE;
-		uint8_t dir = 0;
-		vMotorMovementSwitch(0, 0, &dir, &dir);
-		vTaskDelay(10);
-		led_set(LED_YELLOW);
-		vTaskDelay(10);
-
-		taskENTER_CRITICAL();
+	taskENTER_CRITICAL();
+	{
+		/* You can step out of this function to debug the assertion by using
+		the debugger to set ulSetToNonZeroInDebuggerToContinue to a non-zero
+		value. */
+		while( ulSetToNonZeroInDebuggerToContinue == 0 )
 		{
-				/* You can step out of this function to debug the assertion by using
-				the debugger to set ulSetToNonZeroInDebuggerToContinue to a non-zero
-				value. */
-				while( ulSetToNonZeroInDebuggerToContinue == 0 )
-				{
-				}
 		}
-		taskEXIT_CRITICAL();
-		led_clear(LED_YELLOW);
-		//taskDISABLE_INTERRUPTS();
-		//for (;;);
+	}
+	taskEXIT_CRITICAL();
+	led_clear(LED_YELLOW);
 }
 
 
-/* The main function */
+/**
+ * The main function
+ */
 int main(void)
 {
 	nxt_init();
@@ -136,13 +129,12 @@ int main(void)
 	led_set(LED_RED);
 	
 	/* Initialize queues and semaphores */
-	movementQ = xQueueCreate(2, sizeof(uint8_t)); // For sending movements to vMainMovementTask (used in compass task only)
-	poseControllerQ = xQueueCreate(1, sizeof(point_t)); // For setpoints to controller
-	movementStatusQ = xQueueCreate(1, sizeof(uint8_t)); // For robot status
+	movementQ = xQueueCreate(2, sizeof(uint8_t));
+	poseControllerQ = xQueueCreate(1, sizeof(point_t));
+	movementStatusQ = xQueueCreate(1, sizeof(uint8_t));
 	globalWheelTicksQ = xQueueCreate(1, sizeof(wheel_ticks_t));
-	globalPoseQ = xQueueCreate(1, sizeof(pose_t)); // For storing and passing the global pose estimate
-	mappingMeasurementQ = xQueueCreate(3, sizeof(measurement_t));
-//  actuationQ = xQueueCreate(2, sizeof)
+	globalPoseQ = xQueueCreate(1, sizeof(pose_t));
+	measurementQ = xQueueCreate(3, sizeof(measurement_t));
 
 	xCommandReadyBSem = xSemaphoreCreateBinary();
 
@@ -152,41 +144,31 @@ int main(void)
 	vQueueAddToRegistry(movementStatusQ, "Scan status queue");
 	vQueueAddToRegistry(globalWheelTicksQ, "Global wheel ticks queue");
 	vQueueAddToRegistry(globalPoseQ, "Global pose queue");
-	vQueueAddToRegistry(mappingMeasurementQ, "Measurement queue");
+	vQueueAddToRegistry(measurementQ, "Measurement queue");
 	vQueueAddToRegistry(xCommandReadyBSem, "Command ready semaphore");
 
-	/* Create tasks */
-	BaseType_t ret;
+	/* Create tasks. See the respective header files for description of each task. */
 	#ifndef DEBUG
-	xTaskCreate(vMainCommunicationTask, "Comm", 256, NULL, 3, NULL);  // Dependant on IO, sends instructions to other tasks
+		xTaskCreate(vMainCommunicationTask, "Communication", 256, NULL, 3, NULL);
 	#endif /* DEBUG */
 
-#ifndef COMPASS_CALIBRATE
-	xTaskCreate(vMainPoseControllerTask, "PoseCon", 256, NULL, 2, &xPoseCtrlTask);// Dependant on estimator, sends instructions to movement task //2
-	xTaskCreate(vMainPoseEstimatorTask, "PoseEst", 256, NULL, 2, NULL); // Independent task,
-
-	/*
-	#ifdef MAPPING
-	xTaskCreate(vMainMappingTask, "Mapping", 256, NULL, 1, &xMappingTask);
-	#endif /* MAPPING */
+	#ifndef COMPASS_CALIBRATE
+		xTaskCreate(vMainPoseControllerTask, "Pose controller", 256, NULL, 2, &xPoseCtrlTask);
+		xTaskCreate(vMainPoseEstimatorTask, "Pose estimator", 256, NULL, 2, NULL);
+		xTaskCreate(vMainSensorTowerTask,"Sensor tower", 128, NULL, 3, NULL);
+		#ifdef MAPPING
+			xTaskCreate(vMainMappingTask, "Mapping", 256, NULL, 1, &xMappingTask);
+		#endif /* MAPPING */
+	#endif /* COMPASS_CALIBRATE */
 	
-	ret = xTaskCreate(vMainSensorTowerTask,"Tower", 128, NULL, 3, NULL); // Independent task, but use pose updates from estimator //1
-	//ret = pdPASS;
-#endif /* COMPASS_CALIBRATE */
-	if (ret != pdPASS) {
-		display_goto_xy(0,2);
-		display_string("Error");
-		display_update();
-	}
-	
-#ifdef COMPASS_CALIBRATE
-	#include "calibration.h"
-	display_goto_xy(0,1);
-	display_string("\n \t WARNING \t !\n");
-	display_string("COMPASS CALIBRATION!\n");
-	display_string("{S,CON} to begin\n");
-	xTaskCreate(compassTask, "compasscal", 2000, NULL, 4, NULL); // Task used for compass calibration, dependant on communication and movement task
-#endif /* COMPASS_CALIBRATE */
+	#ifdef COMPASS_CALIBRATE
+		#include "calibration.h"
+		display_goto_xy(0,1);
+		display_string("\n \t WARNING \t !\n");
+		display_string("COMPASS CALIBRATION!\n");
+		display_string("{S,CON} to begin\n");
+		xTaskCreate(compassTask, "compasscal", 2000, NULL, 4, NULL);
+	#endif /* COMPASS_CALIBRATE */
 	
 	/* Indicate that init is complete */
 	led_clear(LED_RED);
@@ -199,7 +181,8 @@ int main(void)
 	vTaskStartScheduler();
 	
 	/*  MCU is out of RAM if the program comes here */
-	while(1) {
+	while (1)
+	{
 		led_toggle(LED_GREEN);
 		led_toggle(LED_RED);
 		led_toggle(LED_YELLOW);
