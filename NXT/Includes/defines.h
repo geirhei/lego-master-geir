@@ -1,7 +1,8 @@
 /************************************************************************/
 // File:			defines.h
-// Author:			Erlend Ese, NTNU Spring 2016
-//					Modifed and adapted to NXT by Kristian Lien, NTNU Fall 2016
+// Author:			- Erlend Ese, NTNU Spring 2016
+//					- Modifed and adapted to NXT by Kristian Lien, NTNU Fall 2016
+//					- Modified by Geir Eikeland, NTNU Spring 2018
 // Defines located in one file
 //
 //
@@ -12,6 +13,7 @@
 
 #define ROBOT_NAME          "NXT"
 #define ROBOT_NAME_LENGTH   3
+
 /************************************************************************/
 /* PHYSICAL CONSTANTS - If the robot is changed these need to be changed
  Some of these will be sent to server during the start-up-handshake
@@ -67,7 +69,7 @@
 #define PB_SIZE 				50
 #define LB_SIZE					50
 #define L_SIZE          		50
-#define MAX_IR_DISTANCE			40
+#define MAX_IR_DISTANCE			40	// [cm]
 
 #define COLLINEAR_TOLERANCE		15	// [cm]
 #define MU 						0.3 // slope
@@ -94,9 +96,9 @@
 /* Defines for enabling system tasks and functionality */
 //#define COMPASS_CALIBRATE		// Compass calibration task
 //#define SENSOR_CALIBRATE		// Sensor calibration task
-//#define MAPPING 		// Mapping task
-//#define SEND_LINE 		// Sending of lines to server in mapping task
-#define SEND_UPDATE	// Sending of IR data to server in sensor tower task
-//#define MANUAL		// Manual drive mode
+//#define MAPPING 				// Mapping task
+//#define SEND_LINE 			// Sending of lines to server in mapping task
+#define SEND_UPDATE			  // Sending of IR data to server in sensor tower task
+//#define MANUAL				// Manual drive mode
 
 #endif /* DEFINES_H_ */
