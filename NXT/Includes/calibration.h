@@ -18,7 +18,7 @@
 
 extern volatile uint8_t gHandshook;
 
-extern QueueHandle_t globalWheelTicksQ;
+extern QueueHandle_t wheelTicksQ;
 
 void compassTask(void *par);
 

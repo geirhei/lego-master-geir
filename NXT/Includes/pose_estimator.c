@@ -16,7 +16,7 @@
 extern volatile uint8_t gHandshook;
 
 extern QueueHandle_t globalPoseQ;
-extern QueueHandle_t globalWheelTicksQ;
+extern QueueHandle_t wheelTicksQ;
 extern TaskHandle_t xPoseCtrlTask;
 
 void vMainPoseEstimatorTask( void *pvParameters )
@@ -78,7 +78,7 @@ void vMainPoseEstimatorTask( void *pvParameters )
 
             // Read wheel ticks from queue written to by motor driver
             // This part is executed only if there is a new tick-value in the queue
-            if (xQueueReceive(globalWheelTicksQ, &WheelTicks, 0) == pdTRUE) {
+            if (xQueueReceive(wheelTicksQ, &WheelTicks, 0) == pdTRUE) {
 
                 // Distance wheels have travelled since last sample
                 float dLeft = (float) (WheelTicks.left - PreviousWheelTicks.left) * WHEEL_FACTOR_MM; 

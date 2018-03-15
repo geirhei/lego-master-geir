@@ -40,7 +40,7 @@ void compassTask(void *par ) {
 	  gRightWheelTicks = 0;
 	  */
 	  wheel_ticks_t WheelTicks = {0};
-	  xQueueOverwrite(globalWheelTicksQ, &WheelTicks);
+	  xQueueOverwrite(wheelTicksQ, &WheelTicks);
 
 	  float previous_ticksLeft = 0;
 	  float previous_ticksRight = 0;
@@ -64,7 +64,7 @@ void compassTask(void *par ) {
 		taskEXIT_CRITICAL();
 		*/
 		wheel_ticks_t WheelTicks = {0};
-		if (xQueueReceive(globalWheelTicksQ, &WheelTicks, 0) == pdTRUE) {
+		if (xQueueReceive(wheelTicksQ, &WheelTicks, 0) == pdTRUE) {
 			leftWheelTicks = WheelTicks.left;
 			rightWheelTicks = WheelTicks.right;
 		}

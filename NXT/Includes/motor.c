@@ -18,7 +18,7 @@
 
 extern volatile uint8_t gHandshook;
 
-extern QueueHandle_t globalWheelTicksQ;
+extern QueueHandle_t wheelTicksQ;
 
 void vMotor_init(void) {
   nxt_motor_set_speed(servoLeft, 0, 1);
@@ -88,7 +88,7 @@ void vMotorCountUpdate(void) {
   WheelTicks.right = nxt_motor_get_count(servoRight);
   WheelTicks.left = nxt_motor_get_count(servoLeft);
   // Pass the motor count values to the global queue containing wheel ticks
-  xQueueOverwrite(globalWheelTicksQ, &WheelTicks);
+  xQueueOverwrite(wheelTicksQ, &WheelTicks);
 }
 
 /* Handle ISR ticks from encoder, Please note that we are losing accuracy here due to division */
