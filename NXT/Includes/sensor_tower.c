@@ -16,7 +16,7 @@
 extern volatile uint8_t gHandshook;
 extern volatile uint8_t gPaused;
 
-extern QueueHandle_t movementStatusQ;
+extern QueueHandle_t movementQ;
 extern QueueHandle_t globalPoseQ;
 extern QueueHandle_t poseControllerQ;
 extern QueueHandle_t measurementQ;
@@ -42,7 +42,7 @@ void vMainSensorTowerTask( void *pvParameters )
 			xLastWakeTime = xTaskGetTickCount();
 			// Set scanning resolution depending on which movement the robot is executing.
 			// Note that the iterations are skipped while robot is rotating (see further downbelow)
-			if (xQueuePeek(movementStatusQ, &robotMovement, 150 / portTICK_PERIOD_MS) == pdTRUE) {
+			if (xQueuePeek(movementQ, &robotMovement, 150 / portTICK_PERIOD_MS) == pdTRUE) {
 				if (robotMovement != lastRobotMovement) {
 					#ifdef MAPPING
 						// Tell mapping task to start line creation.

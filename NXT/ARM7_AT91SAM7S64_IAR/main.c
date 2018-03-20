@@ -56,7 +56,7 @@ SemaphoreHandle_t xCommandReadyBSem;
 /* Queue handles */
 QueueHandle_t movementQ = 0;
 QueueHandle_t poseControllerQ = 0;
-QueueHandle_t movementStatusQ = 0;
+QueueHandle_t movementQ = 0;
 QueueHandle_t wheelTicksQ = 0;
 QueueHandle_t globalPoseQ = 0;
 QueueHandle_t measurementQ = 0;
@@ -132,7 +132,7 @@ int main(void)
 	/* Initialize queues and semaphores */
 	movementQ = xQueueCreate(2, sizeof(uint8_t));
 	poseControllerQ = xQueueCreate(1, sizeof(point_t));
-	movementStatusQ = xQueueCreate(1, sizeof(uint8_t));
+	movementQ = xQueueCreate(1, sizeof(uint8_t));
 	wheelTicksQ = xQueueCreate(1, sizeof(wheel_ticks_t));
 	globalPoseQ = xQueueCreate(1, sizeof(pose_t));
 	measurementQ = xQueueCreate(3, sizeof(measurement_t));
@@ -142,7 +142,7 @@ int main(void)
 	/* For debugging using the FreeRTOS-aware plugin in IAR embedded studio. */
 	vQueueAddToRegistry(movementQ, "Movement queue");
 	vQueueAddToRegistry(poseControllerQ, "Pose controller queue");
-	vQueueAddToRegistry(movementStatusQ, "Scan status queue");
+	vQueueAddToRegistry(movementQ, "Scan status queue");
 	vQueueAddToRegistry(wheelTicksQ, "Global wheel ticks queue");
 	vQueueAddToRegistry(globalPoseQ, "Global pose queue");
 	vQueueAddToRegistry(measurementQ, "Measurement queue");

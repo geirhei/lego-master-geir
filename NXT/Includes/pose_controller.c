@@ -18,7 +18,7 @@ extern volatile uint8_t gPaused;
 
 extern QueueHandle_t globalPoseQ;
 extern QueueHandle_t poseControllerQ;
-extern QueueHandle_t movementStatusQ;
+extern QueueHandle_t movementQ;
 extern TaskHandle_t xPoseCtrlTask;
 
 void vMainPoseControllerTask( void *pvParameters )
@@ -180,7 +180,7 @@ void vMainPoseControllerTask( void *pvParameters )
 			}
 
 			// Send the current movement to the sensor tower task
-			xQueueOverwrite(movementStatusQ, &lastMovement);
+			xQueueOverwrite(movementQ, &lastMovement);
 			
 		} else {
 			// Stop motors if we get disconnected
