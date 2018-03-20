@@ -54,7 +54,6 @@
 SemaphoreHandle_t xCommandReadyBSem;
 
 /* Queue handles */
-QueueHandle_t movementQ = 0;
 QueueHandle_t poseControllerQ = 0;
 QueueHandle_t movementQ = 0;
 QueueHandle_t wheelTicksQ = 0;
@@ -72,6 +71,8 @@ volatile uint8_t gPaused = FALSE;
 #ifdef DEBUG
 	#warning DEBUG IS ACTIVE
 #endif
+
+void vApplicationStackOverflowHook(xTaskHandle *pxTask, signed char *pcTaskName);
 
 /**
  * In case of stack overflow, disable all interrupts and handle it.

@@ -66,7 +66,7 @@
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>8.11.3.13977</state>
+                    <state>8.20.1.14181</state>
                 </option>
                 <option>
                     <name>GeneralEnableMisra</name>
@@ -116,7 +116,7 @@
                 </option>
                 <option>
                     <name>GBECoreSlave</name>
-                    <version>25</version>
+                    <version>26</version>
                     <state>0</state>
                 </option>
                 <option>
@@ -133,7 +133,7 @@
                 </option>
                 <option>
                     <name>CoreVariant</name>
-                    <version>25</version>
+                    <version>26</version>
                     <state>0</state>
                 </option>
                 <option>
@@ -156,7 +156,7 @@
                 </option>
                 <option>
                     <name>GFPUCoreSlave2</name>
-                    <version>25</version>
+                    <version>26</version>
                     <state>0</state>
                 </option>
                 <option>
@@ -304,7 +304,7 @@
                 </option>
                 <option>
                     <name>CCRequirePrototypes</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>CCDiagWarnAreErr</name>
@@ -646,7 +646,7 @@
                 </option>
                 <option>
                     <name>OOCOutputFile</name>
-                    <state>nxt_kartlegging.bin</state>
+                    <state>Backup of nxt_kartlegging.bin</state>
                 </option>
                 <option>
                     <name>OOCCommandLineProducer</name>
@@ -1145,7 +1145,7 @@
                 </option>
                 <option>
                     <name>GBECoreSlave</name>
-                    <version>25</version>
+                    <version>26</version>
                     <state>0</state>
                 </option>
                 <option>
@@ -1162,7 +1162,7 @@
                 </option>
                 <option>
                     <name>CoreVariant</name>
-                    <version>25</version>
+                    <version>26</version>
                     <state>0</state>
                 </option>
                 <option>
@@ -1185,7 +1185,7 @@
                 </option>
                 <option>
                     <name>GFPUCoreSlave2</name>
-                    <version>25</version>
+                    <version>26</version>
                     <state>0</state>
                 </option>
                 <option>
@@ -2090,7 +2090,13 @@
             <name>$PROJ_DIR$\..\Includes\buffer.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\Includes\calibration.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\Includes\cobs.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Includes\communication.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\Includes\crc.c</name>
@@ -2108,6 +2114,9 @@
             <name>$PROJ_DIR$\..\Includes\led.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\Includes\mapping.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\Includes\motor.c</name>
         </file>
         <file>
@@ -2117,19 +2126,16 @@
             <name>$PROJ_DIR$\..\Includes\nxt.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\Includes\server_communication.c</name>
+            <name>$PROJ_DIR$\..\Includes\pose_controller.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Includes\pose_estimator.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Includes\sensor_tower.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\Includes\simple_protocol.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Includes\trcKernelPort.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Includes\trcSnapshotRecorder.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Includes\trcStreamingRecorder.c</name>
         </file>
     </group>
     <group>
@@ -2153,7 +2159,7 @@
     <group>
         <name>Source</name>
         <file>
-            <name>$PROJ_DIR$\..\Source\event_groups.c</name>
+            <name>$PROJ_DIR$\FreeRTOSConfig.h</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\Source\portable\MemMang\heap_4.c</name>
