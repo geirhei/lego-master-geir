@@ -12,11 +12,7 @@
 
 "--device=AT91SAM7S256" 
 
-"--drv_communication=USB0" 
-
-"--drv_interface_speed=auto" 
-
-"--jlink_initial_speed=1000" 
+"--multicore_nr_of_cores=1" 
 
 
 
