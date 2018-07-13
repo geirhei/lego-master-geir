@@ -1,5 +1,5 @@
 # NXT robot
-Source code for the application in the NXT robot, which is part of the master's project for developing a system of self-navigating robots at the Department of Engineering Cybernetics at The Norwegian University of Science and Technology (NTNU).
+Source code for the application in the NXT robot, which is part of the System of Self-Navigating Robots (SSNAR). The work is part of a master's thesis at the Department of Engineering Cybernetics at the Norwegian University of Science and Technology (NTNU).
 
 Changes:
 - New communication protocol by Kristian Lien NTNU, Spring 2017
